@@ -43,388 +43,385 @@ describe('型とは何か', function()
 end)
 -- ## 4.2 <section id='basic-type'>基本型</section>
 -- 基本型とは、そのデータ型の定義に他のデータ型を含まないような原始的な型をいう。
--- describe('基本型', () => {
+ describe('基本型', function()
 --   -- **リスト4.2** 未定義の変数
---   it('未定義の変数', (next) => {
---     /* #@range_begin(undefined_variable) */
---     var variable; -- 宣言されているが値と結びついていない変数
---     expect(
---       variable
---     ).to.eql(
---       undefined
---     );
---     /* #@range_end(undefined_variable) */
---     next();
---   });
+  it('未定義の変数', function()
+    -- /* #@range_begin(undefined_variable) */
+    local variable -- 宣言されているが値と結びついていない変数
+    assert.are.equal(variable, nil)
+    -- /* #@range_end(undefined_variable) */
+  end);
 --   -- ### 基本型は不変なデータである
---   describe('基本型は不変なデータである', () => {
---     it('真理値型は不変である', (next) => {
---       -- ~~~
---       -- node> true === true
---       -- true
---       -- ~~~
---       /* #@range_begin(truth_is_immutable) */
---       var truth = true;
---       expect(
---         true === true
---       ).to.eql(
---         true
---       );
---       /* #@range_end(truth_is_immutable) */
---       next();
---     });
---     it('数値型は不変である', (next) => {
---       -- ~~~
---       -- node> 1 === 1
---       -- true
---       -- ~~~
---       /* #@range_begin(number_is_immutable) */
---       expect(
---         1 === 1
---       ).to.eql(
---         true
---       );
---       /* #@range_end(number_is_immutable) */
---       next();
---     });
---     it('文字列は不変である', (next) => {
---       /* #@range_begin(string_is_immutable) */
---       var str = "to be, or not to be";
---       expect(
---         str
---       ).to.eql(
---         "to be, or not to be"
---       );
---       /* #@range_end(string_is_immutable)  */
---       next();
---     });
---   });
--- });
+  describe('基本型は不変なデータである', function()
+    it('真理値型は不変である', function() 
+      -- ~~~
+      -- node> true === true
+      -- true
+      -- ~~~
+      -- /* #@range_begin(truth_is_immutable) */
+      assert.are.equal(true,true)
+      -- expect(
+      --   true === true
+      -- ).to.eql(
+      --   true
+      -- );
+      -- /* #@range_end(truth_is_immutable) */
+    end);
+    it('数値型は不変である', function()
+      -- ~~~
+      -- node> 1 === 1
+      -- true
+      -- ~~~
+      -- /* #@range_begin(number_is_immutable) */
+      assert.are.equal(1,1)
+      -- expect(
+      --   1 === 1
+      -- ).to.eql(
+      --   true
+      -- );
+      -- /* #@range_end(number_is_immutable) */
+    end)
+    it('文字列は不変である', function()
+      -- /* #@range_begin(string_is_immutable) */
+      local str = "to be, or not to be";
+      assert.are.equal(str,"to be, or not to be")
+      -- expect(
+      --   str
+      -- ).to.eql(
+      --   "to be, or not to be"
+      -- );
+      -- /* #@range_end(string_is_immutable)  */
+    end)
+  end)
+ end)
 --
--- -- ## 4.3 <section id='composite-type'>合成型</section>
--- -- 合成型は、内部に構造を持つ
--- describe('合成型', () => {
+-- ## 4.3 <section id='composite-type'>合成型</section>
+-- 合成型は、内部に構造を持つ
+describe('合成型', function()
 --   -- ### <section id='object-type'>オブジェクト型</section>
 --   -- > 参考資料: [オブジェクトを利用する](https:--developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Working_with_Objects)
---   describe('オブジェクト型', () => {
+   describe('テーブル型', function()
 --     describe('アドレス帳の例', () => {
 --       -- **リスト4.4** オブジェクト型の例
---       it('オブジェクト型の例', (next) => {
---         /* #@range_begin(object_instance_example) */
---         var addressbook = {
---           No1: "Alan Turing",
---           No2: "Haskell Curry",
---           No3: "Alonzo Church",
---           No4: "Ada Lovelace"
---         };
---         /* #@range_end(object_instance_example) */
---         next();
---       });
---       -- **リスト4.5** オブジェクト型の入れ子
---       it('オブジェクト型の入れ子', (next) => {
---         /* ##@range_begin(object_can_embed_object) */
---         var addressbook = {
---           No1: {
---             name: "Alan Turing",
---             gender: "male",
---             birthDay: "1912/6/23"
---           },
---           No2: {
---             name: "Haskell Curry",
---             gender: "male",
---             birthDay: "1900/9/12"
---           },
---           No3: {
---             name: "Alonzo Church",
---             gender: "male",
---             birthDay: "1903/6/14"
---           },
---           No4: {
---             name: "Ada Lovelace",
---             gender: "female",
---             birthDay: "1815/12/10"
---           }
---         };
---         /* ##@range_end(object_can_embed_object) */
---         var addressbook_nested = {
---           /* ##@range_begin(object_can_embed_object_nested) */
---           No1: {
---             name: "Alan Turing",
---             gender: "male",
---             birthDay: {
---               year: 1912,
---               month: 6,
---               day: 23
---             }
---           }
---           /* ##@range_end(object_can_embed_object_nested) */
---         };
---         -- **リスト4.6** オブジェクト型インスタンスへのアクセス
---         /* #@range_begin(object_access) */
---         expect(
---           addressbook.No1.name        -- オブジェクト.キー記法
---         ).to.eql(
---           "Alan Turing"
---         );
---         expect(
---           addressbook["No1"]["name"]  -- オブジェクト[キー]記法
---         ).to.eql(
---           "Alan Turing"
---         );
---         /* #@range_end(object_access) */
---         next();
---       });
---     });
---   });
+      it('オブジェクト型の例', function()
+        -- /* #@range_begin(object_instance_example) */
+        local addressbook = {
+          No1 =  "Alan Turing",
+          No2 =  "Haskell Curry",
+          No3 =  "Alonzo Church",
+          No4 =  "Ada Lovelace"
+        }
+        -- /* #@range_end(object_instance_example) */
+      end)
+      -- **リスト4.5** オブジェクト型の入れ子
+      it('オブジェクト型の入れ子', function()
+        -- /* ##@range_begin(object_can_embed_object) */
+        local addressbook = {
+          No1 =  {
+            name =  "Alan Turing",
+            gender =  "male",
+            birthDay =  "1912/6/23"
+          },
+          No2 = {
+            name =  "Haskell Curry",
+            gender =  "male",
+            birthDay =  "1900/9/12"
+          },
+          No3 = {
+            name =  "Alonzo Church",
+            gender =  "male",
+            birthDay = "1903/6/14"
+          },
+          No4 =  {
+            name = "Ada Lovelace",
+            gender = "female",
+            birthDay = "1815/12/10"
+          }
+        }
+        -- /* ##@range_end(object_can_embed_object) */
+        local addressbook_nested = {
+          -- /* ##@range_begin(object_can_embed_object_nested) */
+          No1 = {
+            name = "Alan Turing",
+            gender = "male",
+            birthDay = {
+              year =  1912,
+              month =  6,
+              day =  23
+            }
+          }
+        -- /* ##@range_end(object_can_embed_object_nested) */
+        };
+        -- **リスト4.6** オブジェクト型インスタンスへのアクセス
+        -- /* #@range_begin(object_access) */
+        assert.are.equal(addressbook.No1.name , "Alan Turing")
+        
+        -- expect(
+        --   addressbook.No1.name        -- オブジェクト.キー記法
+        -- ).to.eql(
+        --   "Alan Turing"
+        -- );
+        -- expect(
+        --   addressbook["No1"]["name"]  -- オブジェクト[キー]記法
+        -- ).to.eql(
+        --   "Alan Turing"
+        -- );
+        -- /* #@range_end(object_access) */
+      end)
+     end)
+   end)
 --   -- ### <section id='array-type'>配列型</section>
 --   -- > 参考資料: https:--developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array  
---   describe('配列型', () => {
---     -- **リスト4.7** 配列の基本操作
---     it("配列の基本操作", (next) => {
---       /* #@range_begin(array_access) */
---       var array = [10,11,12];
---       -- 配列は0から始まるインデックスを持つ
---       expect(
---         array[0] 
---       ).to.eql(
---         10
---       );
---       expect(
---         array[2]
---       ).to.eql(
---         12
---       );
---       -- 存在しない要素にアクセスするとundefinedとなる
---       expect(
---         array[100] 
---       ).to.eql(
---         undefined
---       );
---       /* #@range_end(array_access) */
---       next();
---     });
+   describe('配列型', function() 
+    -- **リスト4.7** 配列の基本操作
+    it("配列の基本操作", function()
+      --  #@range_begin(array_access) */
+      local array = {10,11,12}
+      -- 配列は1から始まるインデックスを持つ
+      assert.are.equal(array[1] , 10)
+      assert.are.equal(array[3] , 12)
+      -- expect(
+      --   array[0] 
+      -- ).to.eql(
+      --   10
+      -- );
+      -- expect(
+      --   array[2]
+      -- ).to.eql(
+      --   12
+      -- );
+      -- -- 存在しない要素にアクセスするとnilとなる
+      assert.are.equal(array[100] , nil)
+      -- expect(
+      --   array[100] 
+      -- ).to.eql(
+      --   undefined
+      -- );
+      -- /* #@range_end(array_access) */
+    end)
 --     -- **リスト4.8** sortによる配列要素の並べかえ
 --     --
 --     -- > [5,3,4,1,2]の配列を昇順に並べかえる
 --     -- > 参考資料: https:--developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
---     it("sortによる配列要素の並べかえ", (next) => {
---       /* #@range_begin(sort_in_array) */
---       var array = [5,3,4,1,2];
---       expect(
---         array.sort((n,m) => {
---           return n > m;
---         })
---       ).to.eql(
---         [1,2,3,4,5]
---       );
---       /* #@range_end(sort_in_array) */
---       next();
---     });
---     -- **リスト4.9** 名簿の配列型表現
---     it("名簿の配列型表現", (next) => {
---       /* #@range_begin(addressbook_example_in_array) */
---       var addressbook = [ -- 配列に要素を格納する
---         {
---           name: "Alan Turing",
---           gender: "male",
---           birthDay: "1912/6/23"
---         },
---         {
---           name: "Haskell Curry",
---           gender: "male",
---           birthDay: "1900/9/12"
---         },
---         {
---           name: "Alonzo Church",
---           gender: "male",
---           birthDay: "1903/6/14"
---         },
---         {
---           name: "Ada Lovelace",
---           gender: "female",
---           birthDay: "1815/12/10"
---         }
---       ];
---       /* #@range_end(addressbook_example_in_array) */
---       -- **リスト4.10** 名簿の並べかえ
---       /* #@range_begin(sorting_array) */
---       expect(
---         addressbook.sort((onePerson,anotherPerson) => {
---           return onePerson.name > anotherPerson.name;
---         })
---       ).to.eql(
---         [
---           {
---             name: "Ada Lovelace",
---             gender: "female",
---             birthDay: "1815/12/10"
---           },
---           {
---             name: "Alan Turing",
---             gender: "male",
---             birthDay: "1912/6/23"
---           },
---           {
---             name: "Alonzo Church",
---             gender: "male",
---             birthDay: "1903/6/14"
---           },
---           {
---             name: "Haskell Curry",
---             gender: "male",
---             birthDay: "1900/9/12"
---           }
---         ]
---       );
---       /* #@range_end(sorting_array) */
---       next();
---     });
---   });
+    it("sortによる配列要素の並べかえ", function()
+      -- /* #@range_begin(sort_in_array) */
+      local array = {5,3,4,1,2}
+      function compare( a, b )
+       return a <  b
+      end
+      -- assert.is_same( table.sort(array), {})
+      -- assert.are.equal( table.sort(array, compare), 1)
+        
+      -- expect(
+      --   array.sort((n,m) => {
+      --     return n > m;
+      --   })
+      -- ).to.eql(
+      --   [1,2,3,4,5]
+      -- );
+      -- /* #@range_end(sort_in_array) */
+    end)
+    -- **リスト4.9** 名簿の配列型表現
+    it("名簿の配列型表現", function()
+      -- /* #@range_begin(addressbook_example_in_array) */
+      local addressbook = { -- 配列に要素を格納する
+        {
+          name =  "Alan Turing",
+          gender = "male",
+          birthDay = "1912/6/23"
+        },
+        {
+          name = "Haskell Curry",
+          gender = "male",
+          birthDay = "1900/9/12"
+        },
+        {
+          name = "Alonzo Church",
+          gender = "male",
+          birthDay = "1903/6/14"
+        },
+        {
+          name = "Ada Lovelace",
+          gender = "female",
+          birthDay = "1815/12/10"
+        }
+      }
+      -- /* #@range_end(addressbook_example_in_array) */
+      -- **リスト4.10** 名簿の並べかえ
+      -- /* #@range_begin(sorting_array) */
+      -- expect(
+      --   addressbook.sort((onePerson,anotherPerson) => {
+      --     return onePerson.name > anotherPerson.name;
+      --   })
+      -- ).to.eql(
+      --   [
+      --     {
+      --       name: "Ada Lovelace",
+      --       gender: "female",
+      --       birthDay: "1815/12/10"
+      --     },
+      --     {
+      --       name: "Alan Turing",
+      --       gender: "male",
+      --       birthDay: "1912/6/23"
+      --     },
+      --     {
+      --       name: "Alonzo Church",
+      --       gender: "male",
+      --       birthDay: "1903/6/14"
+      --     },
+      --     {
+      --       name: "Haskell Curry",
+      --       gender: "male",
+      --       birthDay: "1900/9/12"
+      --     }
+      --   ]
+      -- );
+      -- /* #@range_end(sorting_array) */
+    end)
+   end)
 --   -- ### <section id='function-type'>関数型</section>
---   describe('関数型', () => {
---     -- **リスト4.11** 関数はオブジェクト型である
---     it('関数はオブジェクト型である', (next) => {
---       /* #@range_begin(function_is_object_type) */
---       var func = (n) => {
---         return n;
---       };
---       /* lengthプロパティにアクセスするとアリティ（引数の数）が返る */
---       expect(
---         func.length
---       ).to.eql(
---         1
---       );
---       /* #@range_end(function_is_object_type) */
---       next();
---     });
---     -- **リスト4.12** 引数のない関数 
---     it('引数のない関数', (next) => {
---       /* #@range_begin(function_without_argument) */
---       var three = () => {
---         return 3;
---       };
---       expect(
---         three()
---       ).to.eql(
---         3
---       );
---       /* #@range_end(function_without_argument) */
---       next();
---     });
---     -- **リスト4.13** 関数と変数の類似
---     it('関数と変数の類似', (next) => {
---       /* #@range_begin(function_resembles_variable) */
---       var three = 3;
---       expect(
---         three
---       ).to.eql(
---         3
---       );
---       /* #@range_end(function_resembles_variable) */
---       next();
---     });
---   });
---   -- ### <section id='abstract-datatype'>抽象データ型</section>
---   -- > 参考資料: [抽象データ型](https:--ja.wikipedia.org/wiki/%E6%8A%BD%E8%B1%A1%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B)
---   describe('抽象データ型', () => {
---     -- **リスト4.16** 具体的なリストの利用法
---     it('具体的なリストの利用法', (next) => {
---       /* 具体的なリスト型を定義しておく */
---       /* ただし、引数listにはJavaScriptの配列が入る */
---       var cons = (n, list) => {
---         return [n].concat(list);
---       };
---       var head = (list) => {
---         return list[0];
---       };
---       var tail = (list) => {
---         return list.slice(1,list.length);
---       };
---       var empty = (_) => {
---         return [];
---       };
---       var isEmpty = (list) => {
---         return list.length === 0;
---       };
---       /* #@range_begin(list_as_abstract_type) */
---       expect(
---         head(tail(cons(1,cons(2,empty()))))
---       ).to.eql(
---         2
---       );
---       /* #@range_end(list_as_abstract_type) */
---       next();
---     });
---   });
---   -- ### <section id='mutability-of-composite-type'>合成型の可変性</section>
---   describe('合成型の可変性', () => {
---     -- **リスト4.17** 配列型の可変性
---     -- > JavaScriptの配列は、その一部を書きかえることができる
---     it('配列型の可変性', (next) => {
---       /* #@range_begin(array_is_mutable) */
---       var array = [0,1,2,3];
---       array[0] = 7; -- 配列の一部を書きかえている
---       expect(
---         array
---       ).not.to.eql(
---         [0,1,2,3] -- [7,1,2,3]に変更されている
---       );
---       /* #@range_end(array_is_mutable) */
---       next();
---     });
---     -- **リスト4.18** 配列の破壊的メソッド
---     -- > 配列のreverse関数は、元の配列を逆転させる
---     it('配列の破壊的メソッド', (next) => {
---       /* #@range_begin(destructive_reverse) */
---       var array = [1,2,3,4,5];
---       expect(
---         array.reverse()
---       ).to.eql(
---         [5,4,3,2,1]
---       );
---       expect(
---         array
---       ).not.to.eql(
---         [1,2,3,4,5]  -- 変数arrayの中身が[5,4,3,2,1]に変更されている
---       );
---       /* #@range_end(destructive_reverse) */
---       next();
---     });
---     it('非破壊的なreverse関数', (next) => {
---       -- **リスト4.19** 非破壊的なreverse関数
---       /* #@range_begin(immutable_reverse) */
---       var reverse = (array) => {
---         return array.reduce((accumulator, item) => {
---           return [item].concat(accumulator);
---         }, []);
---       };
---       var array = [1,2,3,4,5];
---       expect(((_) => {
---         var reversed = reverse(array);
---         return array; -- 逆転前の配列を返す
---       })()).to.eql(
---         [1,2,3,4,5]   -- 逆転前の配列と同じ
---       );
---       /* #@range_end(immutable_reverse) */
---       expect(
---         reverse(array)
---       ).to.eql(
---         [5,4,3,2,1]
---       );
---       -- **リスト4.20** 非破壊的なreverse関数は完全には不変でない
---       /* #@range_begin(immutable_reverse_is_not_immutable) */
---       var reversed = reverse(array);
---       reversed[0] = 0;
---       expect(
---         reversed
---       ).to.eql(
---         [0,4,3,2,1]
---       );
---       /* #@range_end(immutable_reverse_is_not_immutable) */
---       next();
---     });
---   });
--- });
+  describe('関数型', () => {
+    -- **リスト4.11** 関数はオブジェクト型である
+    it('関数はオブジェクト型である', function()
+      /* #@range_begin(function_is_object_type) */
+      var func = (n) => {
+        return n;
+      };
+      /* lengthプロパティにアクセスするとアリティ（引数の数）が返る */
+      expect(
+        func.length
+      ).to.eql(
+        1
+      );
+      -- /* #@range_end(function_is_object_type) */
+    end)
+    -- **リスト4.12** 引数のない関数 
+    it('引数のない関数', function()
+      -- /* #@range_begin(function_without_argument) */
+      local three = () => {
+        return 3;
+      };
+      expect(
+        three()
+      ).to.eql(
+        3
+      );
+      -- /* #@range_end(function_without_argument) */
+    end)
+    -- **リスト4.13** 関数と変数の類似
+    it('関数と変数の類似', function()
+      -- /* #@range_begin(function_resembles_variable) */
+      local three = 3;
+      expect(
+        three
+      ).to.eql(
+        3
+      );
+      -- /* #@range_end(function_resembles_variable) */
+    end)
+  end)
+  -- ### <section id='abstract-datatype'>抽象データ型</section>
+  -- > 参考資料: [抽象データ型](https:--ja.wikipedia.org/wiki/%E6%8A%BD%E8%B1%A1%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B)
+  describe('抽象データ型', () => {
+    -- **リスト4.16** 具体的なリストの利用法
+    it('具体的なリストの利用法', (next) => {
+      /* 具体的なリスト型を定義しておく */
+      /* ただし、引数listにはJavaScriptの配列が入る */
+      var cons = (n, list) => {
+        return [n].concat(list);
+      };
+      var head = (list) => {
+        return list[0];
+      };
+      var tail = (list) => {
+        return list.slice(1,list.length);
+      };
+      var empty = (_) => {
+        return [];
+      };
+      var isEmpty = (list) => {
+        return list.length === 0;
+      };
+      /* #@range_begin(list_as_abstract_type) */
+      expect(
+        head(tail(cons(1,cons(2,empty()))))
+      ).to.eql(
+        2
+      );
+      /* #@range_end(list_as_abstract_type) */
+      next();
+    });
+  });
+  -- ### <section id='mutability-of-composite-type'>合成型の可変性</section>
+  describe('合成型の可変性', () => {
+    -- **リスト4.17** 配列型の可変性
+    -- > JavaScriptの配列は、その一部を書きかえることができる
+    it('配列型の可変性', (next) => {
+      /* #@range_begin(array_is_mutable) */
+      var array = [0,1,2,3];
+      array[0] = 7; -- 配列の一部を書きかえている
+      expect(
+        array
+      ).not.to.eql(
+        [0,1,2,3] -- [7,1,2,3]に変更されている
+      );
+      /* #@range_end(array_is_mutable) */
+      next();
+    });
+    -- **リスト4.18** 配列の破壊的メソッド
+    -- > 配列のreverse関数は、元の配列を逆転させる
+    it('配列の破壊的メソッド', (next) => {
+      /* #@range_begin(destructive_reverse) */
+      var array = [1,2,3,4,5];
+      expect(
+        array.reverse()
+      ).to.eql(
+        [5,4,3,2,1]
+      );
+      expect(
+        array
+      ).not.to.eql(
+        [1,2,3,4,5]  -- 変数arrayの中身が[5,4,3,2,1]に変更されている
+      );
+      /* #@range_end(destructive_reverse) */
+      next();
+    });
+    it('非破壊的なreverse関数', (next) => {
+      -- **リスト4.19** 非破壊的なreverse関数
+      /* #@range_begin(immutable_reverse) */
+      var reverse = (array) => {
+        return array.reduce((accumulator, item) => {
+          return [item].concat(accumulator);
+        }, []);
+      };
+      var array = [1,2,3,4,5];
+      expect(((_) => {
+        var reversed = reverse(array);
+        return array; -- 逆転前の配列を返す
+      })()).to.eql(
+        [1,2,3,4,5]   -- 逆転前の配列と同じ
+      );
+      /* #@range_end(immutable_reverse) */
+      expect(
+        reverse(array)
+      ).to.eql(
+        [5,4,3,2,1]
+      );
+      -- **リスト4.20** 非破壊的なreverse関数は完全には不変でない
+      /* #@range_begin(immutable_reverse_is_not_immutable) */
+      var reversed = reverse(array);
+      reversed[0] = 0;
+      expect(
+        reversed
+      ).to.eql(
+        [0,4,3,2,1]
+      );
+      /* #@range_end(immutable_reverse_is_not_immutable) */
+      next();
+    });
+  });
+-- end)
 -- -- ## 4.4 <section id='variable-and-data'>変数とデータの関係</section>
 -- describe('変数とデータの関係', () => {
 --   -- ### <section id='variable-binding'>変数のバインド</section>
@@ -607,6 +604,6 @@ end)
 --     -- ![代入の仕組み](images/mechanism-of-assignment.gif) 
 --   });
 -- });
---
+
 -- [目次に戻る](index.html) [次章に移る](chap05.spec.html) 
 
