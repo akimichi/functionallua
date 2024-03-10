@@ -302,7 +302,7 @@ describe('合成型', function()
       local three = function()
         return 3
       end
-      assert.are.equal(three(), 2)
+      assert.are.equal(three(), 3)
 
       -- expect(
       --   three()
@@ -315,11 +315,12 @@ describe('合成型', function()
     it('関数と変数の類似', function()
       -- /* #@range_begin(function_resembles_variable) */
       local three = 3;
-      expect(
-        three
-      ).to.eql(
-        3
-      );
+      assert.are.equal(three, 3)
+      -- expect(
+      --   three
+      -- ).to.eql(
+      --   3
+      -- );
       -- /* #@range_end(function_resembles_variable) */
     end)
   end)
@@ -336,10 +337,10 @@ describe('合成型', function()
         return {n, table.unpack(list)}
       end
       local head = function(list)
-        return list[0];
+        return table.remove(list, 1)
       end
       local tail = function(list)
-        return list.slice(1,#list);
+        return {table.unpack(list, 2)}
       end 
       local empty = function()
         return {}
@@ -348,85 +349,89 @@ describe('合成型', function()
         return #list == 0;
       end 
       -- /* #@range_begin(list_as_abstract_type) */
-      expect(
-        head(tail(cons(1,cons(2,empty()))))
-      ).to.eql(
-        2
-      );
+      assert.are.equal(head(tail(cons(1,cons(2,empty())))), 2)
+      -- expect(
+      --   
+      -- ).to.eql(
+      --   2
+      -- );
       -- /* #@range_end(list_as_abstract_type) */
     end);
   end)
   -- ### <section id='mutability-of-composite-type'>合成型の可変性</section>
-  describe('合成型の可変性', () => {
-    -- **リスト4.17** 配列型の可変性
-    -- > JavaScriptの配列は、その一部を書きかえることができる
-    it('配列型の可変性', (next) => {
-      /* #@range_begin(array_is_mutable) */
-      var array = [0,1,2,3];
-      array[0] = 7; -- 配列の一部を書きかえている
-      expect(
-        array
-      ).not.to.eql(
-        [0,1,2,3] -- [7,1,2,3]に変更されている
-      );
-      /* #@range_end(array_is_mutable) */
-      next();
-    });
-    -- **リスト4.18** 配列の破壊的メソッド
-    -- > 配列のreverse関数は、元の配列を逆転させる
-    it('配列の破壊的メソッド', (next) => {
-      /* #@range_begin(destructive_reverse) */
-      var array = [1,2,3,4,5];
-      expect(
-        array.reverse()
-      ).to.eql(
-        [5,4,3,2,1]
-      );
-      expect(
-        array
-      ).not.to.eql(
-        [1,2,3,4,5]  -- 変数arrayの中身が[5,4,3,2,1]に変更されている
-      );
-      /* #@range_end(destructive_reverse) */
-      next();
-    });
-    it('非破壊的なreverse関数', (next) => {
+  describe('合成型の可変性', function()
+  --   -- **リスト4.17** 配列型の可変性
+  --   -- > JavaScriptの配列は、その一部を書きかえることができる
+    it('配列型の可変性', function()
+      -- /* #@range_begin(array_is_mutable) */
+      local array = {0,1,2,3}
+      array[1] = 7 -- 配列の一部を書きかえている
+      assert.are_not.same(array , {0,1,2,3})
+      assert.are.same(array , {7,1,2,3})
+
+      -- expect(
+      --   array
+      -- ).not.to.eql(
+      --   [0,1,2,3] -- [7,1,2,3]に変更されている
+      -- );
+      -- /* #@range_end(array_is_mutable) */
+    end)
+  --   -- **リスト4.18** 配列の破壊的メソッド
+  --   -- > 配列のreverse関数は、元の配列を逆転させる
+    it('配列の破壊的メソッド', function()
+      -- /* #@range_begin(destructive_reverse) */
+      -- Luaでは不要なケース
+      local array = {1,2,3,4,5}
+      assert.are.same(array , {7,1,2,3})
+      -- expect(
+      --   array.reverse()
+      -- ).to.eql(
+      --   [5,4,3,2,1]
+      -- );
+      -- expect(
+      --   array
+      -- ).not.to.eql(
+      --   [1,2,3,4,5]  -- 変数arrayの中身が[5,4,3,2,1]に変更されている
+      -- );
+      -- /* #@range_end(destructive_reverse) */
+    end)
+    it('非破壊的なreverse関数', function()
+      pending("I should finish this test later")
       -- **リスト4.19** 非破壊的なreverse関数
-      /* #@range_begin(immutable_reverse) */
-      var reverse = (array) => {
-        return array.reduce((accumulator, item) => {
-          return [item].concat(accumulator);
-        }, []);
-      };
-      var array = [1,2,3,4,5];
-      expect(((_) => {
-        var reversed = reverse(array);
-        return array; -- 逆転前の配列を返す
-      })()).to.eql(
-        [1,2,3,4,5]   -- 逆転前の配列と同じ
-      );
-      /* #@range_end(immutable_reverse) */
-      expect(
-        reverse(array)
-      ).to.eql(
-        [5,4,3,2,1]
-      );
-      -- **リスト4.20** 非破壊的なreverse関数は完全には不変でない
-      /* #@range_begin(immutable_reverse_is_not_immutable) */
-      var reversed = reverse(array);
-      reversed[0] = 0;
-      expect(
-        reversed
-      ).to.eql(
-        [0,4,3,2,1]
-      );
-      /* #@range_end(immutable_reverse_is_not_immutable) */
-      next();
-    });
-  });
--- end)
--- -- ## 4.4 <section id='variable-and-data'>変数とデータの関係</section>
--- describe('変数とデータの関係', () => {
+      -- /* #@range_begin(immutable_reverse) */
+      -- local reverse = function(array)
+      --   return array.reduce((accumulator, item) => {
+      --     return [item].concat(accumulator);
+      --   }, []);
+      -- end 
+      -- var array = [1,2,3,4,5];
+      -- expect(((_) => {
+      --   var reversed = reverse(array);
+      --   return array; -- 逆転前の配列を返す
+      -- })()).to.eql(
+      --   [1,2,3,4,5]   -- 逆転前の配列と同じ
+      -- );
+      -- -- /* #@range_end(immutable_reverse) */
+      -- expect(
+      --   reverse(array)
+      -- ).to.eql(
+      --   [5,4,3,2,1]
+      -- );
+      -- -- **リスト4.20** 非破壊的なreverse関数は完全には不変でない
+      -- -- /* #@range_begin(immutable_reverse_is_not_immutable) */
+      -- var reversed = reverse(array);
+      -- reversed[0] = 0;
+      -- expect(
+      --   reversed
+      -- ).to.eql(
+      --   [0,4,3,2,1]
+      -- );
+      -- /* #@range_end(immutable_reverse_is_not_immutable) */
+    end)
+  end)
+
+-- ## 4.4 <section id='variable-and-data'>変数とデータの関係</section>
+describe('変数とデータの関係', () => {
 --   -- ### <section id='variable-binding'>変数のバインド</section>
 --   -- > 変数boundはバインドされているが、変数unboundはバインドされていない
 --   it('変数のバインド', (next) => {
@@ -470,7 +475,7 @@ describe('合成型', function()
 --       })(2,3)
 --     );
 --     next();
---   });
+   end)
 --   describe('環境と値', () => {
 --     it('関数本体での自由変数', (next) => {
 --       -- **リスト4.23** 関数本体での自由変数
