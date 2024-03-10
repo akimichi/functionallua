@@ -50,7 +50,7 @@ end)
     local variable -- 宣言されているが値と結びついていない変数
     assert.are.equal(variable, nil)
     -- /* #@range_end(undefined_variable) */
-  end);
+  end)
 --   -- ### 基本型は不変なデータである
   describe('基本型は不変なデータである', function()
     it('真理値型は不変である', function() 
@@ -281,32 +281,34 @@ describe('合成型', function()
     end)
    end)
 --   -- ### <section id='function-type'>関数型</section>
-  describe('関数型', () => {
+  describe('関数型', function()
     -- **リスト4.11** 関数はオブジェクト型である
     it('関数はオブジェクト型である', function()
-      /* #@range_begin(function_is_object_type) */
-      var func = (n) => {
-        return n;
-      };
-      /* lengthプロパティにアクセスするとアリティ（引数の数）が返る */
-      expect(
-        func.length
-      ).to.eql(
-        1
-      );
+      -- /* #@range_begin(function_is_object_type) */
+      local func = function(n)
+        return n
+      end
+      -- /* lengthプロパティにアクセスするとアリティ（引数の数）が返る */
+      -- expect(
+      --   func.length
+      -- ).to.eql(
+      --   1
+      -- );
       -- /* #@range_end(function_is_object_type) */
     end)
     -- **リスト4.12** 引数のない関数 
     it('引数のない関数', function()
       -- /* #@range_begin(function_without_argument) */
-      local three = () => {
-        return 3;
-      };
-      expect(
-        three()
-      ).to.eql(
-        3
-      );
+      local three = function()
+        return 3
+      end
+      assert.are.equal(three(), 2)
+
+      -- expect(
+      --   three()
+      -- ).to.eql(
+      --   3
+      -- );
       -- /* #@range_end(function_without_argument) */
     end)
     -- **リスト4.13** 関数と変数の類似
@@ -323,36 +325,37 @@ describe('合成型', function()
   end)
   -- ### <section id='abstract-datatype'>抽象データ型</section>
   -- > 参考資料: [抽象データ型](https:--ja.wikipedia.org/wiki/%E6%8A%BD%E8%B1%A1%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B)
-  describe('抽象データ型', () => {
+  describe('抽象データ型', function()
     -- **リスト4.16** 具体的なリストの利用法
-    it('具体的なリストの利用法', (next) => {
+    it('具体的なリストの利用法', function()
+      --[[
       /* 具体的なリスト型を定義しておく */
       /* ただし、引数listにはJavaScriptの配列が入る */
-      var cons = (n, list) => {
-        return [n].concat(list);
-      };
-      var head = (list) => {
+      ]]
+      local cons = function(n, list)
+        return {n, table.unpack(list)}
+      end
+      local head = function(list)
         return list[0];
-      };
-      var tail = (list) => {
-        return list.slice(1,list.length);
-      };
-      var empty = (_) => {
-        return [];
-      };
-      var isEmpty = (list) => {
-        return list.length === 0;
-      };
-      /* #@range_begin(list_as_abstract_type) */
+      end
+      local tail = function(list)
+        return list.slice(1,#list);
+      end 
+      local empty = function()
+        return {}
+      end
+      local isEmpty = function(list)
+        return #list == 0;
+      end 
+      -- /* #@range_begin(list_as_abstract_type) */
       expect(
         head(tail(cons(1,cons(2,empty()))))
       ).to.eql(
         2
       );
-      /* #@range_end(list_as_abstract_type) */
-      next();
-    });
-  });
+      -- /* #@range_end(list_as_abstract_type) */
+    end);
+  end)
   -- ### <section id='mutability-of-composite-type'>合成型の可変性</section>
   describe('合成型の可変性', () => {
     -- **リスト4.17** 配列型の可変性
