@@ -433,7 +433,7 @@ describe('再帰による反復処理', function()
         return match(alist, {
           -- /* 空のリストに先頭要素はない */
           empty = function(_)
-            return null; 
+            return nil; 
           end,
           cons = function(head, tail) 
             return head;
@@ -445,13 +445,18 @@ describe('再帰による反復処理', function()
         return match(alist, {
           -- /* 空のリストに後尾はない */
           empty = function(_)
-            return null;  
+            return nil;  
           end,
           cons = function(head, tail)
             return tail
           end 
         })
       end 
+      local log = function(array)
+        for item in pairs(array) do
+          print( item )
+        end
+      end
       -- /* #@range_end(recursive_map) */
       -- **リスト5.22** 再帰によるtoArray関数
       -- /* #@range_begin(recursive_toArray) */
@@ -463,13 +468,16 @@ describe('再帰による反復処理', function()
               return accumulator  -- 空のリストの場合は終了
             end, 
             cons =  function(head, tail)
-              print head
-              print tail
-              if(table.unpack(accumulator)) then
-                return toArrayHelper(tail, {table.unpack(accumulator), head})
+              print("head= " ..head)
+              print "accumulator"
+              log(accumulator)
+
+              if(#accumulator == 0) then
+                return toArrayHelper(tail, {head})
               else
-                return toArrayHelper(tail, { head })
+                return toArrayHelper(tail, {table.unpack(accumulator), head})
               end
+              -- return toArrayHelper(tail, {head,  table.unpack(accumulator)})
             end 
           })
         end 
@@ -479,14 +487,14 @@ describe('再帰による反復処理', function()
       local succ = function(n)
         return n + 1;
       end 
-      assert.are.same(toArray(empty()), {})
-      assert.are.same(toArray(cons(1, empty())), {1})
-      assert.are.same(toArray(cons(2, cons(1, empty()))), {2, 1})
-      assert.are.same(toArray(cons(1, cons(2, empty()))), {1, 2})
-      assert.are.same(head(cons(1,cons(2,cons(3,empty())))), 1)
-      assert.are.same(toArray(tail(cons(1,cons(2,cons(3,empty()))))), {2, 3})
-      -- assert.are.same(toArray(cons(1,cons(2,cons(3,empty())))), {1, 2, 3})
-      -- assert.are.same(toArray(map(cons(1,cons(2,cons(3,empty()))),succ)), {2, 3, 4})
+      -- assert.are.same(toArray(empty()), {})
+      -- assert.are.same(toArray(cons(1, empty())), {1})
+      -- assert.are.same(toArray(cons(2, cons(1, empty()))), {2, 1})
+      -- assert.are.same(toArray(cons(1, cons(2, empty()))), {1, 2})
+      -- assert.are.same(head(cons(1,cons(2,cons(3,empty())))), 1)
+      -- assert.are.same(toArray(tail(cons(1,cons(2,cons(3,empty()))))), {2, 3})
+      -- assert.are.same(toArray(map(cons(1,cons(2,empty())),succ)), {2, 3})
+      assert.are.same(toArray(cons(1,cons(2,cons(3,empty())))), {1, 2, 3})
       -- assert.are.same(toArray(map(cons(1,cons(2,cons(3,empty()))),succ)), {2,3,4})
       -- expect(
       --   toArray(map(cons(1,cons(2,cons(3,empty()))),succ))

@@ -103,7 +103,7 @@ describe('合成型', function()
    describe('テーブル型', function()
 --     describe('アドレス帳の例', () => {
 --       -- **リスト4.4** オブジェクト型の例
-      it('オブジェクト型の例', function()
+      it('テーブル型の例', function()
         -- /* #@range_begin(object_instance_example) */
         local addressbook = {
           No1 =  "Alan Turing",
@@ -114,7 +114,7 @@ describe('合成型', function()
         -- /* #@range_end(object_instance_example) */
       end)
       -- **リスト4.5** オブジェクト型の入れ子
-      it('オブジェクト型の入れ子', function()
+      it('テーブル型の入れ子', function()
         -- /* ##@range_begin(object_can_embed_object) */
         local addressbook = {
           No1 =  {
@@ -198,6 +198,17 @@ describe('合成型', function()
       --   undefined
       -- );
       -- /* #@range_end(array_access) */
+    end)
+    it("配列の展開", function()
+      assert.are.same({table.unpack({})} , {})
+      assert.are.same({table.unpack({nil})} , {})
+      assert.are.same({table.unpack({}), 2} , {nil, 2})
+      local array = {1,2,3,4,5}
+      assert.are.same({table.unpack(array)} , {1,2,3,4,5})
+      assert.are.same({table.unpack(array), nil} , {1})
+      assert.are.same({nil, table.unpack(array)} , {nil,1,2,3,4,5})
+      assert.are.same({0, table.unpack(array)} , {0,1,2,3,4,5})
+      assert.are.same({0, table.unpack({})} , {0})
     end)
 --     -- **リスト4.8** sortによる配列要素の並べかえ
 --     --
