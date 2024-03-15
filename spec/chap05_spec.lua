@@ -433,7 +433,7 @@ describe('再帰による反復処理', function()
         return match(alist, {
           -- /* 空のリストに先頭要素はない */
           empty = function(_)
-            return nil; 
+            return {}; 
           end,
           cons = function(head, tail) 
             return head;
@@ -445,7 +445,7 @@ describe('再帰による反復処理', function()
         return match(alist, {
           -- /* 空のリストに後尾はない */
           empty = function(_)
-            return nil;  
+            return {};  
           end,
           cons = function(head, tail)
             return tail
@@ -465,17 +465,21 @@ describe('再帰による反復処理', function()
         function toArrayHelper(alist,accumulator)
           return match(alist, {
             empty = function(_)
+              -- print "accumulator"
+              -- log(accumulator)
               return accumulator  -- 空のリストの場合は終了
             end, 
             cons =  function(head, tail)
-              print("head= " ..head)
-              print "accumulator"
-              log(accumulator)
+              -- print("head= " ..head)
+              -- print "accumulator"
+              -- log(accumulator)
 
               if(#accumulator == 0) then
                 return toArrayHelper(tail, {head})
               else
-                return toArrayHelper(tail, {table.unpack(accumulator), head})
+                accumulator[#accumulator+1] = head
+                return toArrayHelper(tail, accumulator)
+                -- return toArrayHelper(tail, {table.unpack(accumulator), head})
               end
               -- return toArrayHelper(tail, {head,  table.unpack(accumulator)})
             end 
@@ -487,15 +491,15 @@ describe('再帰による反復処理', function()
       local succ = function(n)
         return n + 1;
       end 
-      -- assert.are.same(toArray(empty()), {})
-      -- assert.are.same(toArray(cons(1, empty())), {1})
-      -- assert.are.same(toArray(cons(2, cons(1, empty()))), {2, 1})
-      -- assert.are.same(toArray(cons(1, cons(2, empty()))), {1, 2})
-      -- assert.are.same(head(cons(1,cons(2,cons(3,empty())))), 1)
-      -- assert.are.same(toArray(tail(cons(1,cons(2,cons(3,empty()))))), {2, 3})
-      -- assert.are.same(toArray(map(cons(1,cons(2,empty())),succ)), {2, 3})
+      assert.are.same(toArray(empty()), {})
+      assert.are.same(toArray(cons(1, empty())), {1})
+      assert.are.same(toArray(cons(2, cons(1, empty()))), {2, 1})
+      assert.are.same(toArray(cons(1, cons(2, empty()))), {1, 2})
+      assert.are.same(head(cons(1,cons(2,cons(3,empty())))), 1)
+      assert.are.same(toArray(tail(cons(1,cons(2,cons(3,empty()))))), {2, 3})
+      assert.are.same(toArray(map(cons(1,cons(2,empty())),succ)), {2, 3})
       assert.are.same(toArray(cons(1,cons(2,cons(3,empty())))), {1, 2, 3})
-      -- assert.are.same(toArray(map(cons(1,cons(2,cons(3,empty()))),succ)), {2,3,4})
+      assert.are.same(toArray(map(cons(1,cons(2,cons(3,empty()))),succ)), {2,3,4})
       -- expect(
       --   toArray(map(cons(1,cons(2,cons(3,empty()))),succ))
       -- ).to.eql(
@@ -555,7 +559,7 @@ describe('再帰による反復処理', function()
         -- **リスト5.25** 再帰によるlength関数
         it('再帰によるlength関数', function()
           -- /* #@range_begin(recursive_length_without_accumulator) */
-          local length = function(list) 
+          function length(list) 
             return match(list, {
               -- /* emptyの場合は、終了条件となる */
               empty = function(_)
@@ -569,22 +573,25 @@ describe('再帰による反復処理', function()
           end 
           -- /* #@range_end(recursive_length_without_accumulator) */
           -- /************************ テスト ************************/
-          expect(
-            length(cons(1,cons(2,cons(3,empty())))) -- [1,2,3]の長さは 3
-          ).to.eql(
-            3
-          );
+          assert.are.equal(length(cons(1,cons(2,cons(3,empty())))),  3)
+          -- expect(
+          --   length(cons(1,cons(2,cons(3,empty())))) -- [1,2,3]の長さは 3
+          -- ).to.eql(
+          --   3
+          -- );
         end)
         -- **リスト5.26** 再帰によるappend関数
         it('再帰によるappend関数', function()
           local toArray = function(seq,callback)
-            local toArrayAux = function(seq,accumulator)
+            function toArrayAux(seq,accumulator)
               return match(seq, {
                 empty = function(_)
                   return accumulator;
                 end,
                 cons = function(head, tail)
-                  return toArrayAux(tail, accumulator.concat(head))
+                  accumulator[#accumulator+1] = head
+                  return toArrayAux(tail, accumulator)
+                  -- return toArrayAux(tail, accumulator.concat(head))
                 end 
               });
             end 
@@ -592,7 +599,7 @@ describe('再帰による反復処理', function()
           end 
           -- /* append :: (LIST[T], LIST[T]) -> LIST[T] */
           -- /* #@range_begin(list_append) */
-          local append = function(xs, ys)
+          function append(xs, ys)
             return match(xs,{
               -- /* emptyの場合は、終了条件 */
               empty = function(_)
@@ -614,18 +621,19 @@ describe('再帰による反復処理', function()
           local ys = cons(3,
                         cons(4,
                              empty()));
-          expect(
-            toArray(append(xs,ys)) -- toArray関数でリストを配列に変換する
-          ).to.eql(
-            {1,2,3,4}
-          );
+          assert.are.same(toArray(append(xs,  ys)), {1, 2, 3, 4})
+          -- expect(
+          --   toArray(append(xs,ys)) -- toArray関数でリストを配列に変換する
+          -- ).to.eql(
+          --   {1,2,3,4}
+          -- );
           -- /* #@range_end(list_append_test) */
         end)
         -- **リスト5.27** 再帰によるreverse関数
         it('再帰によるreverse関数', function()
           -- /* #@range_begin(list_reverse) */
           local reverse = function(list)
-            local reverseHelper = function(list, accumulator)
+            function reverseHelper(list, accumulator)
               return match(list, {
                 empty = function(_)  -- emptyの場合は、終了条件
                   return accumulator;
@@ -662,7 +670,7 @@ describe('再帰による反復処理', function()
         -- /* #@range_end(expression_algebraic_datatype) */
         -- **リスト5.30** 数式を再帰的に計算する
         -- /* #@range_begin(expression_algebraic_datatype_recursion) */
-        local calculate = function(exp)
+        function calculate(exp)
           return match(exp, { -- パターンマッチを実行する
             num = function(n)
               return n;
@@ -682,11 +690,12 @@ describe('再帰による反復処理', function()
         local expression = add(num(1),
                              mul(num(2),
                                  num(3)));
-        expect(
-          calculate(expression)
-        ).to.eql(
-          7
-        );
+        assert.are.equal(calculate(expression),  7)
+        -- expect(
+        --   calculate(expression)
+        -- ).to.eql(
+        --   7
+        -- );
       -- /* #@range_end(expression_algebraic_datatype_recursion) */
       end)
     end)
@@ -702,7 +711,7 @@ describe('再帰による反復処理', function()
         return pattern.cons(head, tail);
       end 
     end 
-    local length = function(list)
+    function length(list)
       return match(list, {
         empty = function(_)    -- リストが空のときが終了条件となる
           return 0;
@@ -712,7 +721,7 @@ describe('再帰による反復処理', function()
         end 
       })
     end 
-    local append = function(xs, ys)
+    function append(xs, ys)
       return match(xs,{
         empty = function(_)
           return ys;
@@ -746,11 +755,12 @@ describe('再帰による反復処理', function()
       local ys = cons(3,
                     cons(4,
                          empty()));
-      expect(
-        length(append(xs, ys))  -- 命題Pの左辺
-      ).to.eql(
-        length(xs) + length(ys) -- 命題Pの右辺
-      );
+      assert.are.same(length(append(xs, ys)),  length(xs) + length(ys))
+      -- expect(
+      --   length(append(xs, ys))  -- 命題Pの左辺
+      -- ).to.eql(
+      --   length(xs) + length(ys) -- 命題Pの右辺
+      -- );
       -- /* #@range_end(statement_p_test) */
     end)
   end)
