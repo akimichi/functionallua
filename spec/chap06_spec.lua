@@ -386,11 +386,86 @@ describe('関数の基本', function()
               return enumFrom(n + 1);
             end)
           end 
+          local function match(data, pattern)
+              return data(pattern)
+          end
+          local list = {
+            empty = function(_)
+              return function(pattern)
+                return pattern.empty();
+              end
+            end,
+            cons = function(value, list)
+              return function(pattern)
+                return pattern.cons(value, list);
+              end 
+            end,
+            isEmpty = function(alist)
+              return match(alist, { 
+                empty = true,
+                cons = function(head, tail)
+                  return false;
+                end
+              })
+            end,
+            head = function(alist)
+              return match(alist, {
+                empty = nil, 
+                cons =  function(head, tail)
+                  return head;
+                end
+              })
+            end,
+            tail = function(alist) 
+              return match(alist, {
+                empty = nil,
+                cons = function(head, tail)
+                  return tail;
+                end
+              })
+            end,
+            -- **リスト6.22** リストのtoArray関数
+            -- /* #@range_begin(list_toArray) */
+            toArray = function(alist)
+              local function toArrayHelper(alist,accumulator)
+                return match(alist, {
+                  empty = function(_)
+                    return accumulator;
+                  end,
+                  cons = function(head, tail)
+
+                    accumulator[#accumulator+1] = head
+                    return toArrayHelper(tail, accumulator);
+                    -- return toArrayHelper(tail,
+                    --                      accumulator.concat(head));
+                  end
+                })
+              end
+              return toArrayHelper(alist, {});
+            end
+            -- /* #@range_end(list_toArray) */
+          };
+          -- **リスト6.21** ストリームのtake関数
+          -- /* #@range_begin(stream_take) */
+          -- /* take:: (STREAM[T], NUM) => LIST[T] */
+          local function take(astream, n)
+            return match(astream,{
+              empty = function(_)              -- ストリームが空のケース
+                return list.empty();
+              end,
+              cons = function(head,tailThunk)  -- ストリームが空でないケース 
+                if(n == 0) then
+                  return list.empty();
+                else
+                  -- print("head: " ..head)
+                  -- リストを生成する
+                  return list.cons(head, take(tailThunk(),(n - 1)))
+                end 
+              end
+            })
+          end
           -- /* take関数を定義するため、streamモジュールを再掲する */
           local stream = {
-            match = function(data, pattern)
-              return data(pattern);
-            end,
             empty = function(_)
               return function(pattern)
                 return pattern.empty();
@@ -424,21 +499,21 @@ describe('関数の基本', function()
             -- **リスト6.21** ストリームのtake関数
             -- /* #@range_begin(stream_take) */
             -- /* take:: (STREAM[T], NUM) => LIST[T] */
-            take = function(astream, n)
-              return match(astream,{
-                empty = function(_)              -- ストリームが空のケース
-                  return list.empty();
-                end,
-                cons = function(head,tailThunk)  -- ストリームが空でないケース 
-                  if(n == 0) then
-                    return list.empty();
-                  else
-                    return list.cons(head,   -- リストを生成する
-                                     stream.take(tailThunk(),(n -1)))
-                  end 
-                end
-              })
-            end
+            -- take = function(astream, n)
+            --   return match(astream,{
+            --     empty = function(_)              -- ストリームが空のケース
+            --       return list.empty();
+            --     end,
+            --     cons = function(head,tailThunk)  -- ストリームが空でないケース 
+            --       if(n == 0) then
+            --         return list.empty();
+            --       else
+            --         return list.cons(head,   -- リストを生成する
+            --                          stream.take(tailThunk(),(n -1)))
+            --       end 
+            --     end
+            --   })
+            -- end
           }
           -- /* #@range_end(stream_take) */
           assert.are.equal(stream.head(enumFrom(1)), 1)
@@ -453,68 +528,13 @@ describe('関数の基本', function()
           -- ).to.eql(
           --   2
           -- );
-          local list = {
-            match = function(data, pattern)
-              return data(pattern);
-            end,
-            empty = function(_)
-              return function(pattern)
-                return pattern.empty();
-              end
-            end,
-            cons = function(value, list)
-              return function(pattern)
-                return pattern.cons(value, list);
-              end 
-            end,
-            isEmpty = function(alist)
-              return match(alist, { 
-                empty = true,
-                cons = function(head, tail)
-                  return false;
-                end
-              })
-            end,
-            head = function(alist)
-              return match(alist, {
-                empty = nil, 
-                cons =  function(head, tail)
-                  return head;
-                end
-              })
-            end,
-            tail = function(alist) 
-              return match(alist, {
-                empty = null,
-                cons = function(head, tail)
-                  return tail;
-                end
-              })
-            end,
-            -- **リスト6.22** リストのtoArray関数
-            -- /* #@range_begin(list_toArray) */
-            toArray = function(alist)
-              local function toArrayHelper(alist,accumulator)
-                return match(alist, {
-                  empty = function(_)
-                    return accumulator;
-                  end,
-                  cons = function(head, tail)
-                    return toArrayHelper(tail,
-                                         accumulator.concat(head));
-                  end
-                })
-              end
-              return toArrayHelper(alist, {});
-            end
-            -- /* #@range_end(list_toArray) */
-          };
           -- **リスト6.23** 無限の整数列をテストする
           -- /* #@range_begin(infinite_integer_test) */
           assert.are.same(
             list.toArray( -- ストリームを配列に変換する
-              stream.take(enumFrom(1),4) -- 無限の整数列から4個の要素を取り出す 
-              ), {})
+              take(enumFrom(1),4) -- 無限の整数列から4個の要素を取り出す 
+              ), {1, 2, 3, 4 })
+             
 
           -- expect(
           --   list.toArray( -- ストリームを配列に変換する
@@ -544,14 +564,15 @@ describe('関数と参照透過性', function()
   -- **リスト6.25** succ関数は参照透過性を持つ
   it('succ関数は参照透過性を持つ', function()
     local succ = function(n)
-      return n + 1;
+      return n + 1
     end
     -- /* #@range_begin(succ_has_referential_transparency) */
-    expect(
-      succ(1)
-    ).to.eql(
-      succ(1)
-    );
+    assert.are.equal(succ(1), succ(1))
+    -- expect(
+    --   succ(1)
+    -- ).to.eql(
+    --   succ(1)
+    -- );
     -- /* #@range_end(succ_has_referential_transparency) */
   end)
   -- **リスト6.26** ファイル操作は参照透過性を破壊する
@@ -585,12 +606,13 @@ describe('関数と参照透過性', function()
     -- /* #@range_end(fileio_destroys_referential_transparency) */
   end)
   it('画面出力が参照透過性を損なうこと', function()
+    pending("I should finish this test later")
     -- /* #@range_begin(log_destroys_referential_transparency) */
-    expect(
-      console.log("this is a test")
-    ).to.eql(
-      console.log("this is anoter test")
-    );
+    -- expect(
+    --   console.log("this is a test")
+    -- ).to.eql(
+    --   console.log("this is anoter test")
+    -- );
     -- /* #@range_end(log_destroys_referential_transparency) */
   end)
   -- ### <section id='coping-sideeffect'>副作用への対処</section>
@@ -606,18 +628,19 @@ describe('関数と参照透過性', function()
       -- **リスト6.28** tap関数によるconsole.logのテスト
       it('tap関数によるconsole.logのテスト', function()
         local succ = function(n)
-          return n + 1;
+          return n + 1
         end 
         -- /* #@range_begin(tap_combinator_test_in_console) */
         -- /* 画面出力という副作用を実行する関数 */
         local consoleSideEffect = function(any)
-          console.log(any);
+          print(any)
         end 
-        expect(
-          tap(succ(1), consoleSideEffect)
-        ).to.eql(
-          tap(succ(1), consoleSideEffect)
-        );
+        assert.are.equal(tap(succ(1), consoleSideEffect), tap(succ(1), consoleSideEffect))
+        -- expect(
+        --   tap(succ(1), consoleSideEffect)
+        -- ).to.eql(
+        --   tap(succ(1), consoleSideEffect)
+        -- );
         -- /* #@range_end(tap_combinator_test_in_console) */
       end)
       -- **リスト6.29** tap関数によるファイル入出力のテスト
