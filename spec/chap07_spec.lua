@@ -1074,14 +1074,15 @@ describe('クロージャーを使う', function()
                         return {head}
                       end,
                       cons = function(head_,tailThunk_)
-                        return {head}.concat(stream.toArray(tailThunk()));
+                        return {head,  table.unpack(stream.toArray(tailThunk()))}
+                        -- return {head}.concat(stream.toArray(tailThunk()));
                       end 
                     });
                   end 
                 });
               end,
               take = function(lazyList)
-                return (number) => {
+                return function(number)
                   return stream.match(lazyList,{
                     empty = function(_)
                       return stream.empty();
@@ -1096,33 +1097,33 @@ describe('クロージャーを使う', function()
                       end 
                     end 
                   });
-                };
+                end;
               end,
               -- **リスト7.35** ストリームのfilter関数
-              /* #@range_begin(stream_filter) */
-              /* filter:: FUN[T => BOOL] => STREAM[T] => STREAM[T] */
-              filter: (predicate) => {
-                return (aStream) => {
+              -- /* #@range_begin(stream_filter) */
+              -- /* filter:: FUN[T => BOOL] => STREAM[T] => STREAM[T] */
+              filter = function(predicate)
+                return function(aStream)
                   return stream.match(aStream,{
-                    empty: (_) => {
-                      return stream.empty();
-                    },
-                    cons: (head,tailThunk) => {
-                      if(predicate(head)){ -- 条件に合致する場合
-                        return stream.cons(head,(_) => {
+                    empty = function(_)
+                      return stream.empty()
+                    end,
+                    cons = function(head,tailThunk)
+                      if(predicate(head)) then -- 条件に合致する場合
+                        return stream.cons(head, function(_)
                           return stream.filter(predicate)(tailThunk());
-                        });
-                      } else { -- 条件に合致しない場合
+                        end);
+                      else -- 条件に合致しない場合
                         return stream.filter(predicate)(tailThunk());
-                      }
-                    }
+                      end 
+                    end 
                   });
-                };
-              },
-              /* #@range_end(stream_filter) */
+                end 
+              end,
+              -- /* #@range_end(stream_filter) */
               -- **リスト7.36** ストリームのremove関数
-              /* #@range_begin(stream_remove) */
-              /* remove:: FUN[T => BOOL] => STREAM[T] => STREAM[T] */
+              -- /* #@range_begin(stream_remove) */
+              -- /* remove:: FUN[T => BOOL] => STREAM[T] => STREAM[T] */
               remove: (predicate) => {
                 return (aStream) => {
                   return stream.filter(not(predicate))(aStream);
