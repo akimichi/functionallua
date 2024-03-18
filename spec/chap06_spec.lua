@@ -390,6 +390,9 @@ describe('関数の基本', function()
               return data(pattern)
           end
           local list = {
+            match = function(data, pattern)
+              return data(pattern);
+            end,
             empty = function(_)
               return function(pattern)
                 return pattern.empty();
@@ -445,6 +448,7 @@ describe('関数の基本', function()
             end
             -- /* #@range_end(list_toArray) */
           };
+          -- this.timeout(3000);
           -- **リスト6.21** ストリームのtake関数
           -- /* #@range_begin(stream_take) */
           -- /* take:: (STREAM[T], NUM) => LIST[T] */
@@ -464,6 +468,7 @@ describe('関数の基本', function()
               end
             })
           end
+          -- /* #@range_end(stream_take) */
           -- /* take関数を定義するため、streamモジュールを再掲する */
           local stream = {
             empty = function(_)
@@ -528,6 +533,23 @@ describe('関数の基本', function()
           -- ).to.eql(
           --   2
           -- );
+            -- **リスト6.22** リストのtoArray関数
+            -- /* #@range_begin(list_toArray) */
+            toArray = function(alist)
+              local function toArrayHelper(alist,accumulator)
+                return match(alist, {
+                  empty = function(_)
+                    return accumulator;
+                  end,
+                  cons = function(head, tail)
+                    return toArrayHelper(tail,
+                                         accumulator.concat(head));
+                  end
+                })
+              end
+              return toArrayHelper(alist, {});
+            end
+            -- /* #@range_end(list_toArray) */
           -- **リスト6.23** 無限の整数列をテストする
           -- /* #@range_begin(infinite_integer_test) */
           assert.are.same(
