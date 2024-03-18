@@ -521,98 +521,96 @@ describe('コンビネータで関数を組み合わせる', function()
   -- $$ 
   --    (f \circ g) x = f(g(x))
   -- $$
-  describe('関数を合成する', () => {
+  describe('関数を合成する', function()
     -- **リスト7.16** 関数合成の定義
-    /* #@range_begin(compose_definition) */
-    local compose = (f,g) => {
-      return (arg) => {
-        return f(g(arg));
-      };
-    };
-    /* #@range_end(compose_definition) */
+    -- /* #@range_begin(compose_definition) */
+    local compose = function(f,g)
+      return function(arg)
+        return f(g(arg))
+      end 
+    end
+    -- /* #@range_end(compose_definition) */
     -- **リスト7.17** 関数合成のテスト
-    /* #@range_begin(compose_test) */
-    local f = (x) => {
+    -- /* #@range_begin(compose_test) */
+    local f = function(x)
       return x * x + 1; 
-    };
-    local g = (x) => {
+    end 
+    local g = function(x)
       return x - 2;
-    };
+    end 
     expect(
       compose(f,g)(2) -- f◦g で合成された関数
     ).to.eql(
       f(g(2))         -- 合成せずに順次実行した場合
     );
-    /* #@range_end(compose_test) */
+    -- /* #@range_end(compose_test) */
     -- #### 関数合成の条件
-    describe('関数合成の条件', () => {
+    describe('関数合成の条件', function()
       -- **リスト7.18** 反数関数の合成
-      it('反数関数の合成', (next) => {
-        /* #@range_begin(composition_example_opposite_twice) */
-        /* 反数の定義 */
-        local opposite = (n) => { 
+      it('反数関数の合成', function()
+        -- /* #@range_begin(composition_example_opposite_twice) */
+        -- /* 反数の定義 */
+        local opposite = function(n)
           return - n;
-        };
+        end 
         expect(
-          /* 反数同士の合成は成功する */
+          -- /* 反数同士の合成は成功する */
           compose(opposite,opposite)(2) 
         ).to.eql(
           2 -- -(-2) === 2
         );
-        /* #@range_end(composition_example_opposite_twice) */
-        next();
-      });
+        -- /* #@range_end(composition_example_opposite_twice) */
+      end);
       -- **リスト7.20** カリー化による合成
-      it('カリー化による合成', (next) => {
-        /* #@range_begin(compose_opposite_add_successful) */
-        local opposite = (x) => {
+      it('カリー化による合成', function()
+        -- /* #@range_begin(compose_opposite_add_successful) */
+        local opposite = function(x)
           return - x;
-        };
-        local addCurried = (x) => { -- カリー化されたadd関数
-          return (y) => {
+        end 
+        local addCurried = function(x) -- カリー化されたadd関数
+          return function(y)
             return x + y;
-          };
-        };
+          end
+        end 
         expect(
           compose(opposite,
                   addCurried(2))(3)
         ).to.eql(
           -5
         );
-        /* #@range_end(compose_opposite_add_successful) */
-        next();
-      });
-    });
-    local flip = (fun) => {
-      return  (f) => {
-        return (g) => {
+        -- /* #@range_end(compose_opposite_add_successful) */
+      end)
+    end);
+    local flip = function(fun)
+      return function(f)
+        return function(g)
           return fun(g)(f);
-        };
-      };
-    };
+        end 
+      end 
+    end
     -- #### 関数合成による抽象化
-    describe('関数合成による抽象化', () => {
+    describe('関数合成による抽象化', function()
       -- **リスト7.21** 具体的なlast関数
-      it('具体的なlast関数', (next) => {
-        /* #@range_begin(list_last_recursive) */
-        local last = (alist) => {
+      it('具体的なlast関数', function()
+        -- /* #@range_begin(list_last_recursive) */
+        local last = function(alist)
           return list.match(alist, {
-            empty: (_) => { -- alistが空の場合
-              return null;
-            },
-            cons: (head, tail) => { -- alistが空でない場合
+            empty = function(_) -- alistが空の場合
+              return nil
+            end,   
+            cons = function(head, tail) -- alistが空でない場合
               return list.match(tail, {
-                empty: (_) => { -- alistの要素がただ1個の場合
+                empty = function(_)  -- alistの要素がただ1個の場合
                   return head;
-                },
-                cons: (_, __) => {
+                end,
+                cons = function(_, __)
                   return last(tail);
-                }
+                end
               });
-            }
+            end 
           });
-        };
-        /* #@range_end(list_last_recursive) */
+        end 
+        -- /* #@range_end(list_last_recursive) */
         local aList = list.cons(1,
                                 list.cons(2,
                                           list.cons(3,
@@ -622,24 +620,22 @@ describe('コンビネータで関数を組み合わせる', function()
         ).to.eql(
           3
         );
-        next();
-      });
+      end);
       -- ** リスト7.22** 抽象的なlast関数
-      it('抽象的なlast関数', (next) => {
-        /* #@range_begin(list_last_compose) */
-        local last = (alist) => {
+      it('抽象的なlast関数', function()
+        -- /* #@range_begin(list_last_compose) */
+        local last = function(alist)
           return compose(list.head,
                          list.reverse)(alist);
-        };
-        /* #@range_end(list_last_compose) */
+        end
+        -- /* #@range_end(list_last_compose) */
         local sequence = list.cons(1,list.cons(2,list.cons(3,list.cons(4,list.empty()))));
         expect(
           last(sequence)
         ).to.eql(
           4
         );
-        next();
-      });
+      end);
       -- **表7.1** 関数合成による様々な関数定義
       -- 
       -- |関数名	     |関数合成による定義	               |
@@ -650,275 +646,266 @@ describe('コンビネータで関数を組み合わせる', function()
       -- |all(predicate) |and . map(predicate)          |
       -- |any(predicate) |or . map(predicate)           |
       -- |none(predicate)|and . map(not(predicate))     |
-      describe('関数合成による様々な関数定義', () => {
-        local alwaysOne = (x) => {
+      describe('関数合成による様々な関数定義', function()
+        local alwaysOne = function(x)
           return 1;
-        };
+        end 
         local alist = list.cons(1,
                               list.cons(2,
                                         list.cons(3,
                                                   list.empty())));
         -- length関数の定義
-        it('length関数の定義', (next) => {
-          local alwaysOne = (x) => {
+        it('length関数の定義', function()
+          local alwaysOne = function(x)
             return 1;
-          };
-          local sum = (alist) => {
-            local sumHelper = (alist, accumulator) => {
+          end 
+          local sum = function(alist)
+            local sumHelper = function(alist, accumulator)
               return list.match(alist,{
-                empty: (_) => {
+                empty = function(_)
                   return accumulator;
-                },
-                cons: (head, tail) => {
+                end,
+                cons =  function(head, tail)
                   return sumHelper(tail, accumulator + head);
-                }
+                end 
               });
-            };
+            end 
             return sumHelper(alist,0);
-          };
-          local length = (alist) => {
+          end 
+          local length = function(alist)
             return compose(sum,
                            flip(list.map)(alwaysOne))(alist);
-          };
-          /****** テスト *******/
+          end 
+          -- /****** テスト *******/
           expect(
             length(alist)
           ).to.eql(
             3
           );
-          next();
-        });
+        end);
         -- last関数の定義
-        it('last関数の定義', (next) => {
-          local last = (alist) => {
+        it('last関数の定義', function()
+          local last = function(alist)
             return compose(list.head,
                            list.reverse)(alist);
-          };
+          end 
           expect(
             last(alist)
           ).to.eql(
             3
           );
-          next();
-        });
+        end);
         -- init関数の定義
-        it('init関数の義', (next) => {
-          /* init = reverse . tail . reverse  */
-          local init = (alist) => {
+        it('init関数の義', function()
+          -- /* init = reverse . tail . reverse  */
+          local init = function(alist)
             return compose(list.reverse,
                            compose(list.tail,
                                    list.reverse)
                           )(alist);
-          };
-          /****** テスト *******/
+          end 
+          -- /****** テスト *******/
           expect(
             list.toArray(init(alist))
           ).to.eql(
-            [1,2]
+            {1,2}
           );
-          next();
-        });
+        end);
         -- all関数の定義
-        it('all関数の定義', (next) => {
-          local and = (alist) => {
+        it('all関数の定義', function()
+          local disjunction = function(alist)
             return list.match(alist, {
-              empty: (_) => {
+              empty = function(_)
                 return true;
-              },
-              cons: (head, tail) => {
-                return head && and(tail);
-              }
+              end, 
+              cons = function(head, tail)
+                return head and disjunction(tail);
+              end 
             });
-          };
-          local all = (predicate) => {
-            return (alist) => {
-              return compose(and,
+          end 
+          local all = function(predicate)
+            return function(alist)
+              return compose(disjunction,
                              flip(list.map)(predicate))(alist);
-            };
-          };
+            end 
+          end 
           expect(
-            all((x) => {
+            all(function(x)
               return x > 0;
-            })(alist)
+            end)(alist)
           ).to.eql(
             true
           );
-          next();
-        });
+        end)
         -- any関数の定義
-        it('any関数の定義', (next) => {
-          local or = (alist) => {
+        it('any関数の定義', function()
+          local alternate = function(alist)
             return list.match(alist, {
-              empty: (_) => {
+              empty = function(_)
                 return false;
-              },
-              cons: (head, tail) => {
-                return head || or(tail);
-              }
+              end,
+              cons = function(head, tail)
+                return head or alternate(tail);
+              end
             });
-          };
-          local any = (predicate) => {
-            return (alist) => {
-              return compose(or,
+          end
+          local any = function(predicate)
+            return function(alist)
+              return compose(alternate,
                              flip(list.map)(predicate))(alist);
-            };
-          };
+            end 
+          end 
           expect(
-            any((x) => {
+            any(function(x)
               return x < 2;
-            })(alist)
+            end)(alist)
           ).to.eql(
             true
           );
           expect(
-            any((x) => {
+            any(function(x)
               return x < 1;
-            })(alist)
+            end)(alist)
           ).to.eql(
             false
           );
-          next();
-        });
+        end);
         -- none関数の定義
-        it('none関数の定義', (next) => {
-          local and = (alist) => {
+        it('none関数の定義', function()
+          local disjunction = function(alist)
             return list.match(alist, {
-              empty: (_) => {
+              empty = function(_)
                 return true;
-              },
-              cons: (head, tail) => {
-                return head && and(tail);
-              }
+              end,
+              cons = function(head, tail)
+                return head and disjunction(tail);
+              end
             });
-          };
-          local not = (predicate) => { -- predicate::FUN[NUM => BOOL]
-            return (arg) => { -- FUN[NUM => BOOL]型を返す
-              return ! predicate(arg); -- !演算子で論理を反転させる
-            };
-          };
-          local none = (predicate) => {
-            return (alist) => {
-              return compose(and,
-                             flip(list.map)(not(predicate)))(alist);
-            };
-          };
+          end 
+          local negate = function(predicate)  -- predicate::FUN[NUM => BOOL]
+            return function(arg) -- FUN[NUM => BOOL]型を返す
+              return not predicate(arg); -- !演算子で論理を反転させる
+            end
+          end 
+          local none = function(predicate)
+            return function(alist)
+              return compose(disjunction,
+                             flip(list.map)(negate(predicate)))(alist);
+            end;
+          end
           expect(
-            none((x) => {
+            none(function(x)
               return x < 0;
-            })(alist)
+            end)(alist)
           ).to.eql(
             true
           );
-          next();
-        });
-      });
-    });
+        end);
+      end)
+    end);
     -- ### コラム: Yコンビネータ
     -- [![IMAGE ALT TEXT](http:--img.youtube.com/vi/FITJMJjASUs/0.jpg)](https:--www.youtube.com/watch?v=FITJMJjASUs "Ruby Conf 12 - Y Not- Adventures in Functional Programming by Jim Weirich")
-    it('Y combinator', (next) => {
-      /* #@range_begin(Y_combinator) */
-      local Y = (F) => {
-        return ((x) => {
-          return F((y) => {
+    it('Y combinator', function()
+      -- /* #@range_begin(Y_combinator) */
+      local Y = function(F)
+        return (function(x)
+          return F(function(y)
             return x(x)(y);
-          }) ;
-        })((x) =>  {
-          return F((y) => {
+          end)
+        end)(function(x)
+          return F(function(y)
             return x(x)(y);
-          }) ;
-        });
-      };
-      /* #@range_end(Y_combinator)  */
+          end)
+        end)
+      end
+      -- /* #@range_end(Y_combinator)  */
       -- **リスト7.24** Yコンビネータによるfactorial関数の実装
-      /* #@range_begin(Y_combinator_test) */
-      local factorial = Y((fact) => {
-        return (n) => {
-          if (n === 0) {
+      -- /* #@range_begin(Y_combinator_test) */
+      local factorial = Y(function(fact)
+        return function(n)
+          if (n == 0) then
             return 1;
-          } else {
+          else
             return n * fact(n - 1);
-          }
-        };
-      });
+          end 
+        end;
+      end);
       expect(
         factorial(3) -- 3 * 2 * 1 = 6
       ).to.eql(
         6
       );
-      /* #@range_end(Y_combinator_test) */
-      next();
-    });
-  }); -- 関数を合成する
+      -- /* #@range_end(Y_combinator_test) */
+    end);
+  end); -- 関数を合成する
 end); -- コンビネータ
 
 
 -- ## <section id='closure'>7.4 クロージャーを使う</section>
 -- > 参考資料: [Wikipediaでのクロージャーの解説](https:--ja.wikipedia.org/wiki/%E3%82%AF%E3%83%AD%E3%83%BC%E3%82%B8%E3%83%A3)
-describe('クロージャーを使う', () => {
-  local compose = (f,g) => {
-    return (arg) => {
+describe('クロージャーを使う', function()
+  local compose = function(f,g)
+    return function(arg)
       return f(g(arg));
-    };
-  };
+    end 
+  end
   -- ### <section id='mechanism-of-closure'>クロージャーの仕組み</section>
-  describe('クロージャーの仕組み', () => {
+  describe('クロージャーの仕組み', function()
     -- **リスト7.25** 環境における変数のバインディング
-    it('環境における変数のバインディング', (next) => {
-      /* #@range_begin(variable_binding_in_environment) */
-      /* 変数fooに数値1をバインドする */
+    it('環境における変数のバインディング', function()
+      -- /* #@range_begin(variable_binding_in_environment) */
+      -- /* 変数fooに数値1をバインドする */
       local foo = 1;
-      /* 変数bar に文字列 "a string" をバインドする */
+      -- /* 変数bar に文字列 "a string" をバインドする */
       local bar = "a string"; 
-      /* #@range_end(variable_binding_in_environment) */
+      -- /* #@range_end(variable_binding_in_environment) */
 
       -- **リスト7.26** 環境からバインディングを参照する
-      /* #@range_begin(variable_binding_in_environment_test) */
-      /* 環境 <foo |-> 1, bar |-> "a string"> のもとで評価する */
+      -- /* #@range_begin(variable_binding_in_environment_test) */
+      -- /* 環境 <foo |-> 1, bar |-> "a string"> のもとで評価する */
       expect(
         foo  -- 上記環境から変数fooの値を取り出す
       ).to.eql(
         1
       );
-      /* #@range_end(variable_binding_in_environment_test) */
-      next();
-    });
+      -- /* #@range_end(variable_binding_in_environment_test) */
+    end);
     -- **リスト7.27** 部分適用と環境
-    it('部分適用と環境', (next) => {
-      local multipleOf = (n) => { -- 外側の関数定義
-        return (m) => {         -- 内側の関数定義
-          if(m % n === 0) {
+    it('部分適用と環境', function()
+      local multipleOf = function(n) -- 外側の関数定義
+        return function(m)          -- 内側の関数定義
+          if(m % n == 0) then 
             return true;
-          } else {
+          else
             return false;
-          }
-        };
-      };
-      /* #@range_begin(partial_application_with_environment) */
+          end
+        end
+      end
+      -- /* #@range_begin(partial_application_with_environment) */
       local twoFold = multipleOf(2);
       expect(
         twoFold(4) 
       ).to.eql(
         true
       );
-      /* #@range_end(partial_application_with_environment) */
-      next();
-    });
+      -- /* #@range_end(partial_application_with_environment) */
+    end);
     -- ### <section id='encapsulation-with-closure'>クロージャーで状態をカプセル化する</section>
-    describe('クロージャーで状態をカプセル化する', () => {
+    describe('クロージャーで状態をカプセル化する', function()
       -- **リスト7.28** クロージャーとしてのcounter関数
-      it('クロージャーとしてのcounter関数', (next) => {
-        /* #@range_begin(counter_as_closure) */
-        local counter = (init) => {
+      it('クロージャーとしてのcounter関数', function()
+        -- /* #@range_begin(counter_as_closure) */
+        local counter = function(init)
           local countingNumber =  init;
-          /* countingNumberの環境を持つクロージャーを返す */
-          return (_) => {  
+          -- /* countingNumberの環境を持つクロージャーを返す */
+          return function(_)
             countingNumber = countingNumber + 1;
             return countingNumber ;
-          };
-        };
-        /* #@range_end(counter_as_closure) */
+          end 
+        end 
+        -- /* #@range_end(counter_as_closure) */
         -- **リスト7.29** counter関数の利用法
-        /* #@range_begin(counter_as_closure_test) */
+        -- /* #@range_begin(counter_as_closure_test) */
         local counterFromZero = counter(0);
         expect(
           counterFromZero() -- 1回目の実行
@@ -930,46 +917,45 @@ describe('クロージャーを使う', () => {
         ).to.eql( 
           2
         );
-        /* #@range_end(counter_as_closure_test) */
-        next();
-      });
+        -- /* #@range_end(counter_as_closure_test) */
+      end);
       -- #### クロージャーで不変なデータ型を作る
-      describe('クロージャーで不変なデータ型を作る', () => {
+      describe('クロージャーで不変なデータ型を作る', function()
         -- **リスト7.31** カリー化された不変なオブジェクト型
-        it('カリー化された不変なオブジェクト型', (next) => {
-          /* #@range_begin(immutable_object_type_curried) */
+        it('カリー化された不変なオブジェクト型', function()
+          -- /* #@range_begin(immutable_object_type_curried) */
           local object = {  -- objectモジュール
-            /* empty:: STRING => Any */
-            empty: (key) => {
-              return null;
-            },
-            /* set:: (STRING,Any) => (STRING => Any) => STRING => Any */
-            set: (key, value) => {
-              return (obj) => {
-                return (queryKey) => {
-                  if(key === queryKey) {
+            -- /* empty:: STRING => Any */
+            empty = function(key)
+              return nil;
+            end,
+            -- /* set:: (STRING,Any) => (STRING => Any) => STRING => Any */
+            set = function(key, value)
+              return function(obj)
+                return function(queryKey)
+                  if(key == queryKey) then
                     return value;
-                  } else {
+                  else
                     return object.get(queryKey)(obj);
-                  }
-                };
-              };
-            },
-            /* get:: (STRING) => (STRING => Any) => Any */
-            get: (key) => {
-              return (obj) => {
+                  end 
+                end
+              end 
+            end,
+            -- /* get:: (STRING) => (STRING => Any) => Any */
+            get = function(key)
+              return function(obj)
                 return obj(key);
-              };
-            }
+              end 
+            end 
           };
-          /* #@range_end(immutable_object_type_curried) */
+          -- /* #@range_end(immutable_object_type_curried) */
           -- **リスト7.32** カリー化された不変なオブジェクト型のテスト
-          /* #@range_begin(immutable_object_type_curried_test) */
+          -- /* #@range_begin(immutable_object_type_curried_test) */
           local robots = compose( -- object.setを合成する
             object.set("C3PO", "Star Wars"), -- (STRING => Any) => STRING => Any
             object.set("HAL9000","2001: a space odessay") -- (STRING => Any) => STRING => Any
           )(object.empty);
-          /* )(object.empty()); これは適切でない */
+          -- /* )(object.empty()); これは適切でない */
 
           expect(
             object.get("HAL9000")(robots)
@@ -985,45 +971,44 @@ describe('クロージャーを使う', () => {
           expect(
             object.get("鉄腕アトム")(robots)
           ).to.eql(
-            null 
+            nil 
           );
-          /* #@range_end(immutable_object_type_curried_test) */
-          next();
-        });
-      });
+          -- /* #@range_end(immutable_object_type_curried_test) */
+        end);
+      end);
       -- #### クロージャーでジェネレーターを作る
-      describe('クロージャーでジェネレーターを作る', () => {
+      describe('クロージャーでジェネレーターを作る', function()
         -- **リスト7.33** ストリームからジェネレータを作る
-        describe('ストリームからジェネレータを作る', () => {
-          /* #@range_begin(generator_from_stream) */
-          local generate = (aStream) => {
-            /* いったんローカル変数にストリームを格納する */
+        describe('ストリームからジェネレータを作る', function()
+          -- /* #@range_begin(generator_from_stream) */
+          local generate = function(aStream)
+            -- /* いったんローカル変数にストリームを格納する */
             local _stream = aStream; 
-            /* ジェネレータ関数が返る */
-            return (_) => {
+            -- /* ジェネレータ関数が返る */
+            return function(_)
               return stream.match(_stream, {
-                empty: () => {
-                  return null;
-                },
-                cons: (head, tailThunk) => {
+                empty = function()
+                  return nil;
+                end,
+                cons = function(head, tailThunk)
                   _stream = tailThunk();  -- ローカル変数を更新する
                   return head;  -- ストリームの先頭要素を返す
-                }
+                end 
               });
-            };
-          };
-          /* #@range_end(generator_from_stream) */
+            end 
+          end
+          -- /* #@range_end(generator_from_stream) */
           -- **リスト7.34** 整数列のジェネレータ
-          it('整数列のジェネレータ',(next) => {
-            local enumFrom = (from) => {
-              return stream.cons(from, (_) => {
+          it('整数列のジェネレータ', function()
+            local enumFrom = function(from)
+              return stream.cons(from, function(_)
                 return enumFrom(from + 1);
-              });
-            };
-            /* #@range_begin(integer_generator) */
-            /* 無限の整数列を生成する */
+              end);
+            end
+            -- /* #@range_begin(integer_generator) */
+            -- /* 無限の整数列を生成する */
             local integers = enumFrom(0);            
-            /* 無限ストリームからジェネレータを生成する */
+            -- /* 無限ストリームからジェネレータを生成する */
             local intGenerator = generate(integers); 
             expect(intGenerator()).to.eql(
               0
@@ -1034,92 +1019,85 @@ describe('クロージャーを使う', () => {
             expect(intGenerator()).to.eql(
               2
             );
-            /* #@range_end(integer_generator) */
-            next();
-          });
-          it('無限の素数列を作る',(next) => {
-            this.timeout(4000);
+            -- /* #@range_end(integer_generator) */
+          end);
+          it('無限の素数列を作る', function()
 
-            local not = (predicate) => {
-              return (arg) => {
-                return ! predicate(arg);
-              };
-            };
+            local negate = function(predicate)
+              return function(arg)
+                return not predicate(arg);
+              end 
+            end 
 
             local stream = {
-              match: (data, pattern) => {
-                return data.call(stream, pattern);
-              },
-              empty: (_) => {
-                return (pattern) => {
-                  expect(pattern).to.an('object');
+              match = function(data, pattern)
+                return data(stream, pattern);
+              end,
+              empty = function(_)
+                return function(pattern)
                   return pattern.empty();
-                };
-              },
-              cons: (head,tailThunk) => {
-                expect(tailThunk).to.a('function');
-                return (pattern) => {
-                  expect(pattern).to.an('object');
+                end 
+              end,
+              cons = function(head,tailThunk)
+                return function(pattern)
                   return pattern.cons(head,tailThunk);
-                };
-              },
-              head: (lazyList) => {
+                end;
+              end,
+              head = function(lazyList)
                 return stream.match(lazyList,{
-                  empty: (_) => {
-                    return null;
-                  },
-                  cons: (value, tailThunk) => {
+                  empty = function(_)
+                    return nil;
+                  end,
+                  cons = function(value, tailThunk)
                     return value;
-                  }
+                  end 
                 });
-              },
-              tail: (lazyList) => {
+              end,  
+              tail = function(lazyList)
                 return stream.match(lazyList,{
-                  empty: (_) => {
+                  empty = function(_)
                     return null;
-                  },
-                  cons: (head, tailThunk) => {
+                  end,
+                  cons = function(head, tailThunk)
                     return tailThunk();
-                  }
+                  end 
                 });
-              },
-              toArray: (lazyList) => {
+              end,
+              toArray = function(lazyList)
                 return stream.match(lazyList,{
-                  empty: (_) => {
-                    return [];
-                  },
-                  cons: (head,tailThunk) => {
+                  empty = function(_)
+                    return {}
+                  end,
+                  cons = function(head,tailThunk)
                     return stream.match(tailThunk(),{
-                      empty: (_) => {
-                        return [head];
-                      },
-                      cons: (head_,tailThunk_) => {
-                        return [head].concat(stream.toArray(tailThunk()));
-                      }
+                      empty = function(_)
+                        return {head}
+                      end,
+                      cons = function(head_,tailThunk_)
+                        return {head}.concat(stream.toArray(tailThunk()));
+                      end 
                     });
-                  }
+                  end 
                 });
-              },
-              take: (lazyList) => {
+              end,
+              take = function(lazyList)
                 return (number) => {
-                  expect(number).to.a('number');
-                  expect(number).to.be.greaterThan(-1);
                   return stream.match(lazyList,{
-                    empty: (_) => {
+                    empty = function(_)
                       return stream.empty();
-                    },
-                    cons: (head,tailThunk) => {
-                      if(number === 0) {
+                    end,
+                    cons = function(head,tailThunk)
+                      if(number == 0) then
                         return stream.empty();
-                      } else {
-                        return stream.cons(head,(_) => {
+                      else
+                        return stream.cons(head, function(_)
                           return stream.take(tailThunk())(number -1);
-                        });
-                      }
-                    }
+                        end);
+                      end 
+                    end 
                   });
                 };
-              },
+              end,
               -- **リスト7.35** ストリームのfilter関数
               /* #@range_begin(stream_filter) */
               /* filter:: FUN[T => BOOL] => STREAM[T] => STREAM[T] */
@@ -1227,10 +1205,9 @@ describe('クロージャーを使う', () => {
             expect(primeGenerator()).to.eql(
               5
             );
-            /* #@range_end(prime_generator) */
-            next();
-          });
-        });
+            -- /* #@range_end(prime_generator) */
+          end);
+        end);
         -- #### コラム：ECMAScript2015（ES6）におけるジェネレータ
         -- > 参考資料: https:--developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Generator 
         it('ECMAScript2015（ES6）におけるジェネレータ', (next) => {
@@ -1252,12 +1229,11 @@ describe('クロージャーを使う', () => {
           ).to.eql(
             2
           );
-          /* #@range_end(es6_generator) */
-          next();
+          -- /* #@range_end(es6_generator) */
         });
-      });
-    }); -- クロージャーで状態をカプセル化する
-  });
+      end);
+    end); -- クロージャーで状態をカプセル化する
+  end)
   -- ### <section id='pure-closure'>クロージャーの純粋性 </section>
   describe('クロージャーの純粋性', () => {
     -- **リスト 7.41** multipleOf関数の参照透過性
