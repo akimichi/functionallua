@@ -251,17 +251,19 @@ describe('カリー化で関数を渡す', function()
     -- /* #@range_end(multipleOf_uncurried) */
     -- **リスト7.2** multipleOf関数のテスト
     -- /* #@range_begin(multipleOf_uncurried_test) */
-    expect(
-      multipleOf(2,4)     -- /* 4は、2の倍数である */
-    ).to.eql(
-      true
-    );
+    assert.are.equal(multipleOf(2,4), true)
+    -- expect(
+    --   multipleOf(2,4)     -- /* 4は、2の倍数である */
+    -- ).to.eql(
+    --   true
+    -- );
     -- /* #@range_end(multipleOf_uncurried_test) */
-    expect(
-      multipleOf(3,4)     -- /* 4は、3の倍数ではない */
-    ).to.eql(
-      false
-    );
+    assert.are.equal(multipleOf(3,4), false)
+    -- expect(
+    --   multipleOf(3,4)     -- /* 4は、3の倍数ではない */
+    -- ).to.eql(
+    --   false
+    -- );
   end);
   -- **リスト7.3** カリー化されたmultipleOf関数の定義
   it('カリー化されたmultipleOf関数', function()
@@ -278,32 +280,35 @@ describe('カリー化で関数を渡す', function()
     -- /* #@range_end(multipleOf_curried) */
     -- **リスト7.4** カリー化されたmultipleOf関数のテスト
     -- /* #@range_begin(multipleOf_curried_test) */
-    expect(
-      multipleOf(2)(4)   -- /* 関数適用を2回実行する */ 
-    ).to.eql(
-      true
-    );
+    assert.are.equal(multipleOf(2)(4), true)
+    -- expect(
+    --   multipleOf(2)(4)   -- /* 関数適用を2回実行する */ 
+    -- ).to.eql(
+    --   true
+    -- );
     -- /* #@range_end(multipleOf_curried_test) */
-    expect(
-      multipleOf(3)(4)    -- /* 4は、3の倍数ではない */
-    ).to.eql(
-      false
-    );
+    assert.are.equal(multipleOf(3)(4), false)
+    -- expect(
+    --   multipleOf(3)(4)    -- /* 4は、3の倍数ではない */
+    -- ).to.eql(
+    --   false
+    -- );
     -- **リスト7.5** multipleOf関数のテスト
     -- /* #@range_begin(multipleOf_curried_partilly_applied) */
     local twoFold = multipleOf(2);
-    expect(
-      twoFold(4)    -- /* 4は、2の倍数である */
-    ).to.eql(
-      true
-    );
+    assert.are.equal(twoFold(4), true)
+    -- expect(
+    --   twoFold(4)    -- /* 4は、2の倍数である */
+    -- ).to.eql(
+    --   true
+    -- );
     -- /* #@range_end(multipleOf_curried_partilly_applied) */
   end);
   it('カリー化された指数関数', function()
     -- **リスト7.6** 指数関数の例
     -- > exponential関数は、exponential(b)(n)でbのn乗を計算する
     -- /* #@range_begin(exponential_curried) */
-    local exponential = function(base)
+    local function exponential(base)
       return function(index)
         if(index == 0) then
           return 1;
@@ -313,17 +318,19 @@ describe('カリー化で関数を渡す', function()
       end 
     end
     -- /****** テスト ******/
-    expect(
-      exponential(2)(3) -- 2の3乗を求める 
-    ).to.eql(
-      8
-    );
+    assert.are.equal(exponential(2)(3), 8)
+    -- expect(
+    --   exponential(2)(3) -- 2の3乗を求める 
+    -- ).to.eql(
+    --   8
+    -- );
     -- /* #@range_end(exponential_curried) */
-    expect(
-      exponential(2)(2)
-    ).to.eql(
-      4
-    );
+    assert.are.equal(exponential(2)(2), 4)
+    -- expect(
+    --   exponential(2)(2)
+    -- ).to.eql(
+    --   4
+    -- );
     -- **リスト7.7** flip関数の定義
     -- > flip関数は、flip(fun)(x)(y)でfun(y)(x)を実行する
     -- /* #@range_begin(flip_definition) */
@@ -344,16 +351,18 @@ describe('カリー化で関数を渡す', function()
     local cube = flip(exponential)(3);   
     -- /* #@range_end(flipped_exponential) */
     -- /* #@range_begin(flipped_exponential_test) */
-    expect(
-      square(2)
-    ).to.eql(
-      4 -- /* 2 * 2 = 4 */
-    );
-    expect(
-      cube(2)
-    ).to.eql(
-      8 -- /* 2 * 2 * 2 = 8 */
-    );
+    assert.are.equal(square(2), 4)
+    -- expect(
+    --   square(2)
+    -- ).to.eql(
+    --   4 -- /* 2 * 2 = 4 */
+    -- );
+    assert.are.equal(cube(2), 8)
+    -- expect(
+    --   cube(2)
+    -- ).to.eql(
+    --   8 -- /* 2 * 2 * 2 = 8 */
+    -- );
     -- /* #@range_end(flipped_exponential_test) */
   end);
   -- ### コラム： チャーチ数
@@ -405,15 +414,25 @@ describe('カリー化で関数を渡す', function()
           return _init;
         end 
       end 
-      expect(one(counter(0))()).to.eql(1);
-      expect(two(counter(0))()).to.eql(2);
-      expect(three(counter(0))()).to.eql(3);
-      expect(succ(one)(counter(0))()).to.eql(2);
-      expect(succ(two)(counter(0))()).to.eql(3);
-      expect(add(zero)(one)(counter(0))()).to.eql(1);
-      expect(add(one)(one)(counter(0))()).to.eql(2);
-      expect(add(one)(two)(counter(0))()).to.eql(3);
-      expect(add(two)(three)(counter(0))()).to.eql(5);
+
+      assert.are.equal(one(counter(0))(), 1)
+      -- expect(one(counter(0))()).to.eql(1);
+      assert.are.equal(two(counter(0))(), 2)
+      -- expect(two(counter(0))()).to.eql(2);
+      assert.are.equal(three(counter(0))(), 3)
+      -- expect(three(counter(0))()).to.eql(3);
+      assert.are.equal(succ(one)(counter(0))(), 2)
+      -- expect(succ(one)(counter(0))()).to.eql(2);
+      assert.are.equal(succ(two)(counter(0))(), 3)
+      -- expect(succ(two)(counter(0))()).to.eql(3);
+      assert.are.equal(add(zero)(one)(counter(0))(), 1)
+      -- expect(add(zero)(one)(counter(0))()).to.eql(1);
+      assert.are.equal(add(one)(one)(counter(0))(), 2)
+      -- expect(add(one)(one)(counter(0))()).to.eql(2);
+      assert.are.equal(add(one)(two)(counter(0))(), 3)
+      -- expect(add(one)(two)(counter(0))()).to.eql(3);
+      assert.are.equal(add(two)(three)(counter(0))(), 5)
+      -- expect(add(two)(three)(counter(0))()).to.eql(5);
     end)
   end)
 end)
@@ -436,13 +455,13 @@ describe('コンビネータで関数を組み合わせる', function()
       -- /* #@range_begin(multipleOf_combinator) */
       local even = multipleOf(2); -- /* カリー化されたmultipleOf関数を使う */
       
-      expect(
-        even(2)
-      ).to.eql(
-        true
-      );
+      assert.are.equal(even(2), true)
+      -- expect(
+      --   even(2)
+      -- ).to.eql(
+      --   true
+      -- );
       -- /* #@range_end(multipleOf_combinator) */
-      next();
     end); 
     describe('論理コンビネータ', function()
       local multipleOf = function(n)
@@ -470,16 +489,18 @@ describe('コンビネータで関数を組み合わせる', function()
         -- /* #@range_begin(not_combinator_test) */
         local odd = negate(even); -- notコンビネータでodd関数を定義する
         -- /******** テスト ********/
-        expect(
-          odd(3) -- 3は奇数である
-        ).to.eql(
-          true
-        );
-        expect(
-          odd(2) -- 2は奇数でない 
-        ).to.eql(
-          false
-        );
+        assert.are.equal(odd(3), true)
+        -- expect(
+        --   odd(3) -- 3は奇数である
+        -- ).to.eql(
+        --   true
+        -- );
+        assert.are.equal(odd(2), false)
+        -- expect(
+        --   odd(2) -- 2は奇数でない 
+        -- ).to.eql(
+        --   false
+        -- );
         --/* #@range_end(not_combinator_test) */
       end);
       -- /* 本書では割愛したが、論理和や論理積を実行するコンビネータも同様に定義できる */
@@ -511,9 +532,12 @@ describe('コンビネータで関数を組み合わせる', function()
         end
         -- /* negativeは、0より小さな数値かどうかを判定する */
         local negative = disjunction(negate(positive), negate(zero));
-        expect(negative(-3)).to.eql(true);
-        expect(negative(3)).to.eql(false);
-        expect(negative(0)).to.eql(false);
+        assert.are.equal(negative(-3), true)
+        -- expect(negative(-3)).to.eql(true);
+        assert.are.equal(negative(3), false)
+        -- expect(negative(3)).to.eql(false);
+        assert.are.equal(negative(0), false)
+        -- expect(negative(0)).to.eql(false);
       end);
     end);
   end);
@@ -538,11 +562,13 @@ describe('コンビネータで関数を組み合わせる', function()
     local g = function(x)
       return x - 2;
     end 
-    expect(
-      compose(f,g)(2) -- f◦g で合成された関数
-    ).to.eql(
-      f(g(2))         -- 合成せずに順次実行した場合
-    );
+    assert.are.equal(compose(f,g)(2) , f(g(2)))
+
+    -- expect(
+    --   compose(f,g)(2) -- f◦g で合成された関数
+    -- ).to.eql(
+    --   f(g(2))         -- 合成せずに順次実行した場合
+    -- );
     -- /* #@range_end(compose_test) */
     -- #### 関数合成の条件
     describe('関数合成の条件', function()
@@ -553,12 +579,13 @@ describe('コンビネータで関数を組み合わせる', function()
         local opposite = function(n)
           return - n;
         end 
-        expect(
-          -- /* 反数同士の合成は成功する */
-          compose(opposite,opposite)(2) 
-        ).to.eql(
-          2 -- -(-2) === 2
-        );
+        assert.are.equal(compose(opposite,opposite)(2) , 2)
+        -- expect(
+        --   -- /* 反数同士の合成は成功する */
+        --   compose(opposite,opposite)(2) 
+        -- ).to.eql(
+        --   2 -- -(-2) === 2
+        -- );
         -- /* #@range_end(composition_example_opposite_twice) */
       end);
       -- **リスト7.20** カリー化による合成
@@ -572,12 +599,13 @@ describe('コンビネータで関数を組み合わせる', function()
             return x + y;
           end
         end 
-        expect(
-          compose(opposite,
-                  addCurried(2))(3)
-        ).to.eql(
-          -5
-        );
+        assert.are.equal(compose(opposite, addCurried(2))(3) , -5)
+        -- expect(
+        --   compose(opposite,
+        --           addCurried(2))(3)
+        -- ).to.eql(
+        --   -5
+        -- );
         -- /* #@range_end(compose_opposite_add_successful) */
       end)
     end);
@@ -1239,7 +1267,7 @@ describe('クロージャーを使う', function()
   -- ### <section id='pure-closure'>クロージャーの純粋性 </section>
   describe('クロージャーの純粋性', function()
     -- **リスト 7.41** multipleOf関数の参照透過性
-    it('multipleOf関数の参照透過性', function(next)
+    it('multipleOf関数の参照透過性', function()
       local multipleOf = function(n)
         return function(m)
           if(m % n == 0) then
@@ -1638,7 +1666,7 @@ describe('関数を渡す', function()
         );
       end);
       -- /* foldr関数によるlength関数 */
-      it("foldrでlength関数を作る", function(next)
+      it("foldrでlength関数を作る", function()
         -- /* #@range_begin(foldr_length) */
         local length = function(alist)
           return foldr(alist)(0)(function(item)
@@ -2285,7 +2313,7 @@ describe('関数を渡す', function()
         );
         -- /* #@range_end(amb_test) */
       end);
-      it("amb[1,2,3] + amb[10,20] = amb[11,21,12,22,13,23]", function(next)
+      it("amb[1,2,3] + amb[10,20] = amb[11,21,12,22,13,23]", function()
         local ambExp = exp.add(
           exp.amb(list.fromArray({exp.num(1),exp.num(2),exp.num(3)})),
           exp.amb(list.fromArray({exp.num(10),exp.num(20)})));
@@ -2557,267 +2585,264 @@ describe('モナドを作る', function()
               end 
             });
           end;
-        end,
+        end
         -- /* #@range_end(maybe_monad) */
       };
       -- **リスト7.93** Maybeモナドの利用法
-      it("Maybeモナドの利用法", (next) => {
-        /* #@range_begin(maybe_monad_add_test) */
-        /* 足し算を定義する */
-        local add = (maybeA,maybeB) => {
-          return MAYBE.flatMap(maybeA)((a) => {
-            return MAYBE.flatMap(maybeB)((b) => {
+      it("Maybeモナドの利用法", function()
+        -- /* #@range_begin(maybe_monad_add_test) */
+        -- /* 足し算を定義する */
+        local add = function(maybeA,maybeB)
+          return MAYBE.flatMap(maybeA)(function(a)
+            return MAYBE.flatMap(maybeB)(function(b)
               return MAYBE.unit(a + b);
-            });
-          });
-        };
+            end);
+          end);
+        end;
         local justOne = maybe.just(1);
         local justTwo = maybe.just(2);
 
         expect(
-          MAYBE.getOrElse(add(justOne,justOne))(null) 
+          MAYBE.getOrElse(add(justOne,justOne))(nil) 
         ).to.eql(
           2
         );
         expect(
-          MAYBE.getOrElse(add(justOne,maybe.nothing()))(null)
+          MAYBE.getOrElse(add(justOne,maybe.nothing()))(nil)
         ).to.eql(
           null
         );
         -- /* #@range_end(maybe_monad_add_test) */
-      });
+      end);
     end);
   end);
   -- ### <section id='io-monad'>IOモナドで副作用を閉じ込める</section>
   -- > 参考資料: https:--en.wikibooks.org/wiki/Haskell/Understanding_monads/IO
-  describe('IOモナドで副作用を閉じ込める', () => {
-    local match = (data, pattern) => {
-      return data.call(pattern, pattern);
-    };
+  describe('IOモナドで副作用を閉じ込める', function()
+    local match = function(data, pattern)
+      return data(pattern, pattern);
+    end 
     -- **リスト7.94** Pair型の定義
-    /* #@range_begin(pair_datatype) */
+    -- /* #@range_begin(pair_datatype) */
     local pair = {
-      /* pair のデータ構造 */
-      cons: (left, right) => {
-        return (pattern) => {
+      -- /* pair のデータ構造 */
+      cons = function(left, right)
+        return function(pattern)
           return pattern.cons(left, right);
-        };
-      },
-      /* ペアの右側を取得する */
-      right: (tuple) => {
+        end;
+      end,
+      -- /* ペアの右側を取得する */
+      right = function(tuple)
         return match(tuple, {
-          cons: (left, right) => {
+          cons = function(left, right)
             return right;
-          }
-        });
-      },
-      /* ペアの左側を取得する */
-      left: (tuple) => {
+          end});
+      end,
+      -- /* ペアの左側を取得する */
+      left = function(tuple)
         return match(tuple, {
-          cons: (left, right) => {
+          cons = function(left, right)
             return left;
-          }
+          end 
         });
-      }
-    };
-    /* #@range_end(pair_datatype) */
+      end 
+    }
+    -- /* #@range_end(pair_datatype) */
     -- **リスト7.95** 外界を明示したIOモナドの定義
-    describe('外界を明示したIOモナドの定義', () => {
+    describe('外界を明示したIOモナドの定義', function()
       local IO = {
-        /* #@range_begin(io_monad_definition_with_world) */
-        /* unit:: T => IO[T] */
-        unit: (any) => {
-          return (world) =>  {  -- worldは現在の外界
+        -- /* #@range_begin(io_monad_definition_with_world) */
+        -- /* unit:: T => IO[T] */
+        unit = function(any)
+          return function(world)  -- worldは現在の外界
             return pair.cons(any, world);
-          };
-        },
-        /* flatMap:: IO[T] => FUN[T => IO[U]] => IO[U] */
-        flatMap: (instanceA) => {
-          return (actionAB) => { -- actionAB:: FUN[T => IO[U]]
-            return (world) => {
+          end;
+        end,
+        -- /* flatMap:: IO[T] => FUN[T => IO[U]] => IO[U] */
+        flatMap = function(instanceA)
+          return function(actionAB)  -- actionAB:: FUN[T => IO[U]]
+            return function(world)
               local newPair = instanceA(world); -- 現在の外界のなかで instanceAのIOアクションを実行する
               return pair.match(newPair,{
-                cons: (value, newWorld) => {
+                cons = function(value, newWorld)
                   return actionAB(value)(newWorld); -- 新しい外界のなかで、actionAB(value)で作られたIOアクションを実行する
-                }
+                end
               });
-            };
-          };
-        },
-        /* #@range_end(io_monad_definition_with_world) */
+            end;
+          end;
+        end,
+        -- /* #@range_end(io_monad_definition_with_world) */
         -- **リスト7.96** IOモナドの補助関数
-        /* #@range_begin(io_monad_definition_with_world_helper_function) */
-        /* done:: T => IO[T] */
-        done: (any) => {
+        -- /* #@range_begin(io_monad_definition_with_world_helper_function) */
+        -- /* done:: T => IO[T] */
+        done = function(any)
           return IO.unit();
-        },
-        /* run:: IO[A] => A */
-        run: (instance) => {
-          return (world) => {
+        end,
+        -- /* run:: IO[A] => A */
+        run = function(instance)
+          return function(world)
             local newPair = instance(world); -- IOモナドのインスタンス(アクション)を現在の外界に適用する
             return pair.left(newPair);     -- 結果だけを返す
-          };
-        }
-        /* #@range_end(io_monad_definition_with_world_helper_function) */
+          end;
+        end
+        -- /* #@range_end(io_monad_definition_with_world_helper_function) */
       }; -- IO monad
-      IO.println = (message) => {
-        return (world) => { -- IOモナドを返す
+      IO.println = function(message)
+        return function(world)  -- IOモナドを返す
           console.log(message);
           return IO.unit(null)(world);
-        };
-      };
+        end;
+      end 
       -- **リスト7.98** run関数の利用法
-      /* #@range_begin(run_println) */
-      /* 初期の外界に null をバインドする */
-      local initialWorld = null; 
+      -- /* #@range_begin(run_println) */
+      -- /* 初期の外界に null をバインドする */
+      local initialWorld = nil; 
       expect(
         IO.run(IO.println("我輩は猫である"))(initialWorld)
       ).to.eql(
-        null
+        nil
       );
-      /* #@range_end(run_println) */
-    });
-    describe('外界を引数に持たないIOモナド', () => {
-      local fs = require('fs');
+      --/* #@range_end(run_println) */
+    end);
+    describe('外界を引数に持たないIOモナド', function()
       -- **リスト7.99** 外界を明示しないIOモナドの定義
-      /* #@range_begin(io_monad_definition) */
+      -- /* #@range_begin(io_monad_definition) */
       local IO = {
-        /* unit:: T => IO[T] */
-        unit : (any) => {
-          return (_) =>  { -- 外界を明示する必要はない
+        -- /* unit:: T => IO[T] */
+        unit = function(any)
+          return function(_) -- 外界を明示する必要はない
             return any;
-          };
-        },
-        /* flatMap:: IO[T] => FUN[T => IO[U]] => IO[U] */
-        flatMap : (instanceA) => {
-          return (actionAB) => { -- actionAB:: a -> IO[b]
-            return (_) => {
+          end 
+        end,
+        -- /* flatMap:: IO[T] => FUN[T => IO[U]] => IO[U] */
+        flatMap = function(instanceA)
+          return function(actionAB) -- actionAB:: a -> IO[b]
+            return function(_)
               return IO.run(actionAB(IO.run(instanceA)));
-            }
-          };
-        },
+            end 
+          end 
+        end,
         -- 間違った定義
         -- flatMap: (instanceA) => {
         --   return (actionAB) => { -- actionAB:: A => IO[B]
         --     return actionAB(IO.run(instanceA)); 
         --   };
         -- },
-        /* done:: T => IO[T] */
-        done : (any) => {
+        -- /* done:: T => IO[T] */
+        done = function(any)
           return IO.unit();
-        },
-        /* run:: IO[A] => A */
-        run : (instance) => {
+        end,
+        -- /* run:: IO[A] => A */
+        run = function(instance)
           return instance();
-        },
-        /* readFile:: STRING => IO[STRING] */
-        readFile : (path) => {
-          return (_) => {
-            local fs = require('fs');
+        end,
+        -- /* readFile:: STRING => IO[STRING] */
+        readFile = function(path)
+          return function(_)
+            -- local fs = require('fs');
             local content = fs.readFileSync(path, 'utf8');
             return IO.unit(content)();
-          };
-        },
-        /* println:: STRING => IO[null] */
-        println : (message) => {
-          return (_) => {
+          end;
+        end,
+        -- /* println:: STRING => IO[null] */
+        println = function(message)
+          return function(_)
             console.log(message);
-            return IO.unit(null)();
-          };
-        },
-        writeFile : (path) => {
-          return (content) => {
-            return (_) => {
+            return IO.unit(nil)();
+          end 
+        end,
+        writeFile = function(path)
+          return function(content)
+            return function(_)
               local fs = require('fs');
               fs.writeFileSync(path,content);
               return IO.unit(null)();
-            };
-          };
-        }
+            end;
+          end 
+        end 
       }; -- IO monad
-      /* #@range_end(io_monad_definition) */
+      -- /* #@range_end(io_monad_definition) */
       -- **リスト7.100** run関数の利用法
-      it('run関数の利用法', (next) => {
-        /* #@range_begin(run_println_without_world) */
+      it('run関数の利用法', function()
+        -- /* #@range_begin(run_println_without_world) */
         expect(
-          /* 外界を指定する必要はありません */
+          -- /* 外界を指定する必要はありません */
           IO.run(IO.println("名前はまだない")) 
         ).to.eql(
-          null
+          nil
         );
-        /* #@range_end(run_println_without_world) */
-        next();
-      });
+        -- /* #@range_end(run_println_without_world) */
+      end);
       -- #### IOアクションを合成する
-      describe('IOアクションを合成する', () => {
-        /* #@range_begin(io_monad_is_composable) */
+      describe('IOアクションを合成する', function()
+        -- /* #@range_begin(io_monad_is_composable) */
         -- **リスト7.102** seq関数の定義
-        /* IO.seq:: IO[a] => IO[b] => IO[b] */
-        IO.seq = (instanceA) => {
-          return (instanceB) => {
-            return IO.flatMap(instanceA)((a) => {
+        -- /* IO.seq:: IO[a] => IO[b] => IO[b] */
+        IO.seq = function(instanceA)
+          return function(instanceB)
+            return IO.flatMap(instanceA)(function(a)
               return instanceB;
-            });
-          };
-        };
-        IO.seqs = (alist) => {
+            end);
+          end;
+        end;
+        IO.seqs = function(alist)
           return list.foldr(alist)(list.empty())(IO.done());
-        };
-        /* IO.putc:: CHAR => IO[] */
-        IO.putc = (character) => {
-          return (_) => {
+        end;
+        -- /* IO.putc:: CHAR => IO[] */
+        IO.putc = function(character)
+          return function(_)
             process.stdout.write(character);
-            return null;
-          };
-        };
-        /* IO.puts:: LIST[CHAR] => IO[] */
-        IO.puts = (alist) => {
+            return nil;
+          end;
+        end;
+        -- /* IO.puts:: LIST[CHAR] => IO[] */
+        IO.puts = function(alist)
           return match(alist, {
-            empty: () => {
+            empty = function()
               return IO.done();
-            },
-            cons: (head, tail) => {
+            end,
+            cons = function(head, tail)
               return IO.seq(IO.putc(head))(IO.puts(tail));
-            }
+            end
           });
-        };
-        /* IO.getc:: IO[CHAR] */
-        IO.getc = () => {
-          local continuation = () => {
+        end
+        -- /* IO.getc:: IO[CHAR] */
+        IO.getc = function()
+          local continuation = function()
             local chunk = process.stdin.read();
             return chunk;
-          }; 
+          end 
           process.stdin.setEncoding('utf8');
           return process.stdin.on('readable', continuation);
-        };
-        /* #@range_end(io_monad_is_composable) */
+        end;
+        -- /* #@range_end(io_monad_is_composable) */
 
         -- **リスト7.103** stringモジュール
-        /* #@range_begin(string_module) */
+        -- /* #@range_begin(string_module) */
         local string = {
-          /* 先頭文字を取得する */
-          head: (str) => {
+          -- /* 先頭文字を取得する */
+          head = function(str)
             return str[0];
-          },
-          /* 後尾文字列を取得する */
-          tail: (str) => {
+          end,
+          -- /* 後尾文字列を取得する */
+          tail = function(str)
             return str.substring(1);
-          },
-          /* 空の文字列かどうかを判定する */
-          isEmpty: (str) => {
-            return str.length === 0;
-          },
-          /* 文字列を文字のリストに変換する */
-          toList: (str) => {
-            if(string.isEmpty(str)) {
+          end,
+          -- /* 空の文字列かどうかを判定する */
+          isEmpty = function(str)
+            return str.length == 0;
+          end,
+          -- /* 文字列を文字のリストに変換する */
+          toList = function(str)
+            if(string.isEmpty(str)) then
               return list.empty();
-            } else {
+            else
               return list.cons(string.head(str), 
                                string.toList(string.tail(str)));
-            }
-          }
+            end 
+          end 
         };
-        /* #@range_end(string_module) */
+        -- /* #@range_end(string_module) */
         -- it('IO.putcのテスト', (next) => {
         --   expect(
         --     IO.putc('a')
@@ -2826,7 +2851,7 @@ describe('モナドを作る', function()
         --   );
         --   next();
         -- });
-        it('stringのテスト', (next) => {
+        it('stringのテスト', function()
           expect(
             string.head("abc")
           ).to.eql(
@@ -2837,12 +2862,11 @@ describe('モナドを作る', function()
           ).to.eql(
             'bc'
           );
-          next();
-        });
-      });
-    });
-  }); -- IOモナドで副作用を閉じ込める
-  end); -- モナド
+        end);
+      end);
+    end);
+  end); -- IOモナドで副作用を閉じ込める
 end); -- モナド
+-- end); -- モナド
 
 -- [目次に戻る](index.html) [次章に移る](chap08.spec.html) 
