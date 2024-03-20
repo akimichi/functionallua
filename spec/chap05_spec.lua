@@ -185,7 +185,7 @@ describe('条文分岐の種類と特徴', function()
   -- > 参考資料: [代数的データ型](https:--ja.wikipedia.org/wiki/%E4%BB%A3%E6%95%B0%E7%9A%84%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B)
    describe('代数的データ型とパターンマッチ', function()
      local match = function(data, pattern)
-       return data(pattern, pattern)
+       return data(pattern)
      end
      -- **リスト5.12** 代数的データ構造によるリスト
      it('代数的データ構造によるリスト', function()

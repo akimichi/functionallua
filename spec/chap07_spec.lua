@@ -31,14 +31,15 @@
 --   </li>
 -- </ul>
 -- </div>
-
+package.path=package.path..';./?.lua'
+List = require("./lib/list")
 
 -- テストで利用されるlistモジュールとstreamモジュールを定義しておく
 
 -- listモジュール
 local list  = {
   match =  function(data, pattern)
-    return data.call(list, pattern);
+    return data(pattern);
   end,
   empty = function(_)
     return function(pattern)
@@ -53,7 +54,7 @@ local list  = {
   head = function(alist)
     return list.match(alist, {
       empty = function(_)
-        return null;
+        return nil;
       end, 
       cons = function(head, tail)
         return head;
@@ -107,26 +108,47 @@ local list  = {
     end
   end,
   reverse = function(alist)
-    local reverseAux = function(alist, accumulator)
-      return list.match(alist, {
+    local cons = function(value, alist)
+      return function(pattern)
+        return pattern.cons(value, alist);
+      end
+    end
+    local empty = function(_)
+      return function(pattern)
+        return pattern.empty();
+      end
+    end
+    local match =  function(data, pattern)
+      return data(pattern)
+    end
+
+    local function reverseAux(alist, accumulator)
+      return match(alist, {
         empty = function(_)
           return accumulator;  -- 空のリストの場合は終了
         end,
         cons = function(head, tail)
-          return reverseAux(tail, list.cons(head, accumulator));
+          return reverseAux(tail, cons(head, accumulator));
         end
       })
     end
-    return reverseAux(alist, list.empty());
+    return reverseAux(alist, empty());
+    -- return reverseAux(alist, list.empty());
   end,
   toArray = function(alist)
-    local toArrayAux = function(alist,accumulator)
-      return list.match(alist, {
+    local match =  function(data, pattern)
+      return data(pattern)
+    end
+    local function toArrayAux(alist,accumulator)
+      -- return list.match(alist, {
+      return match(alist, {
         empty = function(_)
           return accumulator;  -- 空のリストの場合は終了
         end,
         cons = function(head, tail)
-          return toArrayAux(tail, accumulator.concat(head));
+          accumulator[#accumulator+1] = head
+          return toArrayAux(tail, accumulator);
+          -- return toArrayAux(tail, accumulator.concat(head));
         end
       })
     end
@@ -142,7 +164,7 @@ local list  = {
 -- streamモジュール
 local stream = {
   match = function(data, pattern)
-    return data.call(stream, pattern);
+    return data(pattern);
   end,
   empty = function(_)
     return function(pattern)
@@ -621,7 +643,7 @@ describe('コンビネータで関数を組み合わせる', function()
       -- **リスト7.21** 具体的なlast関数
       it('具体的なlast関数', function()
         -- /* #@range_begin(list_last_recursive) */
-        local last = function(alist)
+        local function last(alist)
           return list.match(alist, {
             empty = function(_) -- alistが空の場合
               return nil
@@ -643,12 +665,17 @@ describe('コンビネータで関数を組み合わせる', function()
                                 list.cons(2,
                                           list.cons(3,
                                                     list.empty())));
-        expect(
-          last(aList)
-        ).to.eql(
-          3
-        );
+        assert.are.equal(last(aList), 3)
+        -- expect(
+        --   last(aList)
+        -- ).to.eql(
+        --   3
+        -- );
       end);
+      it('reverse関数', function()
+        local sequence = list.cons(1,list.cons(2,list.empty()))
+        assert.are.same(list.toArray(list.reverse(sequence)), {2, 1})
+      end)
       -- ** リスト7.22** 抽象的なlast関数
       it('抽象的なlast関数', function()
         -- /* #@range_begin(list_last_compose) */
@@ -658,6 +685,7 @@ describe('コンビネータで関数を組み合わせる', function()
         end
         -- /* #@range_end(list_last_compose) */
         local sequence = list.cons(1,list.cons(2,list.cons(3,list.cons(4,list.empty()))));
+        assert.are.equal(last(sequence), 3)
         expect(
           last(sequence)
         ).to.eql(
@@ -1059,7 +1087,7 @@ describe('クロージャーを使う', function()
 
             local stream = {
               match = function(data, pattern)
-                return data(stream, pattern);
+                return data(pattern);
               end,
               empty = function(_)
                 return function(pattern)
@@ -1481,7 +1509,7 @@ describe('関数を渡す', function()
       it('sum関数の定義', function()
         local list = {
           match = function(data, pattern)
-            return data.call(list, pattern);
+            return data(pattern);
           end,
           empty = function(_)
             return function(pattern)
@@ -1556,7 +1584,7 @@ describe('関数を渡す', function()
       it('length関数の定義', function()
         local list = {
           match = function(data, pattern)
-            return data(list, pattern);
+            return data(pattern);
           end,
           empty = function(_)
             return function(pattern)
@@ -1778,7 +1806,7 @@ describe('関数を渡す', function()
       it("foldr関数によるreverse関数の定義", function()
         local list = {
           match = function(data, pattern)
-            return data.call(list, pattern);
+            return data(pattern);
           end,
           empty = function(_)
             return function(pattern)
@@ -2116,7 +2144,7 @@ describe('関数を渡す', function()
       -- 式の代数的データ構造
       local exp = {
         match = function(anExp, pattern)  -- 代数的データ構造のパターンマッチ
-          return anExp.call(exp, pattern);
+          return anExp(pattern);
         end,
         num = function(n)             -- 数値の式
           return function(pattern)
@@ -2144,7 +2172,7 @@ describe('関数を渡す', function()
     describe("非決定計算機を作る", function()
       local exp = {
         match = function(anExp, pattern)
-          return anExp(exp, pattern);
+          return anExp(pattern);
         end,
         -- **リスト7.75** 非決定計算機の式
         -- /* #@range_begin(amb_expression) */
@@ -2537,7 +2565,7 @@ describe('モナドを作る', function()
       -- /* #@range_begin(algebraic_type_maybe) */
       local maybe = {
         match = function(exp, pattern)
-          return exp(pattern, pattern);
+          return exp(pattern);
         end,
         just = function(value)
           return function(pattern)
@@ -2620,7 +2648,7 @@ describe('モナドを作る', function()
   -- > 参考資料: https:--en.wikibooks.org/wiki/Haskell/Understanding_monads/IO
   describe('IOモナドで副作用を閉じ込める', function()
     local match = function(data, pattern)
-      return data(pattern, pattern);
+      return data(pattern);
     end 
     -- **リスト7.94** Pair型の定義
     -- /* #@range_begin(pair_datatype) */
@@ -2747,7 +2775,7 @@ describe('モナドを作る', function()
         -- /* println:: STRING => IO[null] */
         println = function(message)
           return function(_)
-            console.log(message);
+            print(message);
             return IO.unit(nil)();
           end 
         end,
@@ -2819,14 +2847,16 @@ describe('モナドを作る', function()
 
         -- **リスト7.103** stringモジュール
         -- /* #@range_begin(string_module) */
-        local string = {
+        local chars = {
           -- /* 先頭文字を取得する */
           head = function(str)
-            return str[0];
+            return string.sub(str, 1, 1);
+            -- return str[1];
           end,
           -- /* 後尾文字列を取得する */
           tail = function(str)
-            return str.substring(1);
+            return string.sub(str, 2);
+            -- return str.substring(1);
           end,
           -- /* 空の文字列かどうかを判定する */
           isEmpty = function(str)
@@ -2851,17 +2881,19 @@ describe('モナドを作る', function()
         --   );
         --   next();
         -- });
-        it('stringのテスト', function()
-          expect(
-            string.head("abc")
-          ).to.eql(
-            'a'
-          );
-          expect(
-            string.tail("abc")
-          ).to.eql(
-            'bc'
-          );
+        it('charsのテスト', function()
+          assert.are.equal(chars.head("abc"), "a")
+          -- expect(
+          --   string.head("abc")
+          -- ).to.eql(
+          --   'a'
+          -- );
+          assert.are.equal(chars.tail("abc"), "bc")
+          -- expect(
+          --   string.tail("abc")
+          -- ).to.eql(
+          --   'bc'
+          -- );
         end);
       end);
     end);
