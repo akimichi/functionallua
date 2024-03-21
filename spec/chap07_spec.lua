@@ -33,6 +33,7 @@
 -- </div>
 package.path=package.path..';./?.lua'
 List = require("./lib/list")
+Stream = require("./lib/stream")
 
 -- テストで利用されるlistモジュールとstreamモジュールを定義しておく
 
@@ -762,8 +763,8 @@ describe('コンビネータで関数を組み合わせる', function()
         end);
         -- all関数の定義
         it('all関数の定義', function()
-          local disjunction = function(alist)
-            return list.match(alist, {
+          local function disjunction(alist)
+            return List.match(alist, {
               empty = function(_)
                 return true;
               end, 
@@ -775,21 +776,26 @@ describe('コンビネータで関数を組み合わせる', function()
           local all = function(predicate)
             return function(alist)
               return compose(disjunction,
-                             flip(list.map)(predicate))(alist);
+                             flip(List.map)(predicate))(alist);
             end 
           end 
-          expect(
+          assert.are.equal(
             all(function(x)
               return x > 0;
             end)(alist)
-          ).to.eql(
-            true
-          );
+          , true)
+          -- expect(
+          --   all(function(x)
+          --     return x > 0;
+          --   end)(alist)
+          -- ).to.eql(
+          --   true
+          -- );
         end)
         -- any関数の定義
         it('any関数の定義', function()
-          local alternate = function(alist)
-            return list.match(alist, {
+          local function alternate(alist)
+            return List.match(alist, {
               empty = function(_)
                 return false;
               end,
@@ -801,28 +807,38 @@ describe('コンビネータで関数を組み合わせる', function()
           local any = function(predicate)
             return function(alist)
               return compose(alternate,
-                             flip(list.map)(predicate))(alist);
+                             flip(List.map)(predicate))(alist);
             end 
           end 
-          expect(
+          assert.are.equal(
             any(function(x)
               return x < 2;
             end)(alist)
-          ).to.eql(
-            true
-          );
-          expect(
+          , true)
+          -- expect(
+          --   any(function(x)
+          --     return x < 2;
+          --   end)(alist)
+          -- ).to.eql(
+          --   true
+          -- );
+          assert.are.equal(
             any(function(x)
               return x < 1;
             end)(alist)
-          ).to.eql(
-            false
-          );
+          , false)
+          -- expect(
+          --   any(function(x)
+          --     return x < 1;
+          --   end)(alist)
+          -- ).to.eql(
+          --   false
+          -- );
         end);
         -- none関数の定義
         it('none関数の定義', function()
-          local disjunction = function(alist)
-            return list.match(alist, {
+          local function disjunction(alist)
+            return List.match(alist, {
               empty = function(_)
                 return true;
               end,
@@ -831,7 +847,7 @@ describe('コンビネータで関数を組み合わせる', function()
               end
             });
           end 
-          local negate = function(predicate)  -- predicate::FUN[NUM => BOOL]
+          local function negate(predicate)  -- predicate::FUN[NUM => BOOL]
             return function(arg) -- FUN[NUM => BOOL]型を返す
               return not predicate(arg); -- !演算子で論理を反転させる
             end
@@ -839,16 +855,21 @@ describe('コンビネータで関数を組み合わせる', function()
           local none = function(predicate)
             return function(alist)
               return compose(disjunction,
-                             flip(list.map)(negate(predicate)))(alist);
+                             flip(List.map)(negate(predicate)))(alist);
             end;
           end
-          expect(
+          assert.are.equal(
             none(function(x)
               return x < 0;
             end)(alist)
-          ).to.eql(
-            true
-          );
+          , true)
+          -- expect(
+          --   none(function(x)
+          --     return x < 0;
+          --   end)(alist)
+          -- ).to.eql(
+          --   true
+          -- );
         end);
       end)
     end);
@@ -879,11 +900,14 @@ describe('コンビネータで関数を組み合わせる', function()
           end 
         end;
       end);
-      expect(
+      assert.are.equal(
         factorial(3) -- 3 * 2 * 1 = 6
-      ).to.eql(
-        6
-      );
+      , 6)
+      -- expect(
+      --   factorial(3) -- 3 * 2 * 1 = 6
+      -- ).to.eql(
+      --   6
+      -- );
       -- /* #@range_end(Y_combinator_test) */
     end);
   end); -- 関数を合成する
@@ -912,11 +936,14 @@ describe('クロージャーを使う', function()
       -- **リスト7.26** 環境からバインディングを参照する
       -- /* #@range_begin(variable_binding_in_environment_test) */
       -- /* 環境 <foo |-> 1, bar |-> "a string"> のもとで評価する */
-      expect(
-        foo  -- 上記環境から変数fooの値を取り出す
-      ).to.eql(
-        1
-      );
+      assert.are.equal(
+       foo  -- 上記環境から変数fooの値を取り出す 
+      , 1)
+      -- expect(
+      --   foo  -- 上記環境から変数fooの値を取り出す
+      -- ).to.eql(
+      --   1
+      -- );
       -- /* #@range_end(variable_binding_in_environment_test) */
     end);
     -- **リスト7.27** 部分適用と環境
@@ -932,11 +959,14 @@ describe('クロージャーを使う', function()
       end
       -- /* #@range_begin(partial_application_with_environment) */
       local twoFold = multipleOf(2);
-      expect(
-        twoFold(4) 
-      ).to.eql(
-        true
-      );
+      assert.are.equal(
+        twoFold(4)  
+      , true)
+      -- expect(
+      --   twoFold(4) 
+      -- ).to.eql(
+      --   true
+      -- );
       -- /* #@range_end(partial_application_with_environment) */
     end);
     -- ### <section id='encapsulation-with-closure'>クロージャーで状態をカプセル化する</section>
@@ -956,16 +986,22 @@ describe('クロージャーを使う', function()
         -- **リスト7.29** counter関数の利用法
         -- /* #@range_begin(counter_as_closure_test) */
         local counterFromZero = counter(0);
-        expect(
-          counterFromZero() -- 1回目の実行
-        ).to.eql( 
-          1
-        );
-        expect(
-          counterFromZero() -- 2回目の実行
-        ).to.eql( 
-          2
-        );
+        assert.are.equal(
+         counterFromZero() -- 1回目の実行 
+        , 1)
+        -- expect(
+        --   counterFromZero() -- 1回目の実行
+        -- ).to.eql( 
+        --   1
+        -- );
+        assert.are.equal(
+         counterFromZero() -- 1回目の実行 
+        , 2)
+        -- expect(
+        --   counterFromZero() -- 2回目の実行
+        -- ).to.eql( 
+        --   2
+        -- );
         -- /* #@range_end(counter_as_closure_test) */
       end);
       -- #### クロージャーで不変なデータ型を作る
@@ -973,30 +1009,52 @@ describe('クロージャーを使う', function()
         -- **リスト7.31** カリー化された不変なオブジェクト型
         it('カリー化された不変なオブジェクト型', function()
           -- /* #@range_begin(immutable_object_type_curried) */
-          local object = {  -- objectモジュール
-            -- /* empty:: STRING => Any */
-            empty = function(key)
+          local object = {} -- objectモジュール
+          -- /* empty:: STRING => Any */
+          object.empty = function(key)
               return nil;
-            end,
-            -- /* set:: (STRING,Any) => (STRING => Any) => STRING => Any */
-            set = function(key, value)
-              return function(obj)
-                return function(queryKey)
-                  if(key == queryKey) then
-                    return value;
-                  else
-                    return object.get(queryKey)(obj);
-                  end 
-                end
-              end 
-            end,
-            -- /* get:: (STRING) => (STRING => Any) => Any */
-            get = function(key)
-              return function(obj)
-                return obj(key);
-              end 
+          end
+          -- /* set:: (STRING,Any) => (STRING => Any) => STRING => Any */
+          object.set = function(key, value)
+            return function(obj)
+              return function(queryKey)
+                if(key == queryKey) then
+                  return value;
+                else
+                  return object.get(queryKey)(obj);
+                end 
+              end
             end 
-          };
+          end
+          object.get = function(key)
+            return function(obj)
+              return obj(key);
+            end 
+          end 
+          -- local object = {  
+          --   -- /* empty:: STRING => Any */
+          --   empty = function(key)
+          --     return nil;
+          --   end,
+          --   -- /* set:: (STRING,Any) => (STRING => Any) => STRING => Any */
+          --   set = function(key, value)
+          --     return function(obj)
+          --       return function(queryKey)
+          --         if(key == queryKey) then
+          --           return value;
+          --         else
+          --           return object.get(queryKey)(obj);
+          --         end 
+          --       end
+          --     end 
+          --   end,
+          --   -- /* get:: (STRING) => (STRING => Any) => Any */
+          --   get = function(key)
+          --     return function(obj)
+          --       return obj(key);
+          --     end 
+          --   end 
+          -- };
           -- /* #@range_end(immutable_object_type_curried) */
           -- **リスト7.32** カリー化された不変なオブジェクト型のテスト
           -- /* #@range_begin(immutable_object_type_curried_test) */
@@ -1006,22 +1064,31 @@ describe('クロージャーを使う', function()
           )(object.empty);
           -- /* )(object.empty()); これは適切でない */
 
-          expect(
-            object.get("HAL9000")(robots)
-          ).to.eql(
-            "2001: a space odessay"
-          );
-          expect(
-            object.get("C3PO")(robots)
-          ).to.eql(
-            "Star Wars"
-          );
+          assert.are.equal(
+           object.get("HAL9000")(robots)
+          , "2001: a space odessay")
+          -- expect(
+          --   object.get("HAL9000")(robots)
+          -- ).to.eql(
+          --   "2001: a space odessay"
+          -- );
+          assert.are.equal(
+           object.get("C3PO")(robots)
+          , "Star Wars")
+          -- expect(
+          --   object.get("C3PO")(robots)
+          -- ).to.eql(
+          --   "Star Wars"
+          -- );
           -- 該当するデータがなければ、nullが返る
-          expect(
-            object.get("鉄腕アトム")(robots)
-          ).to.eql(
-            nil 
-          );
+          assert.are.equal(
+           object.get("鉄腕アトム")(robots)
+          , nil)
+          -- expect(
+          --   object.get("鉄腕アトム")(robots)
+          -- ).to.eql(
+          --   nil 
+          -- );
           -- /* #@range_end(immutable_object_type_curried_test) */
         end);
       end);
@@ -1035,7 +1102,7 @@ describe('クロージャーを使う', function()
             local _stream = aStream; 
             -- /* ジェネレータ関数が返る */
             return function(_)
-              return stream.match(_stream, {
+              return Stream.match(_stream, {
                 empty = function()
                   return nil;
                 end,
@@ -1049,8 +1116,8 @@ describe('クロージャーを使う', function()
           -- /* #@range_end(generator_from_stream) */
           -- **リスト7.34** 整数列のジェネレータ
           it('整数列のジェネレータ', function()
-            local enumFrom = function(from)
-              return stream.cons(from, function(_)
+            local function enumFrom(from)
+              return Stream.cons(from, function(_)
                 return enumFrom(from + 1);
               end);
             end
@@ -1059,15 +1126,18 @@ describe('クロージャーを使う', function()
             local integers = enumFrom(0);            
             -- /* 無限ストリームからジェネレータを生成する */
             local intGenerator = generate(integers); 
-            expect(intGenerator()).to.eql(
-              0
-            );
-            expect(intGenerator()).to.eql(
-              1
-            );
-            expect(intGenerator()).to.eql(
-              2
-            );
+            assert.are.equal(intGenerator(), 0)
+            -- expect(intGenerator()).to.eql(
+            --   0
+            -- );
+            assert.are.equal(intGenerator(), 1)
+            -- expect(intGenerator()).to.eql(
+            --   1
+            -- );
+            assert.are.equal(intGenerator(), 2)
+            -- expect(intGenerator()).to.eql(
+            --   2
+            -- );
             -- /* #@range_end(integer_generator) */
           end);
           it('無限の素数列を作る', function()
@@ -1188,7 +1258,7 @@ describe('クロージャーを使う', function()
               generate = function(astream)
                 local theStream = astream;
                 return function(_)
-                  return stream.match(theStream,{
+                  return Stream.match(theStream,{
                     empty = function(_)
                       return nil; 
                     end,
@@ -1215,14 +1285,14 @@ describe('クロージャーを使う', function()
             -- [![IMAGE ALT TEXT](http:--img.youtube.com/vi/1NzrrU8BawA/0.jpg)](http:--www.youtube.com/watch?v=1NzrrU8BawA "エラトステネスのふるいの動画")
             -- /* #@range_begin(eratosthenes_sieve) */
             -- /* エラトステネスのふるい */
-            local sieve = function(aStream)
-              return stream.match(aStream, {
+            local function sieve(aStream)
+              return Stream.match(aStream, {
                 empty = function()
                   return nil;
                 end, 
                 cons = function(head, tailThunk)
-                  return stream.cons(head, function(_)
-                    return sieve(stream.remove( -- 後尾を素数の倍数でふるいにかける
+                  return Stream.cons(head, function(_)
+                    return sieve(Stream.remove( -- 後尾を素数の倍数でふるいにかける
                       function(item)
                         return multipleOf(item)(head);  
                       end 
@@ -1231,30 +1301,42 @@ describe('クロージャーを使う', function()
                 end 
               });
             end 
-            local primes = sieve(stream.enumFrom(2)); -- 無限の素数列
+            local primes = sieve(Stream.enumFrom(2)); -- 無限の素数列
             -- /* #@range_end(eratosthenes_sieve) */
             -- /* #@range_begin(eratosthenes_sieve_test) */
-            expect(
-              stream.toArray(stream.take(primes)(10))
-            ).to.eql(
-              { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 }
-            );
+            assert.are.same(
+              Stream.toArray(Stream.take(primes)(10)) 
+            , { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 })
+            -- expect(
+            --   stream.toArray(stream.take(primes)(10))
+            -- ).to.eql(
+            --   { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 }
+            -- );
             -- /* #@range_end(eratosthenes_sieve_test) */
 
             -- **リスト7.39** 素数のジェネレータ
             -- /* #@range_begin(prime_generator) */
-            local primes = sieve(stream.enumFrom(2)); -- 無限の素数列
+            local primes = sieve(Stream.enumFrom(2)); -- 無限の素数列
             local primeGenerator = generate(primes);  -- 素数のジェネレータ
             -- /******* テスト ********/
-            expect(primeGenerator()).to.eql(
-              2
-            );
-            expect(primeGenerator()).to.eql(
-              3
-            );
-            expect(primeGenerator()).to.eql(
-              5
-            );
+            assert.are.equal(
+              primeGenerator()
+            , 2)
+            -- expect(primeGenerator()).to.eql(
+            --   2
+            -- );
+            assert.are.equal(
+              primeGenerator()
+            , 3)
+            -- expect(primeGenerator()).to.eql(
+            --   3
+            -- );
+            assert.are.equal(
+              primeGenerator()
+            , 5)
+            -- expect(primeGenerator()).to.eql(
+            --   5
+            -- );
             -- /* #@range_end(prime_generator) */
           end);
         end);

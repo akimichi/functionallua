@@ -65,7 +65,6 @@ list.reverse = function(alist)
     })
   end
   return reverseAux(alist, list.empty());
-  -- return reverseAux(alist, list.empty());
 end
 
 list.toArray = function(alist)
