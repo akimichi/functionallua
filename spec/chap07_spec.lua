@@ -51,16 +51,16 @@ local list  = {
       return pattern.cons(value, alist);
     end
   end,
-  head = function(alist)
-    return list.match(alist, {
-      empty = function(_)
-        return nil;
-      end, 
-      cons = function(head, tail)
-        return head;
-      end 
-    });
-  end,
+  -- head = function(alist)
+  --   return list.match(alist, {
+  --     empty = function(_)
+  --       return nil;
+  --     end, 
+  --     cons = function(head, tail)
+  --       return head;
+  --     end 
+  --   });
+  -- end,
   tail = function(alist)
     return list.match(alist, {
       empty = function(_)
@@ -108,31 +108,17 @@ local list  = {
     end
   end,
   reverse = function(alist)
-    local cons = function(value, alist)
-      return function(pattern)
-        return pattern.cons(value, alist);
-      end
-    end
-    local empty = function(_)
-      return function(pattern)
-        return pattern.empty();
-      end
-    end
-    local match =  function(data, pattern)
-      return data(pattern)
-    end
-
     local function reverseAux(alist, accumulator)
-      return match(alist, {
+      return List.match(alist, {
         empty = function(_)
           return accumulator;  -- 空のリストの場合は終了
         end,
         cons = function(head, tail)
-          return reverseAux(tail, cons(head, accumulator));
+          return reverseAux(tail, List.cons(head, accumulator));
         end
       })
     end
-    return reverseAux(alist, empty());
+    return reverseAux(alist, List.empty());
     -- return reverseAux(alist, list.empty());
   end,
   toArray = function(alist)
@@ -644,12 +630,12 @@ describe('コンビネータで関数を組み合わせる', function()
       it('具体的なlast関数', function()
         -- /* #@range_begin(list_last_recursive) */
         local function last(alist)
-          return list.match(alist, {
+          return List.match(alist, {
             empty = function(_) -- alistが空の場合
               return nil
             end,   
             cons = function(head, tail) -- alistが空でない場合
-              return list.match(tail, {
+              return List.match(tail, {
                 empty = function(_)  -- alistの要素がただ1個の場合
                   return head;
                 end,
@@ -680,17 +666,21 @@ describe('コンビネータで関数を組み合わせる', function()
       it('抽象的なlast関数', function()
         -- /* #@range_begin(list_last_compose) */
         local last = function(alist)
-          return compose(list.head,
-                         list.reverse)(alist);
+          return compose(List.head,
+                         List.reverse)(alist);
         end
         -- /* #@range_end(list_last_compose) */
-        local sequence = list.cons(1,list.cons(2,list.cons(3,list.cons(4,list.empty()))));
-        assert.are.equal(last(sequence), 3)
-        expect(
-          last(sequence)
-        ).to.eql(
-          4
-        );
+        local sequence = List.cons(1, 
+                          List.cons(2,
+                            List.cons(3,
+                              List.cons(4,
+                                List.empty()))));
+        assert.are.equal(last(sequence), 4)
+        -- expect(
+        --   last(sequence)
+        -- ).to.eql(
+        --   4
+        -- );
       end);
       -- **表7.1** 関数合成による様々な関数定義
       -- 
@@ -706,18 +696,18 @@ describe('コンビネータで関数を組み合わせる', function()
         local alwaysOne = function(x)
           return 1;
         end 
-        local alist = list.cons(1,
-                              list.cons(2,
-                                        list.cons(3,
-                                                  list.empty())));
+        local alist = List.cons(1,
+                              List.cons(2,
+                                        List.cons(3,
+                                                  List.empty())));
         -- length関数の定義
         it('length関数の定義', function()
           local alwaysOne = function(x)
             return 1;
           end 
           local sum = function(alist)
-            local sumHelper = function(alist, accumulator)
-              return list.match(alist,{
+            local function sumHelper(alist, accumulator)
+              return List.match(alist,{
                 empty = function(_)
                   return accumulator;
                 end,
@@ -730,42 +720,45 @@ describe('コンビネータで関数を組み合わせる', function()
           end 
           local length = function(alist)
             return compose(sum,
-                           flip(list.map)(alwaysOne))(alist);
+                           flip(List.map)(alwaysOne))(alist);
           end 
           -- /****** テスト *******/
-          expect(
-            length(alist)
-          ).to.eql(
-            3
-          );
+          assert.are.equal(length(alist), 3)
+          -- expect(
+          --   length(alist)
+          -- ).to.eql(
+          --   3
+          -- );
         end);
         -- last関数の定義
         it('last関数の定義', function()
           local last = function(alist)
-            return compose(list.head,
-                           list.reverse)(alist);
+            return compose(List.head,
+                           List.reverse)(alist);
           end 
-          expect(
-            last(alist)
-          ).to.eql(
-            3
-          );
+          assert.are.equal(last(alist), 3)
+          -- expect(
+          --   last(alist)
+          -- ).to.eql(
+          --   3
+          -- );
         end);
         -- init関数の定義
         it('init関数の義', function()
           -- /* init = reverse . tail . reverse  */
           local init = function(alist)
-            return compose(list.reverse,
-                           compose(list.tail,
-                                   list.reverse)
+            return compose(List.reverse,
+                           compose(List.tail,
+                                   List.reverse)
                           )(alist);
           end 
           -- /****** テスト *******/
-          expect(
-            list.toArray(init(alist))
-          ).to.eql(
-            {1,2}
-          );
+          assert.are.same(List.toArray(init(alist)), {1, 2})
+          -- expect(
+          --   list.toArray(init(alist))
+          -- ).to.eql(
+          --   {1,2}
+          -- );
         end);
         -- all関数の定義
         it('all関数の定義', function()
