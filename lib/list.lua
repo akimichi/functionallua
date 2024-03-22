@@ -39,6 +39,36 @@ list.tail = function(alist)
   });
 end  
 
+list.foldr = function(alist)
+  return function(accumulator)
+    return function(callback)
+      return list.match(alist,{
+        empty = function(_)
+          return accumulator;
+        end,
+        cons = function(head, tail)
+          return callback(head)(list.foldr(tail)(accumulator)(callback));
+        end 
+      });
+    end 
+  end;
+end;
+
+list.find = function(alist)
+  return function(predicate) -- 要素を判定する述語関数
+    return list.foldr(alist)(null)(function(item) -- foldrを利用する
+      return function(accumulator)
+        -- /* 要素が見つかった場合、その要素を返す */
+        if(predicate(item) == true) then
+          return item;
+        else
+          return accumulator;
+        end 
+      end
+    end);
+  end 
+end 
+
 -- /* map:: LIST[T] -> FUNC[T -> T] -> LIST[T] */
 list.map = function(alist)
   return function(transform)

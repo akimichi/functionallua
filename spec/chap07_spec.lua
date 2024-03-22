@@ -1381,16 +1381,26 @@ describe('クロージャーを使う', function()
         end;
       end
       -- /* #@range_begin(multipleOf_is_transparent) */
-      expect(
-        multipleOf(2)(4)
-      ).to.eql(
-        multipleOf(2)(4)
-      );
-      expect(
-        multipleOf(3)(5)
-      ).to.eql(
-        multipleOf(3)(5)
-      );
+      assert.are.equal(
+        multipleOf(2)(4) 
+      , 
+        true
+      )
+      -- expect(
+      --   multipleOf(2)(4)
+      -- ).to.eql(
+      --   multipleOf(2)(4)
+      -- );
+      assert.are.equal(
+        multipleOf(3)(5) 
+      , 
+        false
+      )
+      -- expect(
+      --   multipleOf(3)(5)
+      -- ).to.eql(
+      --   multipleOf(3)(5)
+      -- );
       -- /* #@range_end(multipleOf_is_transparent) */
     end);
     -- **リスト7.42** 参照透過性のないクロージャーの例
@@ -1463,22 +1473,36 @@ describe('クロージャーを使う', function()
       end
       -- /***** counterクロージャーを用いたチャーチ数のテスト *****/
       -- /* #@range_begin(church_numeral_counter) */
-      expect(
-        one(counter(0))() -- oneはチャーチ数（@<list>{church_numeral}）の1
-      ).to.eql(
-        1
-      );
-      expect(
+      assert.are.equal(
+        one(counter(0))() -- oneはチャーチ数（@<list>{church_numeral}）の1 
+      , 
+        1)
+
+      -- expect(
+      --   one(counter(0))() -- oneはチャーチ数（@<list>{church_numeral}）の1
+      -- ).to.eql(
+      --   1
+      -- );
+      assert.are.equal(
         two(counter(0))() -- twoはチャーチ数（@<list>{church_numeral}）の2
-      ).to.eql(
-        2
-      );
+      , 
+        2)
+
+      -- expect(
+      --   two(counter(0))() -- twoはチャーチ数（@<list>{church_numeral}）の2
+      -- ).to.eql(
+      --   2
+      -- );
       -- /* #@range_end(church_numeral_counter) */
-      expect(
+      assert.are.equal(
         add(one)(two)(counter(0))()
-      ).to.eql(
-        3
-      );
+      , 
+        3)
+      -- expect(
+      --   add(one)(two)(counter(0))()
+      -- ).to.eql(
+      --   3
+      -- );
     end);
   end);
 end);
@@ -1501,11 +1525,14 @@ describe('関数を渡す', function()
       local doCall = function(arg)
         return succ(arg);  -- succ関数を直接呼び出す
       end 
-      expect(
-        doCall(2)
-      ).to.eql(
-        3
-      );
+      assert.are.equal(
+       doCall(2) 
+      , 3)
+      -- expect(
+      --   doCall(2)
+      -- ).to.eql(
+      --   3
+      -- );
       -- /* #@range_end(direct_call) */
     end);
     -- **リスト7.48** 単純なコールバックの例
@@ -1522,26 +1549,29 @@ describe('関数を渡す', function()
       end 
       -- /* コールバック関数を設定する */
       local doCallback = setupCallback(succ);  
-      expect(
-        doCallback(2) -- 設定されたコールバック関数を実行する
-      ).to.eql(
-        3
-      );
+      assert.are.equal(
+        doCallback(2) -- 設定されたコールバック関数を実行する 
+      , 3)
+      -- expect(
+      --   doCallback(2) -- 設定されたコールバック関数を実行する
+      -- ).to.eql(
+      --   3
+      -- );
       -- /* #@range_end(call_callback) */
     end);
     it('リストのmap関数', function()
       -- **リスト7.49** リストのmap関数の定義
       -- /* #@range_begin(list_map) */
       -- /* map:: FUN[T => T] => LIST[T] =>  LIST[T] */
-      local map = function(callback)
+      local function map(callback)
         return function(alist)
-          return list.match(alist,{
+          return List.match(alist,{
             empty = function(_)
-              return list.empty();
+              return List.empty();
             end,
             cons = function(head, tail)
               -- /* コールバック関数を実行する */
-              return list.cons(callback(head),  
+              return List.cons(callback(head),  
                                map(callback)(tail)); -- 再帰呼び出し
             end 
           });
@@ -1552,28 +1582,34 @@ describe('関数を渡す', function()
       -- **リスト7.50** map関数のテスト
       -- /* #@range_begin(list_map_test) */
       -- /* map処理の対象となる数値のリスト */
-      local numbers = list.cons(1,
-                              list.cons(2,
-                                        list.cons(3,
-                                                  list.empty())));
+      local numbers = List.cons(1,
+                              List.cons(2,
+                                        List.cons(3,
+                                                  List.empty())));
       -- /* 要素を2倍するmap処理 */
       local mapDouble = map(function(n)
         return n * 2;
       end);
-      expect(
-        compose(list.toArray,mapDouble)(numbers)
-      ).to.eql(
-        {2,4,6}
-      );
+      assert.are.same(
+        compose(List.toArray,mapDouble)(numbers)
+      , {2,4,6})
+      -- expect(
+      --   compose(list.toArray,mapDouble)(numbers)
+      -- ).to.eql(
+      --   {2,4,6}
+      -- );
       -- /* 要素を2乗するmap処理 */
       local mapSquare = map(function(n)
         return n * n;
       end);
-      expect(
-        compose(list.toArray,mapSquare)(numbers)
-      ).to.eql(
-        {1,4,9}
-      );
+      assert.are.same(
+        compose(List.toArray,mapSquare)(numbers) 
+      , {1,4,9})
+      -- expect(
+      --   compose(list.toArray,mapSquare)(numbers)
+      -- ).to.eql(
+      --   {1,4,9}
+      -- );
       -- /* #@range_end(list_map_test) */
     end);
   end);
@@ -1582,46 +1618,46 @@ describe('関数を渡す', function()
     describe('コールバックによるリストの再帰関数', function()
       -- **リスト7.51** sum関数の定義
       it('sum関数の定義', function()
-        local list = {
-          match = function(data, pattern)
-            return data(pattern);
-          end,
-          empty = function(_)
-            return function(pattern)
-              return pattern.empty();
-            end 
-          end,
-          cons = function(value, alist)
-            return function(pattern)
-              return pattern.cons(value, alist);
-            end 
-          end, 
+        -- local list = {
+        --   match = function(data, pattern)
+        --     return data(pattern);
+        --   end,
+        --   empty = function(_)
+        --     return function(pattern)
+        --       return pattern.empty();
+        --     end 
+        --   end,
+        --   cons = function(value, alist)
+        --     return function(pattern)
+        --       return pattern.cons(value, alist);
+        --     end 
+        --   end, 
           -- /* #@range_begin(list_sum) */
-          sum = function(alist)
+          local function sum(alist)
             return function(accumulator)
-              return list.match(alist,{
+              return List.match(alist,{
                 empty = function(_)
                   return accumulator;
                 end,
                 cons = function(head, tail)
-                  return list.sum(tail)(accumulator + head);
+                  return sum(tail)(accumulator + head);
                 end 
               });
             end 
-          end,
+          end
           -- /* #@range_end(list_sum) */
           -- **リスト7.52** コールバック関数を用いたsum関数の再定義
           -- /* #@range_begin(list_sum_callback) */
-          sumWithCallback = function(alist)
+          local function sumWithCallback(alist)
             return function(accumulator)
               return function(CALLBACK)  -- コールバック関数を受け取る
-                return list.match(alist,{
+                return List.match(alist,{
                   empty = function(_)
                     return accumulator;
                   end,
                   cons = function(head, tail)
                     return CALLBACK(head)( -- コールバック関数を呼び出す
-                      list.sumWithCallback(tail)(accumulator)(CALLBACK)
+                      sumWithCallback(tail)(accumulator)(CALLBACK)
                     );
                   end 
                 });
@@ -1629,74 +1665,80 @@ describe('関数を渡す', function()
             end
           end
           -- /* #@range_end(list_sum_callback) */
-        };
+        -- };
 
         -- **リスト7.53** sumWithCallback関数のテスト
         -- /* #@range_begin(list_sum_callback_test) */
-        local numbers = list.cons(1, 
-                                list.cons(2,
-                                          list.cons(3,
-                                                    list.empty())));
+        local numbers = List.cons(1, 
+                                List.cons(2,
+                                          List.cons(3,
+                                                    List.empty())));
         -- /* sumWithCallback関数に渡すコールバック関数 */
         local callback = function(n)
           return function(m)
             return n + m;
           end 
         end 
-        expect(
-          list.sumWithCallback(numbers)(0)(callback)
-        ).to.eql(
-          6  -- 1 + 2 + 3 = 6
-        );
+        assert.are.equal(
+          sumWithCallback(numbers)(0)(callback)
+        , 6)
+        -- expect(
+        --   list.sumWithCallback(numbers)(0)(callback)
+        -- ).to.eql(
+        --   6  -- 1 + 2 + 3 = 6
+        -- );
         -- /* #@range_end(list_sum_callback_test) */
-        expect(
-          list.sum(numbers)(0)
-        ).to.eql(
-          6
-        );
+        assert.are.equal(
+          sum(numbers)(0)
+        , 6)
+        -- expect(
+        --   list.sum(numbers)(0)
+        -- ).to.eql(
+        --   6
+        -- );
       end);
       -- **リスト7.54** length関数の定義
       it('length関数の定義', function()
-        local list = {
-          match = function(data, pattern)
-            return data(pattern);
-          end,
-          empty = function(_)
-            return function(pattern)
-              return pattern.empty();
-            end 
-          end,
-          cons = function(value, alist)
-            return function(pattern)
-              return pattern.cons(value, alist);
-            end
-          end,
+        -- local list = {
+        --   match = function(data, pattern)
+        --     return data(pattern);
+        --   end,
+        --   empty = function(_)
+        --     return function(pattern)
+        --       return pattern.empty();
+        --     end 
+        --   end,
+        --   cons = function(value, alist)
+        --     return function(pattern)
+        --       return pattern.cons(value, alist);
+        --     end
+        --   end,
           -- /* #@range_begin(list_length) */
-          length = function(alist)
+          local function length(alist)
             return function(accumulator)
-              return list.match(alist,{
+              return List.match(alist,{
                 empty = function(_)
                   return accumulator;
                 end, 
                 cons = function(head, tail)
-                  return list.length(tail)(accumulator + 1);
+                  return length(tail)(accumulator + 1);
                 end
               });
             end
-          end,
+          end
           -- /* #@range_end(list_length) */
           -- **リスト7.55** length関数の再定義
           -- /* #@range_begin(list_length_callback) */
-          lengthWithCallback = function(alist)
+          local function lengthWithCallback(alist)
             return function(accumulator)
               return function(CALLBACK)  -- コールバック関数を受け取る
-                return list.match(alist,{
+                return List.match(alist,{
                   empty = function(_)
                     return accumulator;
                   end,
                   cons = function(head, tail)
                     return CALLBACK(head)(
-                      list.lengthWithCallback(tail)(accumulator)(CALLBACK)
+                      lengthWithCallback(tail)(accumulator)(CALLBACK)
                     );
                   end 
                 });
@@ -1704,16 +1746,19 @@ describe('関数を渡す', function()
             end;
           end
           -- /* #@range_end(list_length_callback) */
-        };
-        local numbers = list.cons(1, 
-                                list.cons(2,
-                                          list.cons(3,
-                                                    list.empty())));
-        expect(
-          list.length(numbers)(0)
-        ).to.eql(
-          3
-        );
+        -- };
+        local numbers = List.cons(1, 
+                                List.cons(2,
+                                          List.cons(3,
+                                                    List.empty())));
+        assert.are.equal(
+          length(numbers)(0) 
+        , 3)
+        -- expect(
+        --   list.length(numbers)(0)
+        -- ).to.eql(
+        --   3
+        -- );
         -- **リスト7.56** lengthWithCallback関数でリストの長さをテストする
         -- /* #@range_begin(list_length_callback_test) */
         -- /* lengthWithCallback関数に渡すコールバック関数 */
@@ -1722,21 +1767,24 @@ describe('関数を渡す', function()
             return 1 + m;
           end;
         end;
-        expect(
-          list.lengthWithCallback(numbers)(0)(callback)
-        ).to.eql(
-          3
-        );
+        assert.are.equal(
+          lengthWithCallback(numbers)(0)(callback) 
+        , 3)
+        -- expect(
+        --   list.lengthWithCallback(numbers)(0)(callback)
+        -- ).to.eql(
+        --   3
+        -- );
         -- /* #@range_end(list_length_callback_test) */
       end);
     end);
     describe('畳み込み関数', function()
       -- **リスト7.58** リストの畳み込み関数
       -- /* #@range_begin(list_foldr) */
-      local foldr = function(alist)
+      local function foldr(alist)
         return function(accumulator)
           return function(callback)
-            return list.match(alist,{
+            return List.match(alist,{
               empty = function(_)
                 return accumulator;
               end,
@@ -1761,12 +1809,15 @@ describe('関数を渡す', function()
         end;
         -- /* #@range_end(foldr_sum) */
         -- /* list = [1,2,3,4] */
-        local seq = list.cons(1,list.cons(2,list.cons(3,list.cons(4,list.empty()))));
-        expect(
-          sum(seq)
-        ).to.eql(
-          10  -- 1 + 2 + 3 + 4 = 10
-        );
+        local seq = List.cons(1,List.cons(2,List.cons(3,List.cons(4,List.empty()))));
+        assert.are.equal(
+          sum(seq) 
+        , 10)
+        -- expect(
+        --   sum(seq)
+        -- ).to.eql(
+        --   10  -- 1 + 2 + 3 + 4 = 10
+        -- );
       end);
       -- /* foldr関数によるlength関数 */
       it("foldrでlength関数を作る", function()
@@ -1780,12 +1831,15 @@ describe('関数を渡す', function()
         end
         -- /* #@range_end(foldr_length) */
         -- /* list = [1,2,3,4] */
-        local seq = list.cons(1,list.cons(2,list.cons(3,list.cons(4,list.empty()))));
-        expect(
-          length(seq)
-        ).to.eql(
-          4
-        );
+        local seq = List.cons(1,List.cons(2,List.cons(3,List.cons(4,List.empty()))));
+        assert.are.equal(
+         length(seq) 
+        , 4)
+        -- expect(
+        --   length(seq)
+        -- ).to.eql(
+        --   4
+        -- );
       end);
       -- **表7.2** 反復処理における蓄積変数の初期値とコールバック関数の関係
       --
@@ -1809,15 +1863,18 @@ describe('関数を渡す', function()
           end 
           -- /********* テスト **********/
           -- /* list = [1,2,3] */
-          local seq = list.cons(1,
-                              list.cons(2,
-                                        list.cons(3,
-                                                  list.empty())));
-          expect(
-            product(seq)
-          ).to.eql(
-            6 -- 1 * 2 * 3 = 6
-          );
+          local seq = List.cons(1,
+                              List.cons(2,
+                                        List.cons(3,
+                                                  List.empty())));
+          assert.are.equal(
+           product(seq)
+          , 6)
+          -- expect(
+          --   product(seq)
+          -- ).to.eql(
+          --   6 -- 1 * 2 * 3 = 6
+          -- );
           -- /* #@range_end(foldr_product) */
         end);
         it("foldrでallを作る", function()
@@ -1829,24 +1886,30 @@ describe('関数を渡す', function()
             end);
           end 
           -- /********* テスト **********/
-          local allTrueList = list.cons(true,
-                                      list.cons(true,
-                                                list.cons(true,
-                                                          list.empty())));
-          expect(
-            all(allTrueList)
-          ).to.eql(
-            true
-          );
-          local someFalseList = list.cons(true,
-                                        list.cons(false,
-                                                  list.cons(true,
-                                                            list.empty())));
-          expect(
-            all(someFalseList)
-          ).to.eql(
-            false
-          );
+          local allTrueList = List.cons(true,
+                                      List.cons(true,
+                                                List.cons(true,
+                                                          List.empty())));
+          assert.are.equal(
+            all(allTrueList) 
+          , true)
+          -- expect(
+          --   all(allTrueList)
+          -- ).to.eql(
+          --   true
+          -- );
+          local someFalseList = List.cons(true,
+                                        List.cons(false,
+                                                  List.cons(true,
+                                                            List.empty())));
+          assert.are.equal(
+            all(someFalseList) 
+          , false)
+          -- expect(
+          --   all(someFalseList)
+          -- ).to.eql(
+          --   false
+          -- );
         end);
         it("foldrでanyを作る", function()
           local any = function(alist)
@@ -1857,24 +1920,30 @@ describe('関数を渡す', function()
             end);
           end 
           -- /********* テスト **********/
-          local allTrueList = list.cons(true,
-                                      list.cons(true,
-                                                list.cons(true,
-                                                          list.empty())));
-          expect(
-            any(allTrueList)
-          ).to.eql(
-            true
-          );
-          local someFalseList = list.cons(true,
-                                        list.cons(false,
-                                                  list.cons(true,
-                                                            list.empty())));
-          expect(
-            any(someFalseList)
-          ).to.eql(
-            true
-          );
+          local allTrueList = List.cons(true,
+                                      List.cons(true,
+                                                List.cons(true,
+                                                          List.empty())));
+          assert.are.equal(
+           any(allTrueList) 
+          , true)
+          -- expect(
+          --   any(allTrueList)
+          -- ).to.eql(
+          --   true
+          -- );
+          local someFalseList = List.cons(true,
+                                        List.cons(false,
+                                                  List.cons(true,
+                                                            List.empty())));
+          assert.are.equal(
+            any(someFalseList) 
+          , true)
+          -- expect(
+          --   any(someFalseList)
+          -- ).to.eql(
+          --   true
+          -- );
         end);
       end);
       -- **リス7.60** foldr関数によるreverse関数の定義
@@ -1932,16 +2001,19 @@ describe('関数を渡す', function()
           -- /* #@range_end(foldr_reverse) */
         };
         -- /* list = [1,2,3,4] */
-        local seq = list.cons(1,
-                            list.cons(2,
-                                      list.cons(3,
-                                                list.cons(4,
-                                                          list.empty()))));
-        expect(
-          list.toArray(list.reverse(seq))
-        ).to.eql(
-          { 4, 3, 2, 1}
-        );
+        local seq = List.cons(1,
+                            List.cons(2,
+                                      List.cons(3,
+                                                List.cons(4,
+                                                          List.empty()))));
+        assert.are.same(
+         List.toArray(List.reverse(seq)) 
+        , { 4, 3, 2, 1})
+        -- expect(
+        --   list.toArray(list.reverse(seq))
+        -- ).to.eql(
+        --   { 4, 3, 2, 1}
+        -- );
       end);
       -- **リスト7.61** foldr関数によるfind関数の定義
       it("foldr関数によるfind関数の定義", function()
@@ -1978,15 +2050,18 @@ describe('関数を渡す', function()
           -- /* #@range_end(foldr_find) */
         };
         -- /******** テスト *********/
-        local numbers = list.cons(1,
-                                list.cons(2,
-                                          list.cons(3,
-                                                    list.empty())));
-        expect(
-          list.find(numbers)(even) -- 最初に登場する偶数の要素を探す
-        ).to.eql(
-          2
-        );
+        local numbers = List.cons(1,
+                                List.cons(2,
+                                          List.cons(3,
+                                                    List.empty())));
+        assert.are.same(
+          List.find(numbers)(even) -- 最初に登場する偶数の要素を探す 
+        , 2)
+        -- expect(
+        --   list.find(numbers)(even) -- 最初に登場する偶数の要素を探す
+        -- ).to.eql(
+        --   2
+        -- );
       end);
       it("foldrで map関数を作る", function()
         local double = function(number)
