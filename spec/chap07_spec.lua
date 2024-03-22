@@ -2511,34 +2511,40 @@ describe('モナドを作る', function()
   end
   -- ### <section id='identity-monad'>恒等モナド</section>
   describe('恒等モナド', function()
+    local ID = require("lib/id")
     -- **リスト7.85** 恒等モナドの定義
-    local ID = {
-      -- /* #@range_begin(identity_monad) */
-      -- /* unit:: T => ID[T] */
-      unit = function(value)  -- 単なる identity関数と同じ
-        return value;
-      end,
-      -- /* flatMap:: ID[T] => FUN[T => ID[T]] => ID[T] */
-      flatMap = function(instanceM)
-        return function(transform)
-          return transform(instanceM); -- 単なる関数適用と同じ
-        end;
-      end,
-      -- /* #@range_end(identity_monad) */
-      compose = function(f, g)
-        return function(x)
-          return ID.flatMap(f(x))(g);
-        end
-      end
-    };
+    -- local ID = {
+    --   -- /* #@range_begin(identity_monad) */
+    --   -- /* unit:: T => ID[T] */
+    --   unit = function(value)  -- 単なる identity関数と同じ
+    --     return value;
+    --   end,
+    --   -- /* flatMap:: ID[T] => FUN[T => ID[T]] => ID[T] */
+    --   flatMap = function(instanceM)
+    --     return function(transform)
+    --       return transform(instanceM); -- 単なる関数適用と同じ
+    --     end;
+    --   end,
+    --   -- /* #@range_end(identity_monad) */
+    --   compose = function(f, g)
+    --     return function(x)
+    --       return ID.flatMap(f(x))(g);
+    --     end
+    --   end
+    -- };
     -- **リスト7.86** 恒等モナドunit関数のテスト
     it("恒等モナドunit関数のテスト", function()
       -- /* #@range_begin(identity_monad_unit_test) */
-      expect(
+      assert.are.equal(
         ID.unit(1)
-      ).to.eql(
-        1
-      );
+      , 
+       1 
+      )
+      -- expect(
+      --   ID.unit(1)
+      -- ).to.eql(
+      --   1
+      -- );
       -- /* #@range_end(identity_monad_unit_test) */
     end);
     -- **リスト7.87** 恒等モナドflatMap関数のテスト
@@ -2547,20 +2553,27 @@ describe('モナドを作る', function()
         return n + 1;
       end;
       -- /* #@range_begin(identity_monad_flatMap_test) */
-      expect(
+      assert.are.equal(
         ID.flatMap(ID.unit(1))(function(one)
           return ID.unit(succ(one));
         end)
-      ).to.eql(
+      , 
         succ(1)
-      );
+      )
+      -- expect(
+      --   ID.flatMap(ID.unit(1))(function(one)
+      --     return ID.unit(succ(one));
+      --   end)
+      -- ).to.eql(
+      --   succ(1)
+      -- );
       -- /* #@range_end(identity_monad_flatMap_test) */
       local double = function(m)
         return m * 2;
       end
       -- **リスト7.88** flatMapと関数合成の類似性
       -- /* #@range_begin(flatMap_and_composition) */
-      expect(
+      assert.are.equal(
         ID.flatMap(ID.unit(1))(function(one)
           -- /* succ関数を適用する */
           return ID.flatMap(ID.unit(succ(one)))(function(two)
@@ -2568,9 +2581,20 @@ describe('モナドを作る', function()
             return ID.unit(double(two));  
           end);
         end)
-      ).to.eql(
+      , 
         compose(double,succ)(1)
-      );
+      )
+      -- expect(
+      --   ID.flatMap(ID.unit(1))(function(one)
+      --     -- /* succ関数を適用する */
+      --     return ID.flatMap(ID.unit(succ(one)))(function(two)
+      --       -- /* double関数を適用する */
+      --       return ID.unit(double(two));  
+      --     end);
+      --   end)
+      -- ).to.eql(
+      --   compose(double,succ)(1)
+      -- );
       -- /* #@range_end(flatMap_and_composition) */
     end);
     -- **リスト7.89**  恒等モナドのモナド則
@@ -2581,11 +2605,16 @@ describe('モナドを作る', function()
         local instanceM = ID.unit(1);
         -- 右単位元則
         -- /* #@range_begin(identity_monad_laws_right_unit_law) */
-        expect(
+        assert.are.equal(
           ID.flatMap(instanceM)(ID.unit)
-        ).to.eql(
+        , 
           instanceM
-        );
+        )
+        -- expect(
+        --   ID.flatMap(instanceM)(ID.unit)
+        -- ).to.eql(
+        --   instanceM
+        -- );
         -- /* #@range_end(identity_monad_laws_right_unit_law) */
       end);
       it("flatMap(unit(value))(f) == f(value)", function()
@@ -2595,11 +2624,16 @@ describe('モナドを作る', function()
         end 
         -- 左単位元則
         -- /* #@range_begin(identity_monad_laws_left_unit_law) */
-        expect(
+        assert.are.equal(
           ID.flatMap(ID.unit(1))(f)
-        ).to.eql(
+        , 
           f(1)
-        );
+        )
+        -- expect(
+        --   ID.flatMap(ID.unit(1))(f)
+        -- ).to.eql(
+        --   f(1)
+        -- );
         -- /* #@range_end(identity_monad_laws_left_unit_law) */
       end);
       it("flatMap(flatMap(instanceM)(f))(g) == flatMap(instanceM)((x) => flatMap(f(x))(g))", function()
@@ -2610,7 +2644,7 @@ describe('モナドを作る', function()
               return flatMap(f(x))(g); } 
            } 
         */
-        --]]
+        ]]
         local f = function(n)
           return ID.unit(n + 1);
         end;
@@ -2620,13 +2654,19 @@ describe('モナドを作る', function()
         local instanceM = ID.unit(1);
         -- 結合法則
         -- /* #@range_begin(identity_monad_laws_associative_law) */
-        expect(
-          ID.flatMap(ID.flatMap(instanceM)(f))(g)
-        ).to.eql(
+        assert.are.equal(
+          ID.flatMap(ID.flatMap(instanceM)(f))(g), 
           ID.flatMap(instanceM)(function(x)
             return ID.flatMap(f(x))(g);
           end)
-        );
+        )
+        -- expect(
+        --   ID.flatMap(ID.flatMap(instanceM)(f))(g)
+        -- ).to.eql(
+        --   ID.flatMap(instanceM)(function(x)
+        --     return ID.flatMap(f(x))(g);
+        --   end)
+        -- );
         -- /* #@range_end(identity_monad_laws_associative_law) */
         -- /* #@range_end(identity_monad_laws) */
       end);
@@ -2693,28 +2733,35 @@ describe('モナドを作る', function()
       };
       -- **リスト7.93** Maybeモナドの利用法
       it("Maybeモナドの利用法", function()
+        local Maybe = require("lib/maybe")
         -- /* #@range_begin(maybe_monad_add_test) */
         -- /* 足し算を定義する */
         local add = function(maybeA,maybeB)
-          return MAYBE.flatMap(maybeA)(function(a)
-            return MAYBE.flatMap(maybeB)(function(b)
-              return MAYBE.unit(a + b);
+          return Maybe.flatMap(maybeA)(function(a)
+            return Maybe.flatMap(maybeB)(function(b)
+              return Maybe.unit(a + b);
             end);
           end);
         end;
-        local justOne = maybe.just(1);
-        local justTwo = maybe.just(2);
+        local justOne = Maybe.just(1);
+        local justTwo = Maybe.just(2);
+        assert.are.equal(
+           Maybe.getOrElse(add(justOne,justOne))(nil)
+           , 2)
 
-        expect(
-          MAYBE.getOrElse(add(justOne,justOne))(nil) 
-        ).to.eql(
-          2
-        );
-        expect(
-          MAYBE.getOrElse(add(justOne,maybe.nothing()))(nil)
-        ).to.eql(
-          null
-        );
+        -- expect(
+        --   MAYBE.getOrElse(add(justOne,justOne))(nil) 
+        -- ).to.eql(
+        --   2
+        -- );
+        assert.are.equal(
+          Maybe.getOrElse(add(justOne,maybe.nothing()))(nil) 
+           , nil)
+        -- expect(
+        --   MAYBE.getOrElse(add(justOne,maybe.nothing()))(nil)
+        -- ).to.eql(
+        --   null
+        -- );
         -- /* #@range_end(maybe_monad_add_test) */
       end);
     end);
@@ -2722,6 +2769,7 @@ describe('モナドを作る', function()
   -- ### <section id='io-monad'>IOモナドで副作用を閉じ込める</section>
   -- > 参考資料: https:--en.wikibooks.org/wiki/Haskell/Understanding_monads/IO
   describe('IOモナドで副作用を閉じ込める', function()
+    local IO = require("lib/io")
     local match = function(data, pattern)
       return data(pattern);
     end 
@@ -2792,19 +2840,23 @@ describe('モナドを作る', function()
       }; -- IO monad
       IO.println = function(message)
         return function(world)  -- IOモナドを返す
-          console.log(message);
-          return IO.unit(null)(world);
+          --console.log(message);
+          print(message)
+          return IO.unit(nil)(world);
         end;
       end 
       -- **リスト7.98** run関数の利用法
       -- /* #@range_begin(run_println) */
       -- /* 初期の外界に null をバインドする */
       local initialWorld = nil; 
-      expect(
-        IO.run(IO.println("我輩は猫である"))(initialWorld)
-      ).to.eql(
-        nil
-      );
+      assert.are.equal(
+        IO.run(IO.println("我輩は猫である"))(initialWorld), 
+        nil)
+      -- expect(
+      --   IO.run(IO.println("我輩は猫である"))(initialWorld)
+      -- ).to.eql(
+      --   nil
+      -- );
       --/* #@range_end(run_println) */
     end);
     describe('外界を引数に持たないIOモナド', function()
@@ -2868,12 +2920,16 @@ describe('モナドを作る', function()
       -- **リスト7.100** run関数の利用法
       it('run関数の利用法', function()
         -- /* #@range_begin(run_println_without_world) */
-        expect(
+        assert.are.equal(
           -- /* 外界を指定する必要はありません */
           IO.run(IO.println("名前はまだない")) 
-        ).to.eql(
-          nil
-        );
+        , nil)
+        -- expect(
+        --   -- /* 外界を指定する必要はありません */
+        --   IO.run(IO.println("名前はまだない")) 
+        -- ).to.eql(
+        --   nil
+        -- );
         -- /* #@range_end(run_println_without_world) */
       end);
       -- #### IOアクションを合成する
