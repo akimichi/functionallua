@@ -2068,26 +2068,31 @@ describe('関数を渡す', function()
           return number * 2;
         end 
         -- /* #@range_begin(foldr_map) */
-        local map = function(alist)
+        local function map(alist)
           return function(callback) -- 個々の要素を変換するコールバック関数
-            return foldr(alist)(list.empty())(function(item)
+            return foldr(alist)(List.empty())(function(item)
               return function(accumulator)
-                return list.cons(callback(item), accumulator);
+                return List.cons(callback(item), accumulator);
               end
             end);
           end
         end 
         -- /****** テスト ******/
         -- /* list = [1,2,3] */
-        local seq = list.cons(1,
-                            list.cons(2,
-                                      list.cons(3,
-                                                list.empty())));
-        expect(
-          list.toArray(map(seq)(double))
-        ).to.eql(
-          { 2, 4, 6} -- 2 * [1,2,3] = [2,4,6]
-        );
+        local seq = List.cons(1,
+                            List.cons(2,
+                                      List.cons(3,
+                                                List.empty())));
+        assert.are.same(
+          List.toArray(map(seq)(double))
+        ,  
+          { 2, 4, 6}
+        )
+        -- expect(
+        --   List.toArray(map(seq)(double))
+        -- ).to.eql(
+        --   { 2, 4, 6} -- 2 * [1,2,3] = [2,4,6]
+        -- );
         -- /* #@range_end(foldr_map) */
       end);
     end);
@@ -2097,13 +2102,20 @@ describe('関数を渡す', function()
       -- **リスト7.62** reduceメソッドによるfromArray関数
       it("reduceメソッドによるfromArray関数", function()
         -- /* #@range_begin(list_fromArray) */
-        local fromArray = function(array)
-          return array.reduce(function(accumulator, item)
-            return list.append(accumulator)(list.cons(item, list.empty()));
-          end, list.empty());
+        local Array = require("lib/array")
+        local function fromArray(anArray)
+          return Array.reduce(anArray, function(item,  accumulator)
+            return List.append(accumulator)(List.cons(item, List.empty()));
+            -- return List.append(List.cons(item, List.empty()))(accumulator)
+          end, List.empty());
         end;
         -- /******* テスト *******/
         local theList = fromArray({0,1,2,3});
+        assert.are.same(
+         List.toArray(theList) 
+        ,  
+          { 2, 4, 6}
+        )
         expect(
           list.toArray(theList)
         ).to.eql(
