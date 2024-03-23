@@ -2100,13 +2100,27 @@ describe('関数を渡す', function()
     -- > 参考資料: https:--developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
     describe("コラム：配列の畳み込み関数", function()
       -- **リスト7.62** reduceメソッドによるfromArray関数
+      it("reduceメソッドの検証", function()
+        local Array = require("lib/array")
+        local anArray = {1,2,3}
+        local function sum(anArray)
+          return Array.reduce(anArray, function(item,  accumulator)
+            return item + accumulator
+          end,0)
+        end
+        assert.are.equal(
+         sum({1,2,3})
+        ,  
+          6  
+          )
+      end)
       it("reduceメソッドによるfromArray関数", function()
         -- /* #@range_begin(list_fromArray) */
         local Array = require("lib/array")
         local function fromArray(anArray)
           return Array.reduce(anArray, function(item,  accumulator)
-            return List.append(accumulator)(List.cons(item, List.empty()));
-            -- return List.append(List.cons(item, List.empty()))(accumulator)
+            assert(item)
+            return List.cons(item, accumulator)
           end, List.empty());
         end;
         -- /******* テスト *******/
@@ -2114,13 +2128,13 @@ describe('関数を渡す', function()
         assert.are.same(
          List.toArray(theList) 
         ,  
-          { 2, 4, 6}
-        )
-        expect(
-          list.toArray(theList)
-        ).to.eql(
           {0,1,2,3}
-        );
+        )
+        -- expect(
+        --   list.toArray(theList)
+        -- ).to.eql(
+        --   {0,1,2,3}
+        -- );
         -- /* #@range_end(list_fromArray) */
       end);
     end);

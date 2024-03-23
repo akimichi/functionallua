@@ -54,18 +54,20 @@ list.foldr = function(alist)
   end;
 end;
 
-list.append = function(xs, ys)
-  return list.match(xs,{
-    -- /* emptyの場合は、終了条件 */
-    empty = function(_)
-      return ys; -- xsが空の場合は、ysを返す
-    end,
-    -- /* consの場合は、append関数を再帰的に呼び出す */
-    cons = function(head, tail)
-      -- /* xsとysを連結させる */
-      return list.cons(head, list.append(tail,ys));
-    end 
-  });
+list.append = function(xs)
+  return function(ys)
+    return list.match(xs,{
+      -- /* emptyの場合は、終了条件 */
+      empty = function(_)
+        return ys; -- xsが空の場合は、ysを返す
+      end,
+      -- /* consの場合は、append関数を再帰的に呼び出す */
+      cons = function(head, tail)
+        -- /* xsとysを連結させる */
+        return list.cons(head, list.append(tail,ys));
+      end 
+    });
+  end
 end 
 
 list.find = function(alist)

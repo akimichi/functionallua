@@ -1,15 +1,17 @@
 local array = {}
 
-array.reduce = function(seq,  glue,  accumulator)
-  if(#seq == 0) then
+array.reduce = function(anArray,  callback,  accumulator)
+  if(#anArray == 0) then
     return accumulator
-  elseif(#seq == 1) then
-    return glue(head,  accumulator)
+  -- elseif(#anArray == 1) then
+  --   local head = anArray[1]
+  --   return callback(head,  array.reduce({}, callback,  accumulator))
   else
-    local head = seq[1]
-    print(head)
-    local tail = { select(2, table.unpack(seq)) }
-    return glue(head,  array.reduce(tail, glue,  accumulator))
+    local head = anArray[1]
+    assert(head)
+    -- print(head)
+    local tail = { select(2, table.unpack(anArray)) }
+    return callback(head,  array.reduce(tail, callback,  accumulator))
   end
 
 end
