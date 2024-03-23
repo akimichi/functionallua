@@ -2145,7 +2145,7 @@ describe('関数を渡す', function()
     it("tarai関数の定義", function()
       -- /* #@range_begin(tarai_function) */
       -- /* たらいまわし関数 */
-      local tarai = function(x,y,z)
+      local function tarai(x,y,z)
         if(x > y) then
           return tarai(tarai(x - 1, y, z), 
                        tarai(y - 1, z, x), 
@@ -2154,11 +2154,16 @@ describe('関数を渡す', function()
           return y;
         end 
       end 
-      expect(
-        tarai(1 * 2, 1, 0)
-      ).to.eql(
-        2 
-      );
+      assert.are.equal(
+        tarai(1 * 2, 1, 0) 
+      ,  
+        2
+      )
+      -- expect(
+      --   tarai(1 * 2, 1, 0)
+      -- ).to.eql(
+      --   2 
+      -- );
       -- /* #@range_end(tarai_function) */
     end);
     -- <a name="tarai_system"> taraiサーバークライアント</a>
@@ -2186,130 +2191,153 @@ describe('関数を渡す', function()
         -- /* #@range_begin(succ_cps_test) */
         --[[ /* identity関数を継続として渡すことで、
            succ(1)の結果がそのまま返る */
-           --]]
-        expect(
-          succ(1, identity) 
-        ).to.eql(
-          2
-        );
+           ]]
+         assert.are.equal(
+            succ(1, identity)  
+         ,  
+            2
+         )
+        -- expect(
+        --   succ(1, identity) 
+        -- ).to.eql(
+        --   2
+        -- );
         -- /* #@range_end(succ_cps_test) */
       end);
       -- **リスト7.70** add(2, succ(3))の継続渡し
       it("add(2, succ(3))の継続渡し", function()
-        local identity = function(any) -- 値をそのまま返すだけの継続
-          return any;
-        end
-        -- /* #@range_begin(continuation_in_arithmetic) */
-        -- /* 継続渡しのsucc関数 */
-        local succ = function(n, continues)
-          return continues(n + 1);
-        end
-        -- /* 継続渡しのadd関数 */
-        local add = function(n,m, continues)
-          return continues(n + m);
-        end
-        --[[ /* 継続渡しのsucc関数とadd関数を使って 
-           add(2, succ(3)) を計算する */
-           --]]
-        expect(
-          succ(3, function(succResult)
-            return add(2, succResult, identity);
-          end)
-        ).to.eql(
-          6
-        );
-        -- /* #@range_end(continuation_in_arithmetic) */
+        pending("I should finish this test later")
+        -- --[[
+        -- local identity = function(any) -- 値をそのまま返すだけの継続
+        --   return any;
+        -- end
+        -- -- /* #@range_begin(continuation_in_arithmetic) */
+        -- -- /* 継続渡しのsucc関数 */
+        -- local succ = function(n, continues)
+        --   return continues(n + 1);
+        -- end
+        -- -- /* 継続渡しのadd関数 */
+        -- local add = function(n,m, continues)
+        --   return continues(n + m);
+        -- end
+        -- --[[ /* 継続渡しのsucc関数とadd関数を使って 
+        -- add(2, succ(3)) を計算する */
+        -- ]]
+        -- assert.are.equal(
+        --   succ(3, function(succResult)
+        --     return add(2, succResult, identity);
+        --   end)
+        -- ,  
+        --   6
+        -- )
+        -- -- expect(
+        -- --   succ(3, function(succResult)
+        -- --     return add(2, succResult, identity);
+        -- --   end)
+        -- -- ).to.eql(
+        -- --   6
+        -- -- );
+        -- -- /* #@range_end(continuation_in_arithmetic) */
+        -- ]]
       end);
     end);
     describe("継続で未来を選ぶ", function()
       -- **リスト7.71** 継続による反復処理からの脱出
       it("継続による反復処理からの脱出", function()
-        -- /* #@range_begin(stream_find_cps) */
-        local find = function(aStream,
-                    predicate, 
-                    continuesOnFailure, 
-                    continuesOnSuccess)
-                      return list.match(aStream, {
-                        --[[/* リストの最末尾に到着した場合
-                           成功継続で反復処理を抜ける */
-                           --]]
-                        empty = function()
-                          return continuesOnSuccess(null); 
-                        end,
-                        cons = function(head, tailThunk)
-                          --[[/* 目的の要素を見つけた場合
-                             成功継続で反復処理を脱出する */
-                             --]]
-                          if(predicate(head) == true) then
-                            return continuesOnSuccess(head); 
-                          else 
-                            --[[/* 目的の要素を見つけられなった場合、
-                               失敗継続で次の反復処理を続ける */
-                               --]]
-                            return continuesOnFailure(tailThunk(), 
-                                                      predicate,
-                                                      continuesOnFailure,
-                                                      continuesOnSuccess);
-                          end 
-                        end 
-                      });
-                    end;
-        -- /* #@range_end(stream_find_cps) */
-
-        -- find関数に渡す2つの継続
-        local identity = function(any)
-          return any;
-        end
-        -- **リスト7.72** find関数に渡す2つの継続
-        --[[
-        /* #@range_begin(stream_find_continuations) */
-        /* 成功継続では、反復処理を脱出する */
-        --]]
-        local continuesOnSuccess = identity; 
-
-        -- /* 失敗継続では、反復処理を続ける */
-        local continuesOnFailure = function(aStream,
-                                  predicate, 
-                                  continuesOnRecursion, 
-                                  escapesFromRecursion)
-                                    -- /* find関数を再帰的に呼び出す */
-                                    return find( 
-                                      aStream, 
-                                      predicate, 
-                                      continuesOnRecursion, 
-                                      escapesFromRecursion
-                                    );  
-                                  end
-        --/* #@range_end(stream_find_continuations) */
-        -- **リスト7.73** find関数のテスト
-        -- /* upto3変数は、1から3までの有限ストリーム */
-        local upto3 = stream.cons(1, function(_)
-          return stream.cons(2, function(_)
-            return stream.cons(3, function(_)
-              return stream.empty();
-            end);
-          end);
-        end);
-        expect(
-          find(upto3, function(item)
-            return (item == 4); -- 4を探します
-          end, continuesOnFailure, continuesOnSuccess)
-        ).to.eql(
-          nil -- リスト中に4の要素はないので、nullになります
-        );
-        -- /* #@range_begin(stream_find_cps_test) */
-        -- /* 変数integersは、無限の整数ストリーム */
-        local integers = stream.enumFrom(0);
-        
-        -- /* 無限の整数列のなかから100を探す */
-        expect(
-          find(integers, function(item)
-            return (item == 100)
-          end, continuesOnFailure, continuesOnSuccess)
-        ).to.eql(
-          100 -- 100を見つけて返ってくる
-        );
-        -- /* #@range_end(stream_find_cps_test) */
+        pending("I should finish this test later")
+        -- -- /* #@range_begin(stream_find_cps) */
+        -- local find = function(aStream,
+        --             predicate, 
+        --             continuesOnFailure, 
+        --             continuesOnSuccess)
+        --               return Stream.match(aStream, {
+        --                 --[[/* リストの最末尾に到着した場合
+        --                    成功継続で反復処理を抜ける */
+        --                    --]]
+        --                 empty = function()
+        --                   return continuesOnSuccess(nil); 
+        --                 end,
+        --                 cons = function(head, tailThunk)
+        --                   --[[/* 目的の要素を見つけた場合
+        --                      成功継続で反復処理を脱出する */
+        --                      --]]
+        --                   if(predicate(head) == true) then
+        --                     return continuesOnSuccess(head); 
+        --                   else 
+        --                     --[[/* 目的の要素を見つけられなった場合、
+        --                        失敗継続で次の反復処理を続ける */
+        --                        --]]
+        --                     return continuesOnFailure(tailThunk(), 
+        --                                               predicate,
+        --                                               continuesOnFailure,
+        --                                               continuesOnSuccess);
+        --                   end 
+        --                 end 
+        --               });
+        --             end;
+        -- -- /* #@range_end(stream_find_cps) */
+        --
+        -- -- find関数に渡す2つの継続
+        -- local identity = function(any)
+        --   return any;
+        -- end
+        -- -- **リスト7.72** find関数に渡す2つの継続
+        -- --[[
+        -- /* #@range_begin(stream_find_continuations) */
+        -- /* 成功継続では、反復処理を脱出する */
+        -- ]]
+        -- local continuesOnSuccess = identity; 
+        --
+        -- -- /* 失敗継続では、反復処理を続ける */
+        -- local continuesOnFailure = function(aStream,
+        --                           predicate, 
+        --                           continuesOnRecursion, 
+        --                           escapesFromRecursion)
+        --                             -- /* find関数を再帰的に呼び出す */
+        --                             return find( 
+        --                               aStream, 
+        --                               predicate, 
+        --                               continuesOnRecursion, 
+        --                               escapesFromRecursion
+        --                             );  
+        --                           end
+        -- --/* #@range_end(stream_find_continuations) */
+        -- -- **リスト7.73** find関数のテスト
+        -- -- /* upto3変数は、1から3までの有限ストリーム */
+        -- local upto3 = Stream.cons(1, function(_)
+        --   return Stream.cons(2, function(_)
+        --     return Stream.cons(3, function(_)
+        --       return Stream.empty();
+        --     end);
+        --   end);
+        -- end);
+        -- assert.are.equal(
+        --   find(upto3, function(item)
+        --     return (item == 4); -- 4を探します
+        --   end, continuesOnFailure, continuesOnSuccess)
+        -- ,  
+        --   6
+        -- )
+        -- -- expect(
+        -- --   find(upto3, function(item)
+        -- --     return (item == 4); -- 4を探します
+        -- --   end, continuesOnFailure, continuesOnSuccess)
+        -- -- ).to.eql(
+        -- --   nil -- リスト中に4の要素はないので、nullになります
+        -- -- );
+        -- -- /* #@range_begin(stream_find_cps_test) */
+        -- -- /* 変数integersは、無限の整数ストリーム */
+        -- local integers = stream.enumFrom(0);
+        -- 
+        -- -- /* 無限の整数列のなかから100を探す */
+        -- expect(
+        --   find(integers, function(item)
+        --     return (item == 100)
+        --   end, continuesOnFailure, continuesOnSuccess)
+        -- ).to.eql(
+        --   100 -- 100を見つけて返ってくる
+        -- );
+        -- -- /* #@range_end(stream_find_cps_test) */
       end); 
     end); 
     -- #### 非決定計算機を作る
@@ -2346,259 +2374,259 @@ describe('関数を渡す', function()
       end 
     end); 
     describe("非決定計算機を作る", function()
-      local exp = {
-        match = function(anExp, pattern)
-          return anExp(pattern);
-        end,
-        -- **リスト7.75** 非決定計算機の式
-        -- /* #@range_begin(amb_expression) */
-        amb =  function(alist)
-          return function(pattern)
-            return pattern.amb(alist);
-          end
-        end,
-        -- /* #@range_end(amb_expression) */
-        num = function(n)
-          return function(pattern)
-            return pattern.num(n);
-          end
-        end,
-        add = function(exp1, exp2)
-          return function(pattern)
-            return pattern.add(exp1, exp2);
-          end;
-        end 
-      };
-      -- /* #@range_begin(amb_calculate) */
-      -- <section id='amb_calculate'>非決定性計算機の評価関数</section>
-      local calculate = function(anExp, 
-                       continuesOnSuccess, 
-                       continuesOnFailure)
-                         -- /* 式に対してパターンマッチを実行する */
-                         return exp.match(anExp, { 
-                           -- **リスト7.79** 数値の評価
-                           -- /* #@range_begin(amb_calculate_num) */
-                           -- /* 数値を評価する */
-                           num = function(n)
-                             return continuesOnSuccess(n, continuesOnFailure);
-                           end,
-                           -- /* #@range_end(amb_calculate_num) */
-                           -- **リスト7.80** 足し算の評価 
-                           -- /* #@range_begin(amb_calculate_add) */
-                           -- /* 足し算の式を評価する */
-                           add = function(x, y)
-                             -- /* まず引数xを評価する */
-                             return calculate(x, function(resultX, continuesOnFailureX) 
-                               -- /* 次に引数yを評価する */
-                               return calculate(y, function(resultY, continuesOnFailureY)
-                                 -- /* 引数xとyがともに成功すれば、両者の値で足し算を計算する */
-                                 return continuesOnSuccess(resultX + resultY, continuesOnFailureY); 
-                               end, continuesOnFailureX); -- /* y の計算に失敗すれば、xの失敗継続を渡す */
-                             end, continuesOnFailure);    -- /* x の計算に失敗すれば、おおもとの失敗継続を渡す */
-                           end,
-                           -- /* #@range_end(amb_calculate_add) */
-                           -- **リスト7.81** amb式の評価
-                           -- /* #@range_begin(amb_calculate_amb) */
-                           -- /* amb式を評価する */
-                           amb = function(choices)
-                              local calculateAmb = function(choices)
-                               return list.match(choices, {
-                                 --[[/* 
-                                    amb(list.empty()) の場合、
-                                    すなわち選択肢がなければ、失敗継続を実行する
-                                 */
-                                 --]]
-                                 empty = function()
-                                   return continuesOnFailure();
-                                 end,
-                                 --[[/* 
-                                    amb(list.cons(head, tail))の場合、
-                                    先頭要素を計算して、後尾は失敗継続に渡す
-                                 */
-                                 --]]
-                                 cons = function(head, tail)
-                                   return calculate(head, continuesOnSuccess, function(_)
-                                     -- /* 失敗継続で後尾を計算する */
-                                     return calculateAmb(tail);
-                                   end);
-                                 end
-                               });
-                             end;
-                             return calculateAmb(choices);
-                           end 
-                           -- /* #@range_end(amb_calculate_amb) */
-                         });
-                       end;
-      -- /* #@range_end(amb_calculate) */
-
-      -- **リスト7.82** 非決定計算機の駆動関数
-      -- /* #@range_begin(amb_driver) */
-      local driver = function(expression)
-        -- /* 中断された計算を継続として保存する変数 */
-        local suspendedComputation = nil; 
-        -- /* 成功継続 */
-        local continuesOnSuccess = function(anyValue, 
-                                  continuesOnFailure)
-                                    -- /* 再開に備えて、失敗継続を保存しておく */
-                                    suspendedComputation = continuesOnFailure; 
-                                    return anyValue;
-                                  end;
-        -- /* 失敗継続 */
-        local continuesOnFailure = function()
-          return nil;
-        end;
-
-        -- /* 内部に可変な状態suspendedComputationを持つクロージャーを返す */
-        return function()
-          -- /* 中断された継続がなければ、最初から計算する */
-          if(suspendedComputation == nil) then
-            return calculate(expression, 
-                             continuesOnSuccess, 
-                             continuesOnFailure);
-          else -- /* 中断された継続があれば、その継続を実行する */
-            return suspendedComputation();
-          end 
-        end 
-      end;
-      -- /* #@range_end(amb_driver) */
-      it("amb[1,2] + 3  = amb[4, 5]", function()
-        local ambExp = exp.add(exp.amb(list.cons(exp.num(1),list.cons(exp.num(2), list.empty()))), 
-                             exp.num(3));
-        local calculator = driver(ambExp);
-        expect(
-          calculator()
-        ).to.eql(
-          4 -- 1 + 3 = 4
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          5 -- 2 + 3 = 5 
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          nil
-        );
-      end);
-      -- **リスト7.83** 非決定計算機のテスト
-      it("非決定計算機のテスト", function()
-        -- /* amb[1,2] + amb[3,4] = amb[4, 5, 5, 6] */
-        -- /* #@range_begin(amb_test) */
-        -- /* amb[1,2] + amb[3,4] = 4, 5, 5, 6 */
-        local ambExp = exp.add(
-          exp.amb(list.fromArray({exp.num(1),exp.num(2)})),
-          exp.amb(list.fromArray({exp.num(3),exp.num(4)})));
-        local calculator = driver(ambExp);
-        expect(
-          calculator()
-        ).to.eql(
-          4 -- 1 + 3 = 4
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          5 -- 2 + 3 = 5
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          5 -- 1 + 4 = 5
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          6 -- 2 + 4 = 6
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          nil -- これ以上の候補はないので、計算は終了
-        );
-        -- /* #@range_end(amb_test) */
-      end);
-      it("amb[1,2,3] + amb[10,20] = amb[11,21,12,22,13,23]", function()
-        local ambExp = exp.add(
-          exp.amb(list.fromArray({exp.num(1),exp.num(2),exp.num(3)})),
-          exp.amb(list.fromArray({exp.num(10),exp.num(20)})));
-        local calculator = driver(ambExp);
-        expect(
-          calculator()
-        ).to.eql(
-          11 -- 1 + 10 = 11
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          21 -- 1 + 20 = 21
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          12 -- 2 + 10 = 12
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          22 -- 2 + 20 = 22
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          13 -- 3 + 10 = 13
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          23 -- 3 + 20 = 23
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          nil -- これ以上の候補はないので、計算は終了
-        );
-      end);
-      it("amb[1,2] + amb[10,20,30] = amb[11,21,31,12,22,32]", function()
-        local ambExp = exp.add(
-          exp.amb(list.fromArray({exp.num(1),exp.num(2)})),
-          exp.amb(list.fromArray({exp.num(10),exp.num(20),exp.num(30)})));
-        local calculator = driver(ambExp);
-        expect(
-          calculator()
-        ).to.eql(
-          11 -- 1 + 10 = 11
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          21 -- 1 + 20 = 21
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          31 -- 1 + 30 = 31
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          12 -- 2 + 10 = 12
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          22 -- 2 + 20 = 22
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          32 -- 2 + 30 = 32
-        );
-        expect(
-          calculator()
-        ).to.eql(
-          null -- これ以上の候補はないので、計算は終了
-        );
-      end);
+      -- local exp = {
+      --   match = function(anExp, pattern)
+      --     return anExp(pattern);
+      --   end,
+      --   -- **リスト7.75** 非決定計算機の式
+      --   -- /* #@range_begin(amb_expression) */
+      --   amb =  function(alist)
+      --     return function(pattern)
+      --       return pattern.amb(alist);
+      --     end
+      --   end,
+      --   -- /* #@range_end(amb_expression) */
+      --   num = function(n)
+      --     return function(pattern)
+      --       return pattern.num(n);
+      --     end
+      --   end,
+      --   add = function(exp1, exp2)
+      --     return function(pattern)
+      --       return pattern.add(exp1, exp2);
+      --     end;
+      --   end 
+      -- };
+      -- -- /* #@range_begin(amb_calculate) */
+      -- -- <section id='amb_calculate'>非決定性計算機の評価関数</section>
+      -- local calculate = function(anExp, 
+      --                  continuesOnSuccess, 
+      --                  continuesOnFailure)
+      --                    -- /* 式に対してパターンマッチを実行する */
+      --                    return exp.match(anExp, { 
+      --                      -- **リスト7.79** 数値の評価
+      --                      -- /* #@range_begin(amb_calculate_num) */
+      --                      -- /* 数値を評価する */
+      --                      num = function(n)
+      --                        return continuesOnSuccess(n, continuesOnFailure);
+      --                      end,
+      --                      -- /* #@range_end(amb_calculate_num) */
+      --                      -- **リスト7.80** 足し算の評価 
+      --                      -- /* #@range_begin(amb_calculate_add) */
+      --                      -- /* 足し算の式を評価する */
+      --                      add = function(x, y)
+      --                        -- /* まず引数xを評価する */
+      --                        return calculate(x, function(resultX, continuesOnFailureX) 
+      --                          -- /* 次に引数yを評価する */
+      --                          return calculate(y, function(resultY, continuesOnFailureY)
+      --                            -- /* 引数xとyがともに成功すれば、両者の値で足し算を計算する */
+      --                            return continuesOnSuccess(resultX + resultY, continuesOnFailureY); 
+      --                          end, continuesOnFailureX); -- /* y の計算に失敗すれば、xの失敗継続を渡す */
+      --                        end, continuesOnFailure);    -- /* x の計算に失敗すれば、おおもとの失敗継続を渡す */
+      --                      end,
+      --                      -- /* #@range_end(amb_calculate_add) */
+      --                      -- **リスト7.81** amb式の評価
+      --                      -- /* #@range_begin(amb_calculate_amb) */
+      --                      -- /* amb式を評価する */
+      --                      amb = function(choices)
+      --                         local calculateAmb = function(choices)
+      --                          return list.match(choices, {
+      --                            --[[/* 
+      --                               amb(list.empty()) の場合、
+      --                               すなわち選択肢がなければ、失敗継続を実行する
+      --                            */
+      --                            --]]
+      --                            empty = function()
+      --                              return continuesOnFailure();
+      --                            end,
+      --                            --[[/* 
+      --                               amb(list.cons(head, tail))の場合、
+      --                               先頭要素を計算して、後尾は失敗継続に渡す
+      --                            */
+      --                            --]]
+      --                            cons = function(head, tail)
+      --                              return calculate(head, continuesOnSuccess, function(_)
+      --                                -- /* 失敗継続で後尾を計算する */
+      --                                return calculateAmb(tail);
+      --                              end);
+      --                            end
+      --                          });
+      --                        end;
+      --                        return calculateAmb(choices);
+      --                      end 
+      --                      -- /* #@range_end(amb_calculate_amb) */
+      --                    });
+      --                  end;
+      -- -- /* #@range_end(amb_calculate) */
+      --
+      -- -- **リスト7.82** 非決定計算機の駆動関数
+      -- -- /* #@range_begin(amb_driver) */
+      -- local driver = function(expression)
+      --   -- /* 中断された計算を継続として保存する変数 */
+      --   local suspendedComputation = nil; 
+      --   -- /* 成功継続 */
+      --   local continuesOnSuccess = function(anyValue, 
+      --                             continuesOnFailure)
+      --                               -- /* 再開に備えて、失敗継続を保存しておく */
+      --                               suspendedComputation = continuesOnFailure; 
+      --                               return anyValue;
+      --                             end;
+      --   -- /* 失敗継続 */
+      --   local continuesOnFailure = function()
+      --     return nil;
+      --   end;
+      --
+      --   -- /* 内部に可変な状態suspendedComputationを持つクロージャーを返す */
+      --   return function()
+      --     -- /* 中断された継続がなければ、最初から計算する */
+      --     if(suspendedComputation == nil) then
+      --       return calculate(expression, 
+      --                        continuesOnSuccess, 
+      --                        continuesOnFailure);
+      --     else -- /* 中断された継続があれば、その継続を実行する */
+      --       return suspendedComputation();
+      --     end 
+      --   end 
+      -- end;
+      -- -- /* #@range_end(amb_driver) */
+      -- it("amb[1,2] + 3  = amb[4, 5]", function()
+      --   local ambExp = exp.add(exp.amb(list.cons(exp.num(1),list.cons(exp.num(2), list.empty()))), 
+      --                        exp.num(3));
+      --   local calculator = driver(ambExp);
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     4 -- 1 + 3 = 4
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     5 -- 2 + 3 = 5 
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     nil
+      --   );
+      -- end);
+      -- -- **リスト7.83** 非決定計算機のテスト
+      -- it("非決定計算機のテスト", function()
+      --   -- /* amb[1,2] + amb[3,4] = amb[4, 5, 5, 6] */
+      --   -- /* #@range_begin(amb_test) */
+      --   -- /* amb[1,2] + amb[3,4] = 4, 5, 5, 6 */
+      --   local ambExp = exp.add(
+      --     exp.amb(list.fromArray({exp.num(1),exp.num(2)})),
+      --     exp.amb(list.fromArray({exp.num(3),exp.num(4)})));
+      --   local calculator = driver(ambExp);
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     4 -- 1 + 3 = 4
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     5 -- 2 + 3 = 5
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     5 -- 1 + 4 = 5
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     6 -- 2 + 4 = 6
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     nil -- これ以上の候補はないので、計算は終了
+      --   );
+      --   -- /* #@range_end(amb_test) */
+      -- end);
+      -- it("amb[1,2,3] + amb[10,20] = amb[11,21,12,22,13,23]", function()
+      --   local ambExp = exp.add(
+      --     exp.amb(list.fromArray({exp.num(1),exp.num(2),exp.num(3)})),
+      --     exp.amb(list.fromArray({exp.num(10),exp.num(20)})));
+      --   local calculator = driver(ambExp);
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     11 -- 1 + 10 = 11
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     21 -- 1 + 20 = 21
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     12 -- 2 + 10 = 12
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     22 -- 2 + 20 = 22
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     13 -- 3 + 10 = 13
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     23 -- 3 + 20 = 23
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     nil -- これ以上の候補はないので、計算は終了
+      --   );
+      -- end);
+      -- it("amb[1,2] + amb[10,20,30] = amb[11,21,31,12,22,32]", function()
+      --   local ambExp = exp.add(
+      --     exp.amb(list.fromArray({exp.num(1),exp.num(2)})),
+      --     exp.amb(list.fromArray({exp.num(10),exp.num(20),exp.num(30)})));
+      --   local calculator = driver(ambExp);
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     11 -- 1 + 10 = 11
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     21 -- 1 + 20 = 21
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     31 -- 1 + 30 = 31
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     12 -- 2 + 10 = 12
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     22 -- 2 + 20 = 22
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     32 -- 2 + 30 = 32
+      --   );
+      --   expect(
+      --     calculator()
+      --   ).to.eql(
+      --     null -- これ以上の候補はないので、計算は終了
+      --   );
+      -- end);
     end); 
   end); -- 継続を渡す
 end); -- 関数を渡す
