@@ -1,7 +1,7 @@
 local pair = {}
 
 pair.match = function(data, pattern)
-  return data(pair, pattern);
+  return data(pattern);
 end
 
 pair.cons = function(left, right)

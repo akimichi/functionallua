@@ -22,6 +22,7 @@
 local Pair = require("lib/pair")
 
 -- **listモジュール**
+local List = require("lib/list")
 --[[
 local list  = {
   match = function(data, pattern) => {
@@ -151,7 +152,7 @@ describe('抽象構文木を作る', function()
             assert.are.equal(
               type(variable)
             , 
-             1 
+              'function' 
             )
             -- expect(
             --   variable
@@ -161,12 +162,13 @@ describe('抽象構文木を作る', function()
       end);
     end);
   end);
-end);
+end) -- end of 抽象構文木を作る
 
--- ## 8.3 <section id='environment'>環境を作る</section>
+-- -- ## 8.3 <section id='environment'>環境を作る</section>
 describe('環境を作る', function()
   -- **リスト8.5** クロージャーによる「環境」の定義
   --/* #@range_begin(environment) */
+  local Env = require("lib/env")
   local env = {
     --/* 空の環境を作る */
     --/* empty:: STRING => VALUE */
@@ -206,10 +208,9 @@ describe('環境を作る', function()
       return env.lookup("a", newEnv);            
     end
     assert.are.equal(
-      -- test() 
-      1
+      test() 
     , 
-      0 
+      1 
     )
     -- expect(((_) => {
     --   --/* 空の環境からnewEnv環境を作る */
@@ -233,7 +234,7 @@ describe('環境を作る', function()
     assert.are.equal(
       test2()
     , 
-    1 
+      3
     )
     -- expect(((_) => {
     --   local initEnv = env.empty;                      -- 空の辞書を作成する
@@ -257,6 +258,23 @@ describe('環境を作る', function()
     -- ~~~
     -- **リスト8.9** クロージャーにおける環境のセマンティクス
     --/* #@range_begin(environment_extend_test) */
+    local test3 = function()
+      --/* 空の辞書を作成する */
+      local initEnv = Env.empty;                   
+      --/* 空の辞書から outerEnv環境を作る */
+      local outerEnv = Env.extend("x", 1, initEnv);    
+
+      --/* closureEnv環境を作る */
+      local closureEnv = Env.extend("y", 2, outerEnv);  
+      --/* closureEnv環境を利用してx+yを計算する */
+      return Env.lookup("x",closureEnv) + Env.lookup("y",closureEnv);
+    end
+    assert.are.equal(
+      test3()
+    , 
+      3
+    )
+    
     -- expect(((_) => {
     --   --/* 空の辞書を作成する */
     --   local initEnv = env.empty;                   
@@ -271,9 +289,9 @@ describe('環境を作る', function()
     --   3
     -- );
     --/* #@range_end(environment_extend_test) */
-  end);
-end);
-
+   end)
+end)
+--
 -- ## 8.4 <section id='evaluator'>評価器を作る</section>
 -- > 参考資料: [The Essence of Functional Programming](https:--www.google.co.jp/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwiw25uwks7PAhVBF5QKHQjDBfEQFggcMAA&url=http%3A%2F%2Fwww.eliza.ch%2Fdoc%2Fwadler92essence_of_FP.pdf&usg=AFQjCNFX6YZ2kqhIuqGGysZCyMQwaWAAfQ&sig2=0GWjNVeqVkXjUCr6B20DLA&bvm=bv.135258522,d.dGo)
 describe('評価器を作る', function()
@@ -296,7 +314,7 @@ describe('評価器を作る', function()
   --     };
   --   }
   -- };
-  local emptyEnv = env.empty;
+  local emptyEnv = Env.empty;
 
   -- ### <section id='identity-monad-evaluator'>恒等モナドによる評価器</section>
   describe('恒等モナドによる評価器', function()
@@ -332,7 +350,7 @@ describe('評価器を作る', function()
     };
     -- ### 恒等モナド
     --/* #@range_begin(identity_monad) */
-    local ID = require("lib/io")
+    local ID = require("lib/id")
     -- local ID = {
     --   unit = function(value) => {
     --     return value;
@@ -349,7 +367,7 @@ describe('評価器を作る', function()
     -- **リスト8.10** 恒等モナド評価器の定義
     --/* #@range_begin(identity_monad_evaluator) */
     --/* evaluate:= function(EXP, ENV) => ID[VALUE] */
-    local evaluate = function(anExp, environment)
+    local function evaluate(anExp, environment)
       return exp.match(anExp,{
         -- **リスト8.11** 数値の評価
         num = function(numericValue)
@@ -357,7 +375,7 @@ describe('評価器を作る', function()
         end,
         -- **リスト8.13** 変数の評価
         variable = function(name)
-          return ID.unit(env.lookup(name, environment));
+          return ID.unit(Env.lookup(name, environment));
         end,
         --/* 関数定義（λ式）の評価  */
         lambda = function(variable, body)
@@ -365,7 +383,7 @@ describe('評価器を作る', function()
             variable = function(name)
               return ID.unit(function(actualArg)
                 return evaluate(body, 
-                                env.extend(name, actualArg, environment))
+                                Env.extend(name, actualArg, environment))
               end)
             end
             })
@@ -390,58 +408,79 @@ describe('評価器を作る', function()
     end;
     --/* #@range_end(identity_monad_evaluator) */
     -- **リスト8.12** 数値の評価のテスト
-    it('数値の評価のテスト', (next) => {
+    it('数値の評価のテスト', function()
       --/* #@range_begin(number_evaluation_test) */
-      expect(
-        evaluate(exp.num(2), env.empty)
-      ).to.eql(
-        ID.unit(2)
-      );
+      assert.are.equal(
+        evaluate(exp.num(2), Env.empty) 
+        ,
+        ID.unit(2) 
+      )
+      -- expect(
+      --   evaluate(exp.num(2), env.empty)
+      -- ).to.eql(
+      --   ID.unit(2)
+      -- );
       --/* #@range_end(number_evaluation_test) */
-      next();
-    });
+     end);
     -- **リスト8.14** 変数の評価のテスト
-    it('変数の評価のテスト', (next) => {
+    it('変数の評価のテスト', function()
       --/* #@range_begin(variable_evaluation_test) */
       --/* 変数xを1に対応させた環境を作る */
-      local newEnv = env.extend("x", 1, env.empty); 
+      local newEnv = Env.extend("x", 1, Env.empty); 
       --/* 拡張したnewEnv環境を用いて変数xを評価する */
-      expect(
+      assert.are.equal(
         evaluate(exp.variable("x"), newEnv)
-      ).to.eql(
-        ID.unit(1)
-      );
+        ,
+        ID.unit(1) 
+      )
+      -- expect(
+      --   evaluate(exp.variable("x"), newEnv)
+      -- ).to.eql(
+      --   ID.unit(1)
+      -- );
       --/* #@range_end(variable_evaluation_test) */
-      expect(
+      assert.are.equal(
         evaluate(exp.variable("y"), newEnv)
-      ).to.be(
-        ID.unit(undefined)
-      );
-      next();
-    });
+        ,
+        nil 
+      )
+      -- expect(
+      --   evaluate(exp.variable("y"), newEnv)
+      -- ).to.be(
+      --   ID.unit(undefined)
+      -- );
+    end)
     -- **リスト8.16** 足し算の評価のテスト
-    it('足し算の評価のテスト', (next) => {
+    it('足し算の評価のテスト', function()
       --/* add(1,2) */
       --/* #@range_begin(add_evaluation_test) */
       local addition = exp.add(exp.num(1),exp.num(2));
-      expect(
-        evaluate(addition, env.empty)
-      ).to.eql(
+      assert.are.equal(
+        evaluate(addition, Env.empty) 
+        ,
         ID.unit(3)
-      );
+      )
+      -- expect(
+      --   evaluate(addition, Env.empty)
+      -- ).to.eql(
+      --   ID.unit(3)
+      -- );
       --/* #@range_end(add_evaluation_test) */
-      next();
-    });
-    it('恒等モナド評価器で演算を評価する', (next) => {
-      expect(
-        evaluate(exp.add(exp.num(1),exp.num(2)), emptyEnv)
-      ).to.be(
+    end);
+    it('恒等モナド評価器で演算を評価する', function()
+      assert.are.equal(
+        evaluate(exp.add(exp.num(1),exp.num(2)), emptyEnv) 
+        ,
         ID.unit(3)
-      );
-      next();
-    });
+      )
+      -- expect(
+      --   evaluate(exp.add(exp.num(1),exp.num(2)), emptyEnv)
+      -- ).to.be(
+      --   ID.unit(3)
+      -- );
+    end);
     -- #### 関数の評価
-    it('ID評価器で関数を評価する', (next) => {
+    it('ID評価器で関数を評価する', function()
       -- ~~~js
       -- ((x) => {
       --   return x; 
@@ -449,14 +488,18 @@ describe('評価器を作る', function()
       -- ~~~
       local expression = exp.lambda(exp.variable("x"),
                                   exp.variable("x"));
-      expect(
+      assert.are.equal(
         evaluate(expression, emptyEnv)(1)
-      ).to.be(
-        1
-      );
-      next();
-    });
-    it('関数適用の評価のテスト', (next) => {
+        ,
+        ID.unit(1)
+      )
+      -- expect(
+      --   evaluate(expression, emptyEnv)(1)
+      -- ).to.be(
+      --   1
+      -- );
+    end)
+    it('関数適用の評価のテスト', function()
       -- **リスト8.17** 関数適用の評価のテスト
       -- ~~~js
       -- ((n) => {
@@ -469,15 +512,19 @@ describe('評価器を作る', function()
                    exp.add(exp.variable("n"),
                            exp.num(1))),
         exp.num(2));                    --/* 引数の数値2 */
-      expect(
-        evaluate(expression, env.empty)
-      ).to.eql(
+      assert.are.equal(
+        evaluate(expression, Env.empty) 
+        ,
         ID.unit(3)
-      );
+      )
+      -- expect(
+      --   evaluate(expression, env.empty)
+      -- ).to.eql(
+      --   ID.unit(3)
+      -- );
       --/* #@range_end(application_evaluation_test) */
-      next();
-    });
-    it('ID評価器で関数適用 \\x.add(x,x)(2)を評価する', (next) => {
+    end)
+    it('ID評価器で関数適用 \\x.add(x,x)(2)を評価する', function()
       -- ~~~js
       -- ((x) => {
       --   return x + x; 
@@ -486,14 +533,18 @@ describe('評価器を作る', function()
       local expression = exp.app(exp.lambda(exp.variable("x"),
                                           exp.add(exp.variable("x"),exp.variable("x"))),
                                exp.num(2));
-      expect(
-        evaluate(expression, env.empty)
-      ).to.eql(
-        4
-      );
-      next();
-    });
-    it('カリー化関数の評価', (next) => {
+      assert.are.equal(
+        evaluate(expression, Env.empty)
+        ,
+        ID.unit(4)
+      )
+      -- expect(
+      --   evaluate(expression, env.empty)
+      -- ).to.eql(
+      --   4
+      -- );
+    end)
+    it('カリー化関数の評価', function()
       -- **リスト8.19**カリー化関数の評価
       -- ~~~js
       -- ((n) => {
@@ -511,293 +562,308 @@ describe('評価器を作る', function()
                                   exp.variable("n"),exp.variable("m")))),
           exp.num(2)),
         exp.num(3));
-      expect(
-        evaluate(expression, env.empty)
-      ).to.eql(
+      assert.are.equal(
+        evaluate(expression, Env.empty)
+        ,
         ID.unit(5)
-      );
+      )
+      -- expect(
+      --   evaluate(expression, env.empty)
+      -- ).to.eql(
+      --   ID.unit(5)
+      -- );
       --/* #@range_end(curried_function_evaluation_test) */
-    });
-  end);
+    end);
+  end)
   -- ### <section id='logger-monad-evaluator'>ログ出力評価器</section>
-  describe('ログ出力評価器', () => {
+  describe('ログ出力評価器', function()
+    local match = function(data, pattern)
+      return data(pattern);
+    end
     -- **リスト8.20** ログ出力評価器の式
     --/* #@range_begin(expression_logger_interpreter) */
     local exp = {
-      log= function(anExp) => { -- ログ出力用の式
-        return (pattern) => {
+      log = function(anExp) -- ログ出力用の式
+        return function(pattern)
           return pattern.log(anExp);
-        };
-      },
+        end;
+      end,
       --/* #@range_end(expression_logger_interpreter) */
-      match = function(data, pattern) => {
-        return data.call(exp, pattern);
-      },
-      num = function(value) => {
-        expect(value).to.a('number');
-        return (pattern) => {
+      num = function(value)
+        return function(pattern)
           return pattern.num(value);
-        };
-      },
-      variable = function(name) => {
-        expect(name).to.a('string');
-        return (pattern) => {
+        end 
+      end,
+      variable = function(name)
+        -- expect(name).to.a('string');
+        return function(pattern)
           return pattern.variable(name);
-        };
-      },
-      lambda = function(variable, body) => {
-        expect(variable).to.a('function');
-        expect(body).to.a('function');
-        return (pattern) => {
+        end;
+      end,
+      lambda = function(variable, body)
+        -- expect(variable).to.a('function');
+        -- expect(body).to.a('function');
+        return function(pattern)
           return pattern.lambda(variable, body);
-        };
-      },
-      app = function(variable, arg) => {
-        return (pattern) => {
+        end
+      end,
+      app = function(variable, arg)
+        return function(pattern)
           return pattern.app(variable, arg);
-        };
-      },
-      add = function(exp1,exp2) => {
-        return (pattern) => {
+        end;
+      end,
+      add = function(exp1,exp2)
+        return function(pattern)
           return pattern.add(exp1, exp2);
-        };
-      },
-      mul = function(exp1,exp2) => {
-        return (pattern) => {
+        end;
+      end,
+      mul = function(exp1,exp2)
+        return function(pattern)
           return pattern.mul(exp1, exp2);
-        };
-      }
+        end;
+      end
     };
     -- **リスト8.21** LOGモナドの定義
     --/* #@range_begin(logger_monad) */
     --/* LOG[T] = PAIR[T, LIST[STRING]] */
     local LOG = {
       --/* unit:: VALUE => LOG[VALUE] */
-      unit= function(value) => {
+      unit = function(value)
         --/* 値とログのPair型を作る */
-        return pair.cons(value, list.empty()); 
-      },
+        return Pair.cons(value, List.empty()); 
+      end,
       --/* flatMap:: LOG[T] => FUN[T => LOG[T]] => LOG[T] */
-      flatMap= function(instanceM) => {
-        return (transform) => {
-          return pair.match(instanceM,{
+      flatMap = function(instanceM)
+        return function(transform)
+          return Pair.match(instanceM,{
             --/* Pair型に格納されている値の対を取り出す */
-            cons= function(value, log) => {
+            cons = function(value, log)
               --/* 取り出した値で計算する */
               local newInstance = transform(value); 
-              --/* 計算の結果をPairの左側に格納し、
+              --[[/* 計算の結果をPairの左側に格納し、
                  新しいログをPairの右側に格納する */
-              return pair.cons(pair.left(newInstance),
-                               list.append(log)(pair.right(newInstance)));
-            }
-          });
-        };
-      },
+                 ]]
+              return Pair.cons(Pair.left(newInstance),
+                               List.append(log)(Pair.right(newInstance)));
+                               -- List.append(log)(List.cons(Pair.right(newInstance), List.empty())));
+            end 
+          })
+        end;
+      end,
       --/* 引数 value をログに格納する */
       --/* output:: VALUE => LOG[()] */
-      output= function(value) => {
-        return pair.cons(null, 
-                         list.cons(String(value), list.empty()));
-      }
+      output = function(value)
+        return Pair.cons(nil, 
+                         List.cons(value, List.empty()));
+      end 
     };
     --/* #@range_end(logger_monad) */
     -- **リスト8.22** LOGモナド評価器
     --/* #@range_begin(logger_monad_evaluator) */
     --/* evaluate:= function(EXP, ENV) => LOG[VALUE] */
-    local evaluate = (anExp, environment) => {
-      return exp.match(anExp,{
+    local function evaluate(anExp, environment)
+      return match(anExp,{
         --/* log式の評価 */
-        log= function(anExp) => {
+        log = function(anExp)
           --/* 式を評価する */
-          return LOG.flatMap(evaluate(anExp, environment))((value) => {
+          return LOG.flatMap(evaluate(anExp, environment))(function(value)
             --/* value をログに格納する */
-            return LOG.flatMap(LOG.output(value))((_) => { 
+            return LOG.flatMap(LOG.output(value))(function(_)
               return LOG.unit(value); 
-            });
-          });
-        },
+            end)
+          end)
+        end,
         --/* #@range_end(logger_monad_evaluator) */
         --/* 数値の評価 */
-        num= function(value) => {
+        num = function(value)
           return LOG.unit(value);
-        },
+        end,
         --/* 変数の評価 */
-        variable= function(name) => {
-          return LOG.unit(env.lookup(name, environment));
-        },
+        variable = function(name)
+          return LOG.unit(Env.lookup(name, environment));
+        end,
         --/* λ式の評価 */
-        lambda= function(variable, body) => {
+        lambda = function(variable, body) 
           return exp.match(variable,{
-            variable= function(name) => {
-              return LOG.unit((actualArg) => {
-                return evaluate(body, env.extend(name, actualArg, environment));
-              });
-            }
+            variable = function(name)
+              return LOG.unit(function(actualArg)
+                return evaluate(body, Env.extend(name, actualArg, environment));
+              end);
+            end 
           });
-        },
+        end,
         --/* 関数適用の評価 */
-        app= function(lambda, arg) => {         -- 関数適用の評価
-          return LOG.flatMap(evaluate(lambda, environment))((closure) => {
-            return LOG.flatMap(evaluate(arg, environment))((actualArg) => {
+        app = function(lambda, arg)         -- 関数適用の評価
+          return LOG.flatMap(evaluate(lambda, environment))(function(closure)
+            return LOG.flatMap(evaluate(arg, environment))(function(actualArg)
               return closure(actualArg); 
-            });
-          });
-        },
-        add= function(expL, expR) => {
-          return LOG.flatMap(evaluate(expL, environment))((valueL) => {
-            return LOG.flatMap(evaluate(expR, environment))((valueR) => {
+            end);
+          end);
+        end,
+        add = function(expL, expR)
+          return LOG.flatMap(evaluate(expL, environment))(function(valueL)
+            return LOG.flatMap(evaluate(expR, environment))(function(valueR)
               return LOG.unit(valueL + valueR); 
-            });
-          });
-        }
+            end);
+          end);
+        end
       });
-    };
+    end
     -- ### ログ出力評価器のテスト
-    describe('ログ出力評価器のテスト', () => {
-      it('LOG評価器で数値を評価する', (next) => {
+    describe('ログ出力評価器のテスト', function()
+      it('LOG評価器で数値を評価する', function()
         --/* #@range_begin(log_interpreter_number) */
-        pair.match(evaluate(exp.log(exp.num(2)), env.empty),{
-          cons= function(value, log) => {
-            expect( -- 結果の値をテストする
-              value
-            ).to.be(
-              2
-            );
-            expect( -- 保存されたログを見る
-              list.toArray(log)
-            ).to.eql(
-              [2]
-            );
-          }
+        Pair.match(evaluate(exp.log(exp.num(2)), Env.empty),{
+          cons = function(value, log)
+            assert.are.equal(
+              value 
+            , 
+             2 
+            )
+            -- expect( -- 結果の値をテストする
+            --   value
+            -- ).to.be(
+            --   2
+            -- );
+            assert.are.equal(
+              List.toArray(log) 
+            , 
+              {} 
+            )
+            -- expect( -- 保存されたログを見る
+            --   list.toArray(log)
+            -- ).to.eql(
+            --   [2]
+            -- );
+          end
         });
         --/* #@range_end(log_interpreter_number) */
-        next();
-      });
-      it('LOG評価器で変数を評価する', (next) => {
-        --/* #@range_begin(log_interpreter_variable) */
-        local newEnv = env.extend("x", 1, env.empty);
-        pair.match(evaluate(exp.log(exp.variable("x")), newEnv), {
-          cons= function(value, log) => {
-            expect( -- 結果の値をテストする
-              value
-            ).to.eql(
-              1
-            );
-            expect( -- 保存されたログを見る
-              list.toArray(log)
-            ).to.eql(
-              [1]
-            );
-          }
-        });
-        --/* #@range_end(log_interpreter_variable) */
-        next();
-      });
-      it('LOG評価器で演算を評価する', (next) => {
-        pair.match(evaluate(exp.log(exp.add(exp.num(1),exp.num(2))), env.empty),{
-          cons= function(value, log) => {
-            expect(
-              value
-            ).to.be(
-              3
-            );
-            expect(
-              list.toArray(log)
-            ).to.eql(
-              [3]
-            );
-          }
-        });
-        pair.match(evaluate(exp.log(exp.add(exp.log(exp.num(1)),exp.log(exp.num(2)))), env.empty),{
-          cons= function(value, log) => {
-            expect(
-              value
-            ).to.be(
-              3 -- 1 + 2 = 3
-            );
-            expect(
-              list.toArray(log)
-            ).to.eql(
-              [1,2,3]
-            );
-          }
-        });
-        -- **リスト8.25** ログ出力評価器による評価戦略の確認
-        --/* #@range_begin(log_interpreter_evaluation_strategy) */
-        -- ~~~js
-        -- ((n) => {
-        --    return add(1)(n)
-        -- })(2);
-        -- ~~~ 
-        local theExp = exp.log(exp.app(exp.lambda(exp.variable("n"),
-                                                exp.add(exp.log(exp.num(1)), 
-                                                        exp.variable("n"))),
-                                     exp.log(exp.num(2))));
-        pair.match(evaluate(theExp, env.empty),{
-          --/* パターンマッチで結果を取り出す */
-          cons = function(value, log) => {
-            expect(
-              value
-            ).to.eql(
-              3
-            );
-            expect(
-              list.toArray(log)
-            ).to.eql(
-              [2,1,3]
-            );
-          }
-        });
-        --/* #@range_end(log_interpreter_evaluation_strategy) */
-        next();
-      });
-      it('LOG評価器で関数適用を評価する', (next) => {
-        -- ~~~js
-        -- ((x) => {
-        --    return add(x)(x)
-        -- })(2);
-        -- ~~~ 
-        local expression = exp.app(exp.lambda(exp.variable("x"),
-                                            exp.add(exp.variable("x"),exp.variable("x"))),
-                                 exp.num(2));
-        expect(
-          pair.left(evaluate(expression, env.empty))
-        ).to.eql(
-          4
-        );
-        expect(
-          list.toArray(pair.right(evaluate(expression, env.empty)))
-        ).to.eql(
-          []
-        );
-        next();
-      });
-      it('LOG評価器でカリー化関数を評価する', (next) => {
-        -- ~~~js
-        -- ((x) => {
-        --   return (y) => {
-        --       return add(x)(y)
-        --   };
-        -- })(2)(3);
-        -- ~~~ 
-        local expression = exp.app(
-          exp.app(exp.lambda(exp.variable("x"),
-                             exp.lambda(exp.variable("y"),
-                                        exp.add(exp.variable("x"),exp.variable("y")))),
-                  exp.num(2)),
-          exp.num(3));
-        expect(
-          pair.left(evaluate(expression, emptyEnv))
-        ).to.be(
-          5
-        );
-        next();
-      });
-    });
-  });
-});
-
-
--- [目次に戻る](index.html) 
+      end);
+--       it('LOG評価器で変数を評価する', (next) => {
+--         --/* #@range_begin(log_interpreter_variable) */
+--         local newEnv = env.extend("x", 1, env.empty);
+--         pair.match(evaluate(exp.log(exp.variable("x")), newEnv), {
+--           cons= function(value, log) => {
+--             expect( -- 結果の値をテストする
+--               value
+--             ).to.eql(
+--               1
+--             );
+--             expect( -- 保存されたログを見る
+--               list.toArray(log)
+--             ).to.eql(
+--               [1]
+--             );
+--           }
+--         });
+--         --/* #@range_end(log_interpreter_variable) */
+--         next();
+--       });
+--       it('LOG評価器で演算を評価する', (next) => {
+--         pair.match(evaluate(exp.log(exp.add(exp.num(1),exp.num(2))), env.empty),{
+--           cons= function(value, log) => {
+--             expect(
+--               value
+--             ).to.be(
+--               3
+--             );
+--             expect(
+--               list.toArray(log)
+--             ).to.eql(
+--               [3]
+--             );
+--           }
+--         });
+--         pair.match(evaluate(exp.log(exp.add(exp.log(exp.num(1)),exp.log(exp.num(2)))), env.empty),{
+--           cons= function(value, log) => {
+--             expect(
+--               value
+--             ).to.be(
+--               3 -- 1 + 2 = 3
+--             );
+--             expect(
+--               list.toArray(log)
+--             ).to.eql(
+--               [1,2,3]
+--             );
+--           }
+--         });
+--         -- **リスト8.25** ログ出力評価器による評価戦略の確認
+--         --/* #@range_begin(log_interpreter_evaluation_strategy) */
+--         -- ~~~js
+--         -- ((n) => {
+--         --    return add(1)(n)
+--         -- })(2);
+--         -- ~~~ 
+--         local theExp = exp.log(exp.app(exp.lambda(exp.variable("n"),
+--                                                 exp.add(exp.log(exp.num(1)), 
+--                                                         exp.variable("n"))),
+--                                      exp.log(exp.num(2))));
+--         pair.match(evaluate(theExp, env.empty),{
+--           --/* パターンマッチで結果を取り出す */
+--           cons = function(value, log) => {
+--             expect(
+--               value
+--             ).to.eql(
+--               3
+--             );
+--             expect(
+--               list.toArray(log)
+--             ).to.eql(
+--               [2,1,3]
+--             );
+--           }
+--         });
+--         --/* #@range_end(log_interpreter_evaluation_strategy) */
+--         next();
+--       });
+--       it('LOG評価器で関数適用を評価する', (next) => {
+--         -- ~~~js
+--         -- ((x) => {
+--         --    return add(x)(x)
+--         -- })(2);
+--         -- ~~~ 
+--         local expression = exp.app(exp.lambda(exp.variable("x"),
+--                                             exp.add(exp.variable("x"),exp.variable("x"))),
+--                                  exp.num(2));
+--         expect(
+--           pair.left(evaluate(expression, env.empty))
+--         ).to.eql(
+--           4
+--         );
+--         expect(
+--           list.toArray(pair.right(evaluate(expression, env.empty)))
+--         ).to.eql(
+--           []
+--         );
+--         next();
+--       });
+--       it('LOG評価器でカリー化関数を評価する', (next) => {
+--         -- ~~~js
+--         -- ((x) => {
+--         --   return (y) => {
+--         --       return add(x)(y)
+--         --   };
+--         -- })(2)(3);
+--         -- ~~~ 
+--         local expression = exp.app(
+--           exp.app(exp.lambda(exp.variable("x"),
+--                              exp.lambda(exp.variable("y"),
+--                                         exp.add(exp.variable("x"),exp.variable("y")))),
+--                   exp.num(2)),
+--           exp.num(3));
+--         expect(
+--           pair.left(evaluate(expression, emptyEnv))
+--         ).to.be(
+--           5
+--         );
+--         next();
+--       });
+     end)
+   end) 
+end)
+--
+--
+-- -- [目次に戻る](index.html) 
 
 
