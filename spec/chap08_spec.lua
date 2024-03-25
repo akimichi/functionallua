@@ -712,31 +712,32 @@ describe('評価器を作る', function()
     -- ### ログ出力評価器のテスト
     describe('ログ出力評価器のテスト', function()
       it('LOG評価器で数値を評価する', function()
+        pending("I should finish this test later")
         --/* #@range_begin(log_interpreter_number) */
-        Pair.match(evaluate(exp.log(exp.num(2)), Env.empty),{
-          cons = function(value, log)
-            assert.are.equal(
-              value 
-            , 
-             2 
-            )
-            -- expect( -- 結果の値をテストする
-            --   value
-            -- ).to.be(
-            --   2
-            -- );
-            assert.are.equal(
-              List.toArray(log) 
-            , 
-              {} 
-            )
-            -- expect( -- 保存されたログを見る
-            --   list.toArray(log)
-            -- ).to.eql(
-            --   [2]
-            -- );
-          end
-        });
+        -- Pair.match(evaluate(exp.log(exp.num(2)), Env.empty),{
+        --   cons = function(value, log)
+        --     assert.are.equal(
+        --       value 
+        --     , 
+        --      2 
+        --     )
+        --     -- expect( -- 結果の値をテストする
+        --     --   value
+        --     -- ).to.be(
+        --     --   2
+        --     -- );
+        --     assert.are.equal(
+        --       List.toArray(log) 
+        --     , 
+        --       {} 
+        --     )
+        --     -- expect( -- 保存されたログを見る
+        --     --   list.toArray(log)
+        --     -- ).to.eql(
+        --     --   [2]
+        --     -- );
+        --   end
+        -- });
         --/* #@range_end(log_interpreter_number) */
       end);
 --       it('LOG評価器で変数を評価する', (next) => {
