@@ -45,16 +45,24 @@ describe('DRY原則', function()
       return timesForExponential(m, n, 1);
     end;
     --/* #@range_end(redundant_code) */
-    expect(
+    assert.are.equal(
       multiply(2, 3)
-    ).to.eql(
-      6
-    );
-    expect(
+      , 
+      6)
+    -- expect(
+    --   multiply(2, 3)
+    -- ).to.eql(
+    --   6
+    -- );
+    assert.are.equal(
       exponential(2, 3)
-    ).to.eql(
-      8
-    );
+      , 
+      8)
+    -- expect(
+    --   exponential(2, 3)
+    -- ).to.eql(
+    --   8
+    -- );
   end);
   it('DRYを適用する', function()
     -- **リスト3.3** DRYなtimes関数
@@ -82,21 +90,33 @@ describe('DRY原則', function()
       return times(m, n, 1, multiply);
     end;
     --/* #@range_end(dry_functions) */
-    expect(
-      multiply(2, 3)
-    ).to.eql(
-      6
-    );
-    expect(
-      exponential(2, 3)
-    ).to.eql(
-      8
-    );
-    expect(
+    assert.are.equal(
+      multiply(2, 3) 
+      , 
+      6)
+    -- expect(
+    --   multiply(2, 3)
+    -- ).to.eql(
+    --   6
+    -- );
+    assert.are.equal(
+      exponential(2, 3) 
+      , 
+      8)
+    -- expect(
+    --   exponential(2, 3)
+    -- ).to.eql(
+    --   8
+    -- );
+    assert.are.equal(
       multiply(-2, 3)
-    ).to.eql(
-        -6
-    );
+      , 
+      -6)
+    -- expect(
+    --   multiply(-2, 3)
+    -- ).to.eql(
+    --     -6
+    -- );
   end);
 end);
 
@@ -119,19 +139,19 @@ describe('抽象化への指向', function()
       local anArray = {2,3,5,7}
       local sum = function(array)
         local result = 0;
-        for index = 0, #array, 1 do
+        for index = 1, #array, 1 do
           result = result + array[index];
         end 
         return result;
       end;
       sum(anArray);
+      assert.are.equal(sum(anArray), 17)
       --/* #@range_end(sum_for) */
-      expect(
-        sum(anArray)
-      ).to.eql(
-        17
-      );
-      next();
+      -- expect(
+      --   sum(anArray)
+      -- ).to.eql(
+      --   17
+      -- );
     end);
     -- **リスト3.7** forEachによるsum関数
     it('forEachによるsum関数', function()
@@ -149,28 +169,29 @@ describe('抽象化への指向', function()
         return result;
       end;
       --/* #@range_end(sum_forEach) */
-      expect(
-        sum(anArray)
-      ).to.eql(
-        41
-      );
+      assert.are.equal(sum(anArray), 41)
+      -- expect(
+      --   sum(anArray)
+      -- ).to.eql(
+      --   41
+      -- );
     end);
     -- **リスト3.8** reduceによるsum関数
     it('reduceによるsum関数', function()
       --/* #@range_begin(sum_reduce) */
       local Array = require("lib/array")
       local sum = function(array)
-        return Array.reduce(Array,  function(x, y)
+        return Array.reduce(array,  function(x, y)
           return x + y;
         end,  0);
       end 
       --/* #@range_end(sum_reduce) */
-      expect(
-        sum(anArray)
-      ).to.eql(
-        41
-      );
-      next();
+      assert.are.equal(sum(anArray), 41)
+      -- expect(
+      --   sum(anArray)
+      -- ).to.eql(
+      --   41
+      -- );
     end);
   end);
 end);
@@ -250,15 +271,18 @@ describe('テストに親しむ', function()
     end);
     -- expectライブラリを使う場合
     -- > 参考資料: https:--github.com/Automattic/expect.js
-    it('expectによる表明', function()
+    it('assertによる表明', function()
       --/* #@range_begin(expect_assertion) */
-      expect(
-        1 + 2
-      ).to.eql(
-        3
-      );
+      assert.are.equal(
+        1 +  2
+        , 
+        3)
+      -- expect(
+      --   1 + 2
+      -- ).to.eql(
+      --   3
+      -- );
       --/* #@range_end(expect_assertion) */
-      next();
     end);
   end);
 end);
