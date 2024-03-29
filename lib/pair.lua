@@ -1,5 +1,6 @@
 local pair = {}
 
+-- #@@range_begin(pair_datatype)
 pair.match = function(data, pattern)
   return data(pattern);
 end
@@ -25,7 +26,7 @@ pair.left = function(tuple)
     end
   })
 end
-
+-- #@@range_end(pair_datatype)
 
 
 return pair
