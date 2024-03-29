@@ -293,11 +293,11 @@ describe('関数型モデル', function()
       local multiply = function(n,m)
         return times(m, add, n, 0);
       end 
-      --/* #@@range_begin(exponentia) */
+      -- #@@range_begin(exponential) */
       local exponential = function(n,m)
         return times(m, multiply, n, 1);
       end 
-      --/* #@@range_end(exponential) */
+      -- #@@range_end(exponential) */
       assert.are.equal(exponential(2, 3), 8)
       -- expect(
       --   exponential(2,3)
