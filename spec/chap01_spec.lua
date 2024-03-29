@@ -93,11 +93,11 @@ describe('関数型モデル', function()
   -- ###  <section id='substitution_model'>置換ルール</section>
   describe('置換ルール', function()
     it('単純なλ式の簡約', function()
-      --/* #@range_begin(succ) */
+      --/* #@@range_begin(succ) */
       local succ = function(n)
         return n + 1
       end
-      --/* #@range_end(succ) */
+      --/* #@@range_end(succ) */
       assert.are.equal(succ(1), 2)
       -- expect(
       --   succ(1)
@@ -107,7 +107,7 @@ describe('関数型モデル', function()
     end);
     -- **リスト 1.5 add関数 **
     it('add関数', function()
-      --/* #@range_begin(recursive_add) */
+      --/* #@@range_begin(recursive_add) */
       local succ = function(n)
         return n + 1;
       end;
@@ -123,7 +123,7 @@ describe('関数型モデル', function()
           return add(succ(x), prev(y)); 
         end 
       end;
-      --/* #@range_end(recursive_add) */
+      --/* #@@range_end(recursive_add) */
       -- <a name="add_reduction_demo"> add(3,2)の簡約 </a>
       -- ![add関数の簡約](images/add-reduction.gif) 
       assert.are.equal(add(3, 2), 5)
@@ -140,7 +140,7 @@ describe('関数型モデル', function()
       -- $$ a(n) = a(n-1) + 3$$
       -- 
       -- ただし、 $$ a(1) = 1 $$
-      --/* #@range_begin(recursion) */
+      --/* #@@range_begin(recursion) */
       local function a(n)
         if(n == 1) then
           return 1; -- 初項は1
@@ -148,7 +148,7 @@ describe('関数型モデル', function()
           return a(n-1) + 3; -- 公差は3
         end 
       end 
-      --/* #@range_end(recursion) */
+      --/* #@@range_end(recursion) */
       assert.are.equal(a(1), 1)
       -- expect(
       --   a(1)
@@ -171,7 +171,7 @@ describe('関数型モデル', function()
     -- **リスト 1.7 while文を利用したadd関数 **
     it('while文を利用したadd関数', function()
       --/* add関数の定義 */
-      --/* #@range_begin(imperative_add) */
+      --/* #@@range_begin(imperative_add) */
       local add = function(x,y)
         while(y > 0) do  -- yが0より大きい間、反復処理を実行する
           x = x + 1;    -- 変数xを更新する 
@@ -179,7 +179,7 @@ describe('関数型モデル', function()
         end 
         return x;
       end 
-      --/* #@range_end(imperative_add) */
+      --/* #@@range_end(imperative_add) */
       assert.are.equal(add(1,2), 3)
       -- expect(
       --   add(1,2)
@@ -217,7 +217,7 @@ describe('関数型モデル', function()
           return add(succ(x),prev(y)); -- add関数の再帰呼び出し
         end 
       end 
-      --/* #@range_begin(multiply) */
+      --/* #@@range_begin(multiply) */
       local function times(count,fun,arg, memo)
         if(count > 1) then
           --/* times関数を再帰呼び出し */
@@ -230,7 +230,7 @@ describe('関数型モデル', function()
         --/* 2番目の引数にadd関数を渡している */
         return times(m, add, n, 0); 
       end 
-      --/* #@range_end(multiply) */
+      --/* #@@range_end(multiply) */
       -- #### <a name="multiply_reduction_demo"> **multiply(2,3)の簡約** </a>
       -- ![multiply関数の簡約](images/multiply_reduction.gif) 
       assert.are.equal(add(2, 3), 5)
@@ -293,11 +293,11 @@ describe('関数型モデル', function()
       local multiply = function(n,m)
         return times(m, add, n, 0);
       end 
-      --/* #@range_begin(exponentia) */
+      --/* #@@range_begin(exponentia) */
       local exponential = function(n,m)
         return times(m, multiply, n, 1);
       end 
-      --/* #@range_end(exponential) */
+      --/* #@@range_end(exponential) */
       assert.are.equal(exponential(2, 3), 8)
       -- expect(
       --   exponential(2,3)

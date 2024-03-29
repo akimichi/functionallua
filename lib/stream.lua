@@ -60,7 +60,7 @@ stream.take = function(lazyList)
 end
 
 -- **リスト7.35** ストリームのfilter関数
--- /* #@range_begin(stream_filter) */
+-- #@@range_begin(stream_filter)
 -- /* filter:: FUN[T => BOOL] => STREAM[T] => STREAM[T] */
 stream.filter = function(predicate)
   return function(aStream)
@@ -80,15 +80,17 @@ stream.filter = function(predicate)
     });
   end 
 end
+-- #@@range_end(stream_filter)
 
 -- **リスト7.36** ストリームのremove関数
--- /* #@range_begin(stream_remove) */
+-- #@@range_begin(stream_remove)
 -- /* remove:: FUN[T => BOOL] => STREAM[T] => STREAM[T] */
 stream.remove = function(predicate)
   return function(aStream)
     return stream.filter(negate(predicate))(aStream);
   end
 end
+-- #@@range_end(stream_remove)
 
 stream.enumFrom = function(from)
   return stream.cons(from, function(_)

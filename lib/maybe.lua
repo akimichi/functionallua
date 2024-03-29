@@ -1,6 +1,6 @@
 local Maybe = {}
 
--- /* #@range_begin(maybe_monad) */
+-- #@@range_begin(maybe_monad)
 Maybe.match = function(exp, pattern)
   return exp(pattern);
 end
@@ -17,8 +17,6 @@ Maybe.nothing = function(_)
   end
 end 
 
--- /* #@range_begin(maybe_monad) */
--- /* unit:: T => MAYBE[T] */
 Maybe.unit = function(value)
   return Maybe.just(value);
 end
@@ -52,7 +50,7 @@ Maybe.getOrElse = function(instanceM)
     });
   end;
 end
--- /* #@range_end(maybe_monad) */
+-- #@@range_end(maybe_monad)
 
 
 return Maybe
