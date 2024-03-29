@@ -40,7 +40,7 @@ describe('関数型プログラミングの特徴', function()
     -- ~~~
 
     it('数値はファーストクラスオブジェクトである', function()
-      --/*  #@range_begin(number_as_first_class_citizen) */
+      --/*  #@@range_begin(number_as_first_class_citizen) */
       -- 値を変数にバインドする
       local zero = 0;
       local name = "Haskell Curry";
@@ -54,7 +54,7 @@ describe('関数型プログラミングの特徴', function()
       local birthYear = function(birthdayObject)
         return birthdayObject.year;
       end;
-      --/* #@range_end(number_as_first_class_citizen) */
+      --/* #@@range_end(number_as_first_class_citizen) */
       -- 値を関数に渡す
      assert.are.equal(math.sqrt(2), 1.4142135623730951455)
       -- expect(
@@ -65,11 +65,11 @@ describe('関数型プログラミングの特徴', function()
       -- );
     end);
     it('関数は変数にバインドできる', function()
-      --/* #@range_begin(function_bound_to_variable) */
+      --/* #@@range_begin(function_bound_to_variable) */
       local succ = function(n)
         return n + 1;
       end;
-      --/* #@range_end(function_bound_to_variable) */
+      --/* #@@range_end(function_bound_to_variable) */
       assert.are.equal(succ(1), 2)
       -- expect(
       --   succ(1) -- 変数succを用いてλ式を呼びだす
@@ -78,7 +78,7 @@ describe('関数型プログラミングの特徴', function()
       -- );
     end);
     it('関数をオブジェクトに埋めこむ', function()
-      --/* #@range_begin(function_embedded_in_object) */
+      --/* #@@range_begin(function_embedded_in_object) */
       local Math = {
         add =  function(n,m)
           return n + m;
@@ -90,11 +90,11 @@ describe('関数型プログラミングの特徴', function()
       -- ).to.eql(
       --   3
       -- );
-      --/* #@range_end(function_embedded_in_object) */
+      --/* #@@range_end(function_embedded_in_object) */
     end);
     -- **リスト 2.1** forEach文によるsumの定義
     it('forEach文によるsumの定義', function()
-      --/* #@range_begin(sum_forEach) */
+      --/* #@@range_begin(sum_forEach) */
       pending("I should finish this test later")
       -- local sum = function(array)
       --   local result = 0;
@@ -103,7 +103,7 @@ describe('関数型プログラミングの特徴', function()
       --   });
       --   return result;
       -- end;
-      -- --/* #@range_end(sum_forEach)  */
+      -- --/* #@@range_end(sum_forEach)  */
       -- expect(
       --   sum([1,2,3,4])
       -- ).to.eql(
@@ -113,13 +113,13 @@ describe('関数型プログラミングの特徴', function()
     describe('関数を返す', function()
       -- adderを定義する
       it('adderを定義する', function()
-        --/* #@range_begin(adder_definition) */
+        --/* #@@range_begin(adder_definition) */
         local function adder(n)
           return function(m) -- 関数を返す
             return n + m;
           end;
         end;
-        --/* #@range_end(adder_definition) */
+        --/* #@@range_end(adder_definition) */
         local succ = adder(1);
         assert.are.equal(succ(0), 1)
         -- expect(
@@ -238,13 +238,13 @@ describe('関数型プログラミングの特徴', function()
       end);
       -- **リスト2.2** 代入が参照透明性を破壊する例
       it('代入が参照透明性を破壊する例', function()
-        --/* #@range_begin(assignment_breaks_referential_transparency) */
+        --/* #@@range_begin(assignment_breaks_referential_transparency) */
         local x = 0;
         local add = function(y)
           x = x + 1; -- 代入で変数を更新する
           return x + y;
         end;
-        --/* #@range_end(assignment_breaks_referential_transparency)  */
+        --/* #@@range_end(assignment_breaks_referential_transparency)  */
         assert.are.equal(
           add(1)
         , 
@@ -257,7 +257,7 @@ describe('関数型プログラミングの特徴', function()
       end);
       -- **リスト2.3** 命令的な階乗関数
       it('命令的な階乗関数', function()
-        --/* #@range_begin(imperative_factorial) */
+        --/* #@@range_begin(imperative_factorial) */
         local factorial = function(n)
           --/* 変数resultに結果が入る */
           local result = 1;             
@@ -272,7 +272,7 @@ describe('関数型プログラミングの特徴', function()
           end 
           return result;
         end;
-        --/* #@range_end(imperative_factorial) */
+        --/* #@@range_end(imperative_factorial) */
         assert.are.equal(
           factorial(2)
         , 
@@ -357,7 +357,7 @@ describe('関数型プログラミングの特徴', function()
       describe('値の参照透過性を保証する（可変なデータの排除）', function()
         -- ** リスト2.4** 不変なデータ構造としてのオブジェクト型の実装
         it('不変なデータ構造としてのオブジェクト型の実装', function()
-          --/* #@range_begin(immutable_datatype) */
+          --/* #@@range_begin(immutable_datatype) */
           local empty =  function(_)
             return null;
           end;
@@ -373,14 +373,14 @@ describe('関数型プログラミングの特徴', function()
               end 
             end;
           end;
-          --/* #@range_end(immutable_datatype) */
+          --/* #@@range_end(immutable_datatype) */
         end);
       end);
       -- ##### 変数の参照透過性を保証する(代入の排除)
       describe('変数の参照透過性を保証する(代入の排除)', function()
         -- ** リスト2.5** 代入を使った足し算の定義
         it('代入を使った足し算の定義', function()
-          --/* #@range_begin(imperative_addition) */
+          --/* #@@range_begin(imperative_addition) */
           local add = function(x,y)
             local times = 0;          
             local result = x;         
@@ -392,7 +392,7 @@ describe('関数型プログラミングの特徴', function()
             end 
             return result;
           end;
-          --/* #@range_end(imperative_addition) */
+          --/* #@@range_end(imperative_addition) */
           assert.are.equal(
             add(2,1)
           , 
@@ -411,7 +411,7 @@ describe('関数型プログラミングの特徴', function()
         end);
         -- ** リスト2.6** 関数型プログラミングによる足し算の定義
         it('関数型プログラミングによる足し算の定義', function()
-          --/* #@range_begin(functional_addition) */
+          --/* #@@range_begin(functional_addition) */
           local function add(x,y)
             if(y < 1) then
               return x;
@@ -420,7 +420,7 @@ describe('関数型プログラミングの特徴', function()
               return add(x + 1, y - 1); 
             end 
           end;
-          --/* #@range_end(functional_addition) */
+          --/* #@@range_end(functional_addition) */
           assert.are.equal(
            add(2,1) 
           , 
@@ -442,7 +442,7 @@ describe('関数型プログラミングの特徴', function()
       describe('関数の参照透過性を保証する（副作用の分離）', function()
         -- **リスト2.7** 副作用が分離されていないコード
         it('副作用が分離されていないコード', function()
-          --/* #@range_begin(age_sideeffect) */
+          --/* #@@range_begin(age_sideeffect) */
           local age = function(birthYear)
             --/* todayは現時点の日付データ */
             local today = new Date();
@@ -450,16 +450,16 @@ describe('関数型プログラミングの特徴', function()
             local thisYear = today.getFullYear(); 
             return thisYear - birthYear;
           end;
-          --/* #@range_end(age_sideeffect) */
+          --/* #@@range_end(age_sideeffect) */
         end);
         -- **リスト2.8** 副作用が分離されているコード
         it('副作用が分離されているコード', function()
-          --/* #@range_begin(age_without_sideeffect) */
+          --/* #@@range_begin(age_without_sideeffect) */
           pending("I should finish this test later")
           -- local age = function(birthYear, thisYear)
           --   return thisYear - birthYear;
           -- end;
-          -- --/* #@range_end(age_without_sideeffect) */
+          -- --/* #@@range_end(age_without_sideeffect) */
           -- expect(
           --   age(1999, (new Date()).getFullYear())
           -- ).to.eql(
@@ -487,7 +487,7 @@ describe('関数型プログラミングの利点', function()
       describe('sum関数の定義', function()
         -- ##### forEachメソッドによるsumの定義
         it('forEachメソッドによるsumの定義', function()
-          --/* #@range_begin(sum_in_array_while) */
+          --/* #@@range_begin(sum_in_array_while) */
           local sum = function(array)
             --/* 結果を格納する変数 */
             local result = 0;
@@ -501,7 +501,7 @@ describe('関数型プログラミングの利点', function()
             end 
             return result;
           end;
-          --/* #@range_end(sum_in_array_while)  */
+          --/* #@@range_end(sum_in_array_while)  */
           -- expect(
           --   sum([1,2,3,4])
           -- ).to.eql(
@@ -515,7 +515,7 @@ describe('関数型プログラミングの利点', function()
         end);
         -- ##### reduceメソッドによるsumの定義
         it('reduceメソッドによるsumの定義', function()
-          --/* #@range_begin(sum_in_array_reduce) */
+          --/* #@@range_begin(sum_in_array_reduce) */
           pending("I should finish this test later")
           -- local sum = function(array)
           --   return array.reduce(--/* 第1引数に関数を渡す */
@@ -523,7 +523,7 @@ describe('関数型プログラミングの利点', function()
           --       return accumulator + item; --/* 足し算を実行する */
           --     },0); -- 第2引数には、蓄積変数の初期値として0を渡す 
           -- end;
-          -- --/* #@range_end(sum_in_array_reduce)  */
+          -- --/* #@@range_end(sum_in_array_reduce)  */
           -- expect(
           --   sum([1,2,3,4])
           -- ).to.eql(
@@ -533,21 +533,21 @@ describe('関数型プログラミングの利点', function()
       end);
       -- **リスト2.10** product関数の定義
       it('product関数の定義', function()
-        --/* #@range_begin(product_in_array_reduce) */
+        --/* #@@range_begin(product_in_array_reduce) */
         pending("I should finish this test later")
         -- local product = function(array)
         --   return array.reduce((accumulator, item) => {
         --     return accumulator * item; --/* かけ算を実行する */
         --   }, 1); -- 第2引数には、蓄積変数の初期値として1を渡す 
         -- end;
-        -- --/* #@range_end(product_in_array_reduce)  */
-        -- --/* #@range_begin(product_in_array_reduce_test) */
+        -- --/* #@@range_end(product_in_array_reduce)  */
+        -- --/* #@@range_begin(product_in_array_reduce_test) */
         -- expect(
         --   product([1,2,3,4])
         -- ).to.eql(
         --   24
         -- );
-        --/* #@range_end(product_in_array_reduce_test)  */
+        --/* #@@range_end(product_in_array_reduce_test)  */
         next();
       end);
       -- **リスト2.11** map関数の定義
@@ -556,7 +556,7 @@ describe('関数型プログラミングの利点', function()
         -- local succ = (n) => {
         --   return n + 1;
         -- };
-        -- --/* #@range_begin(map_in_array_reduce) */
+        -- --/* #@@range_begin(map_in_array_reduce) */
         -- local map = (transform) => {
         --   return (array) => {
         --     return array.reduce((accumulator, item) => {
@@ -564,7 +564,7 @@ describe('関数型プログラミングの利点', function()
         --     },[]); -- 蓄積変数の初期値として空の配列[]を指定する
         --   };
         -- };
-        -- --/* #@range_end(map_in_array_reduce)  */
+        -- --/* #@@range_end(map_in_array_reduce)  */
         -- expect(
         --   map(succ)([1,2,3])
         -- ).to.eql(
@@ -572,13 +572,13 @@ describe('関数型プログラミングの利点', function()
         -- );
         -- expect(
         --   -- **リスト2.12** map関数のテスト
-        --   --/* #@range_begin(map_in_array_reduce_test) */
+        --   --/* #@@range_begin(map_in_array_reduce_test) */
         --   map(succ)([1,3,5])
-        --   --/* #@range_end(map_in_array_reduce_test) */
+        --   --/* #@@range_end(map_in_array_reduce_test) */
         -- ).to.eql(
-        --   --/* #@range_begin(map_in_array_reduce_test_result) */
+        --   --/* #@@range_begin(map_in_array_reduce_test_result) */
         --   [2,4,6]
-        --   --/* #@range_end(map_in_array_reduce_test_result) */
+        --   --/* #@@range_end(map_in_array_reduce_test_result) */
         -- );
       end);
     end);
@@ -600,22 +600,22 @@ describe('関数型プログラミングの利点', function()
         --   },0); -- 第2引数には、蓄積変数の初期値として0を渡す 
         -- };
         -- -- **リスト2.13** constant関数
-        -- --/* #@range_begin(constant) */
+        -- --/* #@@range_begin(constant) */
         -- local constant = (any) => {
         --   return (_) => {
         --     return any;
         --   };
         -- };
         -- local alwaysOne = constant(1); 
-        -- --/* #@range_end(constant) */
+        -- --/* #@@range_end(constant) */
         -- -- **リスト2.14** map(alwaysOne)で配列の全要素を1に変える
-        -- --/* #@range_begin(map_alwaysOne) */
+        -- --/* #@@range_begin(map_alwaysOne) */
         -- expect(
         --   map(alwaysOne)([1,2,3])
         -- ).to.eql(
         --   [1,1,1]
         -- );
-        -- --/* #@range_end(map_alwaysOne) */
+        -- --/* #@@range_end(map_alwaysOne) */
         -- local flip = (fun) => {
         --   return  (x) => {
         --     return (y) => {
@@ -625,12 +625,12 @@ describe('関数型プログラミングの利点', function()
         -- };
         -- **リスト2.15** 関数適用によるlength関数の定義
         it('関数適用によるlength関数の定義', function()
-          --/* #@range_begin(array_length) */
+          --/* #@@range_begin(array_length) */
           pending("I should finish this test later")
           -- local length = (array) => {
           --   return sum(map(alwaysOne)(array));
           -- };
-          -- --/* #@range_end(array_length)  */
+          -- --/* #@@range_end(array_length)  */
           -- expect(
           --   length([1,2,3])
           -- ).to.eql(
@@ -641,19 +641,19 @@ describe('関数型プログラミングの利点', function()
         -- ##### 関数合成による処理の合成
         describe('関数合成による処理の合成', function()
           -- **リスト2.16** 関数の合成
-          --/* #@range_begin(function_compose) */
+          --/* #@@range_begin(function_compose) */
           local compose = function(f,g)
             return function(arg)
               return f(g(arg));
             end;
           end;
-          --/* #@range_end(function_compose)  */
+          --/* #@@range_end(function_compose)  */
           -- **リスト2.17** 関数合成によるlength関数の定義（ポイントフリースタイル）
           it('関数合成によるlength関数の定義（ポイントフリースタイル）', function()
-            --/* #@range_begin(array_length_in_composition_with_point_free_style) */
+            --/* #@@range_begin(array_length_in_composition_with_point_free_style) */
           pending("I should finish this test later")
           --   local length = compose(sum,map(alwaysOne));
-          --   --/* #@range_end(array_length_in_composition_with_point_free_style)  */
+          --   --/* #@@range_end(array_length_in_composition_with_point_free_style)  */
           --   expect(
           --     length([1,2,3])
           --   ).to.eql(
@@ -662,12 +662,12 @@ describe('関数型プログラミングの利点', function()
           -- end);
           -- **リスト2.18** 関数合成によるlength関数の定義（引数を明示したスタイル）
           it('関数合成によるlength関数の定義（引数を明示したスタイル）', function()
-            --/* #@range_begin(array_length_in_composition) */
+            --/* #@@range_begin(array_length_in_composition) */
              pending("I should finish this test later")
             -- local length = (array) => { -- 引数が配列であることを明示する
             --   return compose(sum,map(alwaysOne))(array);
             -- };
-            -- --/* #@range_end(array_length_in_composition)  */
+            -- --/* #@@range_end(array_length_in_composition)  */
             -- expect(
             --   length([1,2,3])
             -- ).to.eql(
@@ -704,28 +704,28 @@ describe('関数型プログラミングの利点', function()
           it('正格評価の例', function()
             pending("I should finish this test later")
             -- expect(
-            --   --/* #@range_begin(strict_evaluation) */
+            --   --/* #@@range_begin(strict_evaluation) */
             --   length([1,1+1])
-            --   --/* #@range_end(strict_evaluation) */
+            --   --/* #@@range_end(strict_evaluation) */
             -- ).to.eql(
-            --   --/* #@range_begin(strict_evaluation_result) */
+            --   --/* #@@range_begin(strict_evaluation_result) */
             --   2
-            --   --/* #@range_end(strict_evaluation_result) */
+            --   --/* #@@range_end(strict_evaluation_result) */
             -- );
           end);
           -- **リスト2.20** 遅延評価の例
           it('遅延評価の例', function()
             pending("I should finish this test later")
             -- expect(
-            --   --/* #@range_begin(lazy_evaluation) */
+            --   --/* #@@range_begin(lazy_evaluation) */
             --   length([1,(_) => {
             --     return 1+1; 
             --   }])
-            --   --/* #@range_end(lazy_evaluation) */
+            --   --/* #@@range_end(lazy_evaluation) */
             -- ).to.eql(
-            --   --/* #@range_begin(lazy_evaluation_result) */
+            --   --/* #@@range_begin(lazy_evaluation_result) */
             --   2
-            --   --/* #@range_end(lazy_evaluation_result) */
+            --   --/* #@@range_end(lazy_evaluation_result) */
             -- );
           end);
         end);
@@ -733,11 +733,11 @@ describe('関数型プログラミングの利点', function()
         describe('遅延評価によるストリーム', function()
           -- **リスト2.21** ストリームの例
           it('ストリームの例', function()
-            --/* #@range_begin(stream_example) */
+            --/* #@@range_begin(stream_example) */
             local aStream = {1, function(_) -- 後尾は無名関数で表現する
               return 2;
             end};
-            --/* #@range_end(stream_example) */
+            --/* #@@range_end(stream_example) */
             assert.are.equal(
               aStream[1] -- ストリームの先頭要素を取得する
             , 
@@ -762,16 +762,16 @@ describe('関数型プログラミングの利点', function()
             local succ = function(n)
               return n + 1;
             end;
-            --/* #@range_begin(enumFrom) */
+            --/* #@@range_begin(enumFrom) */
             local function enumFrom(n)
               return {n, function(_)  -- ストリームを返す
                 return enumFrom(succ(n));
               end};
             end;
-            --/* #@range_end(enumFrom) */
+            --/* #@@range_end(enumFrom) */
             -- **リスト2.23** 無限の偶数列を作る
             it('無限の偶数列を作る', function()
-              --/* #@range_begin(evenStream) */
+              --/* #@@range_begin(evenStream) */
                pending("I should finish this test later")
               local evenFrom = function(n)
                 return {n, function(_)
@@ -779,7 +779,7 @@ describe('関数型プログラミングの利点', function()
                 end};
               end;
               local evenStream = evenFrom(2); 
-              --/* #@range_end(evenStream) */
+              --/* #@@range_end(evenStream) */
               -- local take = function(n, astream)
               --   if(n == 1)  then
               --     return astream[0];
@@ -794,7 +794,7 @@ describe('関数型プログラミングの利点', function()
               -- );
             end);
             -- **リスト2.24** iterate関数 
-            --/* #@range_begin(stream_iterate) */
+            --/* #@@range_begin(stream_iterate) */
             local iterate = function(init)  -- 先頭の値を渡す
               return function(step)       -- 次の値との差を計算する関数を渡す
                 return {init, function(_) -- ストリーム型を返す
@@ -802,14 +802,14 @@ describe('関数型プログラミングの利点', function()
                 end};
               end;
             end;
-            --/* #@range_end(stream_iterate) */
+            --/* #@@range_end(stream_iterate) */
 
             -- **リスト2.25** 無限ストリームの例
             it('無限の偶数列', function()
               local succ = function(n)
                 return n + 1;
               end;
-              --/* #@range_begin(enumFrom_by_iterate) */
+              --/* #@@range_begin(enumFrom_by_iterate) */
               local function enumFrom(n)
                 return iterate(n)(succ);
               end;
@@ -820,11 +820,11 @@ describe('関数型プログラミングの利点', function()
                 return n + 2;
               end;
               local evenStream = iterate(2)(twoStep);
-              --/* #@range_end(enumFrom_by_iterate) */
+              --/* #@@range_end(enumFrom_by_iterate) */
             end);
             it('ストリームを加工する', function()
               -- **リスト2.26** ストリームのfilter関数
-              --/* #@range_begin(stream_filter) */
+              --/* #@@range_begin(stream_filter) */
               local function filter(predicate)
                 return function(aStream)
                   --/* ストリームの先頭要素を取り出す */
@@ -840,16 +840,16 @@ describe('関数型プログラミングの利点', function()
                   end 
                 end;
               end;
-              --/* #@range_end(stream_filter) */
+              --/* #@@range_end(stream_filter) */
               -- **リスト2.27**filter関数で無限の偶数列を作る
-              --/* #@range_begin(evenStream_by_filter) */
+              --/* #@@range_begin(evenStream_by_filter) */
               local even = function(n)
                 return (n % 2) == 0; 
               end;
               local evenStream = filter(even)(enumFrom(1));
-              --/* #@range_end(evenStream_by_filter) */
+              --/* #@@range_end(evenStream_by_filter) */
               -- **リスト2.28** ストリームのelemAt関数
-              --/* #@range_begin(stream_elemAt) */
+              --/* #@@range_begin(stream_elemAt) */
               local function elemAt(n)
                 return function(aStream)
                   if(n == 1) then
@@ -859,7 +859,7 @@ describe('関数型プログラミングの利点', function()
                   end;
                 end;
               end;
-              --/* #@range_end(stream_elemAt) */
+              --/* #@@range_end(stream_elemAt) */
               assert.are.equal(
                 elemAt(1)(evenStream)
               , 
@@ -887,18 +887,18 @@ describe('関数型プログラミングの利点', function()
                 6
               ) 
               -- expect(
-              --   --/* #@range_begin(third_element_of_evenStream) */
+              --   --/* #@@range_begin(third_element_of_evenStream) */
               --   elemAt(3)(evenStream)
-              --   --/* #@range_end(third_element_of_evenStream) */
+              --   --/* #@@range_end(third_element_of_evenStream) */
               -- ).to.eql(
-              --   --/* #@range_begin(third_element_of_evenStream_result) */
+              --   --/* #@@range_begin(third_element_of_evenStream_result) */
               --   6
-              --   --/* #@range_end(third_element_of_evenStream_result) */
+              --   --/* #@@range_end(third_element_of_evenStream_result) */
               -- );
             end);
             -- **リスト2.30** 配列のelemAt関数
             it('配列のelemAt関数', function()
-              --/* #@range_begin(array_elemAt) */
+              --/* #@@range_begin(array_elemAt) */
               local function elemAt(n)
                 return function(anArray)
                   assert(type(anArray) == "table")
@@ -912,7 +912,7 @@ describe('関数型プログラミングの利点', function()
                   end;
                 end;
               end;
-              --/* #@range_end(array_elemAt) */
+              --/* #@@range_end(array_elemAt) */
               assert.are.equal(
                elemAt(4)({2,4,6}) 
               , 
@@ -920,13 +920,13 @@ describe('関数型プログラミングの利点', function()
               ) 
               -- expect(
               --   -- **リスト2.31** 4番目の偶数を求める
-              --   --/* #@range_begin(fourth_element_of_evenArray) */
+              --   --/* #@@range_begin(fourth_element_of_evenArray) */
               --   elemAt(4)({2,4,6})
-              --   --/* #@range_end(fourth_element_of_evenArray) */
+              --   --/* #@@range_end(fourth_element_of_evenArray) */
               -- ).to.eql(
-              --   --/* #@range_begin(fourth_element_of_evenArray_result) */
+              --   --/* #@@range_begin(fourth_element_of_evenArray_result) */
               --   undefined
-              --   --/* #@range_end(fourth_element_of_evenArray_result) */
+              --   --/* #@@range_end(fourth_element_of_evenArray_result) */
               -- );
             end);
           end);
@@ -941,7 +941,7 @@ describe('関数型プログラミングの利点', function()
       local succ = function(n)
         return n + 1;
       end;
-      --/* #@range_begin(expect_example) */
+      --/* #@@range_begin(expect_example) */
       assert.are.equal(
         succ(1) -- テストしたい式を書く
       , 
@@ -952,11 +952,11 @@ describe('関数型プログラミングの利点', function()
       -- ).to.eql(
       --   2       -- 期待する結果を書く
       -- );
-      --/* #@range_end(expect_example) */
+      --/* #@@range_end(expect_example) */
     end);
     -- **リスト2.33** 参照透過性のない関数の単体テスト
     it("参照透過性のない関数の単体テスト", function()
-      --/* #@range_begin(winner_with_sideeffect) */
+      --/* #@@range_begin(winner_with_sideeffect) */
       local winner = function(playerL, playerR)
         if(playerR.score > playerL.score) then
           console.log(playerR.name + "が勝者です");
@@ -966,7 +966,7 @@ describe('関数型プログラミングの利点', function()
           console.log("引き分けです");
         end 
       end; 
-      --/* #@range_end(winner_with_sideeffect) */
+      --/* #@@range_end(winner_with_sideeffect) */
       local playerA = {
         name = 'a',
         score =  10
@@ -979,7 +979,7 @@ describe('関数型プログラミングの利点', function()
     describe('副作用を分離する', function()
       -- **リスト2.34** winner関数の分離
       it("winner関数の分離", function()
-        --/* #@range_begin(winner_without_sideeffect) */
+        --/* #@@range_begin(winner_without_sideeffect) */
         --/* 勝者を判定する */
         local judge = function(playerL, playerR)
           if(playerL.score > playerR.score) then
@@ -1002,9 +1002,9 @@ describe('関数型プログラミングの利点', function()
         local displayWinner = function(winner)
           console.log(announce(winner));
         end;
-        --/* #@range_end(winner_without_sideeffect) */
+        --/* #@@range_end(winner_without_sideeffect) */
         -- **リスト2.35** 副作用のない関数のテスト
-        --/* #@range_begin(announce_winner) */
+        --/* #@@range_begin(announce_winner) */
         local socrates = {
           name = 'ソクラテス',
           score =  10
@@ -1025,7 +1025,7 @@ describe('関数型プログラミングの利点', function()
         -- ).to.eql(
         --   "プラトンが勝者です"
         -- );
-        --/* #@range_end(announce_winner) */
+        --/* #@@range_end(announce_winner) */
       end);
     end);
   end);
@@ -1051,7 +1051,7 @@ describe('関数型プログラミングの利点', function()
       end;
       it('succ関数の性質テスト', function()
         -- **リスト2.39** プロパティテストのための関数
-        --/* #@range_begin(succ_property) */
+        --/* #@@range_begin(succ_property) */
         --/* ストリームのmap関数 */
         local function map(transform)
           return function(aStream)
@@ -1090,10 +1090,10 @@ describe('関数型プログラミングの利点', function()
         local proposition = function(n)
           return succ(0) + succ(n) == succ(succ(n));
         end;
-        --/* #@range_end(succ_property) */
+        --/* #@@range_end(succ_property) */
 
         -- **リスト2.40** succ関数のプロパティテスト
-        --/* #@range_begin(succ_property_test) */
+        --/* #@@range_begin(succ_property_test) */
         --/* 100個の整数について命題が正しいかをテストする */
         assert.are.equal(
           all(
@@ -1113,7 +1113,7 @@ describe('関数型プログラミングの利点', function()
         -- ).to.eql(
         --   true
         -- );
-        --/* #@range_end(succ_property_test) */
+        --/* #@@range_end(succ_property_test) */
       end);
     end);
   end);

@@ -25,11 +25,11 @@ describe('関数の基本', function()
   describe('関数を定義する', function()
     -- **リスト6.1** 恒等関数
     it('恒等関数', function()
-      -- /* #@range_begin(identity_function_definition) */
+      -- /* #@@range_begin(identity_function_definition) */
       local identity = function(any)
         return any;
       end
-      -- /* #@range_end(identity_function_definition) */
+      -- /* #@@range_end(identity_function_definition) */
       assert.are.equal(identity(1), 1)
       assert.are.equal(identity("a"), "a")
       -- expect(
@@ -45,11 +45,11 @@ describe('関数の基本', function()
     end)
     -- **リスト6.2** succ関数
     it('succ関数', function()
-      -- /* #@range_begin(succ_function_definition) */
+      -- /* #@@range_begin(succ_function_definition) */
       local succ = function(n)
         return n + 1;
       end
-      -- /* #@range_end(succ_function_definition) */
+      -- /* #@@range_end(succ_function_definition) */
       -- /* テスト */
       assert.are.equal(succ(0), 1)
       -- expect(
@@ -79,12 +79,12 @@ describe('関数の基本', function()
     end)
     -- **リスト6.3** add関数
     it('add関数', function()
-      -- /* #@range_begin(add_function_definition) */
+      -- /* #@@range_begin(add_function_definition) */
       -- /* add:: (NUM, NUM) => NUM */
       local add = function(n, m)
         return n + m;
       end 
-      -- /* #@range_end(add_function_definition) */
+      -- /* #@@range_end(add_function_definition) */
       -- /* テスト */
       assert.are.equal(add(0, 1), 1)
       -- expect(
@@ -95,19 +95,19 @@ describe('関数の基本', function()
     end)
     -- **リスト6.5** 関数の変数へのバインド
     it('関数の変数へのバインド', function()
-      -- /* #@range_begin(function_bound_to_variable) */
+      -- /* #@@range_begin(function_bound_to_variable) */
       local succ = function(x)
         return x + 1;
       end 
-      -- /* #@range_end(function_bound_to_variable) */
+      -- /* #@@range_end(function_bound_to_variable) */
     end)
     it('引数を参照しない関数', function()
       -- **リスト6.6** 定数関数
-      -- /* #@range_begin(constant_one_function) */
+      -- /* #@@range_begin(constant_one_function) */
       local alwaysOne = function(x)
         return 1;
       end 
-      -- /* #@range_end(constant_one_function) */
+      -- /* #@@range_end(constant_one_function) */
       assert.are.equal(alwaysOne(1), 1)
       assert.are.equal(alwaysOne("a"), 1)
       -- expect(
@@ -121,11 +121,11 @@ describe('関数の基本', function()
       --   1
       -- );
       -- **リスト6.7** left関数
-      -- /* #@range_begin(left_function) */
+      -- /* #@@range_begin(left_function) */
       local left = function(x,y)
         return x;
       end
-      -- /* #@range_end(left_function) */
+      -- /* #@@range_end(left_function) */
       assert.are.equal(left(1), 1)
       -- expect(
       --   left(1,2)
@@ -138,7 +138,7 @@ describe('関数の基本', function()
   describe('関数を適用する', function()
     -- **リスト6.8** succ関数のテスト
     it('succ関数のテスト', function()
-      -- /* #@range_begin(succ_function_test) */
+      -- /* #@@range_begin(succ_function_test) */
       local succ = function(n) -- nは仮引数 
         return n + 1;
       end 
@@ -148,7 +148,7 @@ describe('関数の基本', function()
       -- ).to.eql(
       --   2
       -- );
-      -- /* #@range_end(succ_function_test) */
+      -- /* #@@range_end(succ_function_test) */
     end)
     -- #### 関数の評価戦略
     describe('関数の評価戦略', function()
@@ -168,7 +168,7 @@ describe('関数の基本', function()
       end)
       -- **リスト6.9** JavaScriptにおける正格評価
       it('JavaScriptにおける正格評価', function()
-        -- /* #@range_begin(strict_evaluation_in_javascript) */
+        -- /* #@@range_begin(strict_evaluation_in_javascript) */
         local left = function(x,y)
           return x;
         end 
@@ -182,11 +182,11 @@ describe('関数の基本', function()
            1
          )
          --]]
-        -- /* #@range_end(strict_evaluation_in_javascript) */
+        -- /* #@@range_end(strict_evaluation_in_javascript) */
       end)
       -- **リスト6.10** 条件文と遅延評価
       it('条件文と遅延評価', function()
-        -- /* #@range_begin(conditional_is_nonstrict) */
+        -- /* #@@range_begin(conditional_is_nonstrict) */
         local infiniteLoop = function()
           return infiniteLoop();
         end
@@ -205,14 +205,14 @@ describe('関数の基本', function()
         -- ).to.eql(
         --   true -- 無限ループに陥ることなく計算に成功する
         -- );
-        -- /* #@range_end(conditional_is_nonstrict) */
+        -- /* #@@range_end(conditional_is_nonstrict) */
       end)
       it('乗算の遅延評価', function()
         local infiniteLoop = function()
           return infiniteLoop();
         end 
         -- **リスト6.11** 遅延評価で定義したmultiply関数
-        -- /* #@range_begin(multiply_lazy_evaluation) */
+        -- /* #@@range_begin(multiply_lazy_evaluation) */
         local lazyMultiply = function(funX,funY)
           local x = funX();
 
@@ -222,9 +222,9 @@ describe('関数の基本', function()
             return x * funY(); -- ここで初めてfunYを評価する
           end 
         end 
-        -- /* #@range_end(multiply_lazy_evaluation) */
+        -- /* #@@range_end(multiply_lazy_evaluation) */
         -- **リスト6.12** 遅延評価で定義したmultiply関数のテスト
-        -- /* #@range_begin(multiply_lazy_evaluation_test) */
+        -- /* #@@range_begin(multiply_lazy_evaluation_test) */
         -- expect(
         --   lazyMultiply((_) => {    -- 値を関数でラッピングする
         --     return 0;
@@ -234,13 +234,13 @@ describe('関数の基本', function()
         -- ).to.eql(
         --   0
         -- );
-        -- /* #@range_end(multiply_lazy_evaluation_test) */
+        -- /* #@@range_end(multiply_lazy_evaluation_test) */
       end)
     end)
     -- #### サンクで無限を表現する
     describe('サンクで無限を表現する', function()
       -- **リスト6.14** サンクによるストリーム型の定義
-      -- /* #@range_begin(stream_with_thunk) */
+      -- /* #@@range_begin(stream_with_thunk) */
       local match = function(data, pattern)
         return data(pattern)
       end 
@@ -280,10 +280,10 @@ describe('関数の基本', function()
           })
         end
       };
-      -- /* #@range_end(stream_with_thunk) */
+      -- /* #@@range_end(stream_with_thunk) */
       -- **リスト6.16** ストリーム型のテスト
       it("ストリーム型のテスト", function()
-        -- /* #@range_begin(stream_with_thunk_test) */
+        -- /* #@@range_begin(stream_with_thunk_test) */
         local theStream = stream.cons(1, function(_) -- 第2引数にサンクを渡す
           return stream.cons(2, function(_)         -- 第2引数にサンクを渡す
             return stream.empty();
@@ -295,7 +295,7 @@ describe('関数の基本', function()
         -- ).to.eql(
         --   1
         -- );
-        -- /* #@range_end(stream_with_thunk_test) */
+        -- /* #@@range_end(stream_with_thunk_test) */
       end)
       describe("無限ストリームを作る", function()
         local match = function(data, pattern)
@@ -339,13 +339,13 @@ describe('関数の基本', function()
         it("無限の整数列を作る", function()
           pending("I should finish this test later")
           -- **リスト6.17** 無限に1が続く数列
-          -- /* #@range_begin(infinite_ones) */
+          -- /* #@@range_begin(infinite_ones) */
           -- /* ones = 1,1,1,1,... */
         --   local ones = stream.cons(1, function tailThunk(_)
         --     return ones; -- onesを再帰的に呼び出す
         --   end)
-        --   -- /* #@range_end(infinite_ones) */
-        --   -- /* #@range_begin(infinite_ones_test) */
+        --   -- /* #@@range_end(infinite_ones) */
+        --   -- /* #@@range_begin(infinite_ones_test) */
         --   assert.are.equal(stream.head(ones) , 1)
         --   -- expect(
         --   --   stream.head(ones) -- 最初の要素を取りだす
@@ -358,16 +358,16 @@ describe('関数の基本', function()
         --   -- ).to.eql(
         --   --   1
         --   -- );
-        --   -- /* #@range_end(infinite_ones_test) */
+        --   -- /* #@@range_end(infinite_ones_test) */
         --
         --   -- **リスト6.19** 無限に連続する整数列を生成するenumFrom関数
-        --   -- /* #@range_begin(infinite_integer) */
+        --   -- /* #@@range_begin(infinite_integer) */
         --   local enumFrom = function(n)
         --     return stream.cons(n, function(_)
         --       return enumFrom(n + 1)
         --     end )
         --   end 
-        --   -- /* #@range_end(infinite_integer) */
+        --   -- /* #@@range_end(infinite_integer) */
         --   expect(
         --     stream.head(enumFrom(1)) -- 最初の要素を取りだす
         --   ).to.eql(
@@ -428,7 +428,7 @@ describe('関数の基本', function()
               })
             end,
             -- **リスト6.22** リストのtoArray関数
-            -- /* #@range_begin(list_toArray) */
+            -- /* #@@range_begin(list_toArray) */
             toArray = function(alist)
               local function toArrayHelper(alist,accumulator)
                 return match(alist, {
@@ -446,11 +446,11 @@ describe('関数の基本', function()
               end
               return toArrayHelper(alist, {});
             end
-            -- /* #@range_end(list_toArray) */
+            -- /* #@@range_end(list_toArray) */
           };
           -- this.timeout(3000);
           -- **リスト6.21** ストリームのtake関数
-          -- /* #@range_begin(stream_take) */
+          -- /* #@@range_begin(stream_take) */
           -- /* take:: (STREAM[T], NUM) => LIST[T] */
           local function take(astream, n)
             return match(astream,{
@@ -468,7 +468,7 @@ describe('関数の基本', function()
               end
             })
           end
-          -- /* #@range_end(stream_take) */
+          -- /* #@@range_end(stream_take) */
           -- /* take関数を定義するため、streamモジュールを再掲する */
           local stream = {
             empty = function(_)
@@ -502,7 +502,7 @@ describe('関数の基本', function()
               })
             end,
             -- **リスト6.21** ストリームのtake関数
-            -- /* #@range_begin(stream_take) */
+            -- /* #@@range_begin(stream_take) */
             -- /* take:: (STREAM[T], NUM) => LIST[T] */
             -- take = function(astream, n)
             --   return match(astream,{
@@ -520,7 +520,7 @@ describe('関数の基本', function()
             --   })
             -- end
           }
-          -- /* #@range_end(stream_take) */
+          -- /* #@@range_end(stream_take) */
           assert.are.equal(stream.head(enumFrom(1)), 1)
           -- expect(
           --   stream.head(enumFrom(1))
@@ -534,7 +534,7 @@ describe('関数の基本', function()
           --   2
           -- );
             -- **リスト6.22** リストのtoArray関数
-            -- /* #@range_begin(list_toArray) */
+            -- /* #@@range_begin(list_toArray) */
             toArray = function(alist)
               local function toArrayHelper(alist,accumulator)
                 return match(alist, {
@@ -549,9 +549,9 @@ describe('関数の基本', function()
               end
               return toArrayHelper(alist, {});
             end
-            -- /* #@range_end(list_toArray) */
+            -- /* #@@range_end(list_toArray) */
           -- **リスト6.23** 無限の整数列をテストする
-          -- /* #@range_begin(infinite_integer_test) */
+          -- /* #@@range_begin(infinite_integer_test) */
           assert.are.same(
             list.toArray( -- ストリームを配列に変換する
               take(enumFrom(1),4) -- 無限の整数列から4個の要素を取り出す 
@@ -565,15 +565,15 @@ describe('関数の基本', function()
           -- ).to.eql(
           --   [1,2,3,4]
           -- );
-          -- /* #@range_end(infinite_integer_test) */
-          -- /* #@range_begin(stream_filter_test) */
+          -- /* #@@range_end(infinite_integer_test) */
+          -- /* #@@range_begin(stream_filter_test) */
           -- expect(
           --   -- /* 無限の整数列から最初の4つの要素を取り出し、それを配列に変換する */
           --   list.toArray(stream.take(enumFrom(1), 4))
           -- ).to.eql(
           --   [1,2,3,4]
           -- );
-          -- /* #@range_end(stream_filter_test) */
+          -- /* #@@range_end(stream_filter_test) */
         end)
       end)
     end)
@@ -588,19 +588,19 @@ describe('関数と参照透過性', function()
     local succ = function(n)
       return n + 1
     end
-    -- /* #@range_begin(succ_has_referential_transparency) */
+    -- /* #@@range_begin(succ_has_referential_transparency) */
     assert.are.equal(succ(1), succ(1))
     -- expect(
     --   succ(1)
     -- ).to.eql(
     --   succ(1)
     -- );
-    -- /* #@range_end(succ_has_referential_transparency) */
+    -- /* #@@range_end(succ_has_referential_transparency) */
   end)
   -- **リスト6.26** ファイル操作は参照透過性を破壊する
   it('ファイル操作は参照透過性を破壊する', function()
     pending("I should finish this test later")
-    -- /* #@range_begin(fileio_destroys_referential_transparency) */
+    -- /* #@@range_begin(fileio_destroys_referential_transparency) */
     -- -- /* fsモジュールを変数fsにバインドする */
     -- local fs = require('fs');
     -- --[[/* テストの実行前にあらかじめ "This is a test."
@@ -625,34 +625,34 @@ describe('関数と参照透過性', function()
     -- ).to.eql(-- /* 最初の readFileSync関数の結果と異なっている */
     --   "This is another test."
     -- );
-    -- /* #@range_end(fileio_destroys_referential_transparency) */
+    -- /* #@@range_end(fileio_destroys_referential_transparency) */
   end)
   it('画面出力が参照透過性を損なうこと', function()
     pending("I should finish this test later")
-    -- /* #@range_begin(log_destroys_referential_transparency) */
+    -- /* #@@range_begin(log_destroys_referential_transparency) */
     -- expect(
     --   console.log("this is a test")
     -- ).to.eql(
     --   console.log("this is anoter test")
     -- );
-    -- /* #@range_end(log_destroys_referential_transparency) */
+    -- /* #@@range_end(log_destroys_referential_transparency) */
   end)
   -- ### <section id='coping-sideeffect'>副作用への対処</section>
   describe('副作用への対処', function()
     describe('tap関数', function()
       -- **リスト6.27** tap関数
-      -- /* #@range_begin(tap_combinator) */
+      -- /* #@@range_begin(tap_combinator) */
       local tap = function(target,sideEffect)
         sideEffect(target); -- 副作用を実行する
         return target;
       end 
-      --- /* #@range_end(tap_combinator) */
+      --- /* #@@range_end(tap_combinator) */
       -- **リスト6.28** tap関数によるconsole.logのテスト
       it('tap関数によるconsole.logのテスト', function()
         local succ = function(n)
           return n + 1
         end 
-        -- /* #@range_begin(tap_combinator_test_in_console) */
+        -- /* #@@range_begin(tap_combinator_test_in_console) */
         -- /* 画面出力という副作用を実行する関数 */
         local consoleSideEffect = function(any)
           print(any)
@@ -663,12 +663,12 @@ describe('関数と参照透過性', function()
         -- ).to.eql(
         --   tap(succ(1), consoleSideEffect)
         -- );
-        -- /* #@range_end(tap_combinator_test_in_console) */
+        -- /* #@@range_end(tap_combinator_test_in_console) */
       end)
       -- **リスト6.29** tap関数によるファイル入出力のテスト
       it('tap関数によるファイル入出力のテスト', function()
         -- local fs = require('fs'); -- fsモジュールを変数fsにバインドする
-        -- -- /* #@range_begin(tap_combinator_test_in_fileio) */
+        -- -- /* #@@range_begin(tap_combinator_test_in_fileio) */
         -- -- /* あらかじめ文字列をファイルに書き込んでおく */
         -- fs.writeFileSync('test/resources/file.txt', "This is a test.");
 
@@ -688,7 +688,7 @@ describe('関数と参照透過性', function()
         --   tap(fs.readFileSync("test/resources/file.txt", 'utf8'),
         --       IOSideEffect)
         -- );
-        -- /* #@range_end(tap_combinator_test_in_fileio) */
+        -- /* #@@range_end(tap_combinator_test_in_fileio) */
       end)
     end)
   end)

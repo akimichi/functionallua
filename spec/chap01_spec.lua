@@ -2,7 +2,7 @@
 describe("命令型モデル", function()
   describe("チューリング機械 turing machine", function()
     -- **リスト 1.1 JavaScriptによるチューリング機械 **
-    -- #@range_begin(turing)
+    -- #@@range_begin(turing)
     local machine = function(program,tape,initState, endState)
       -- ヘッドの位置
       local position = 0
@@ -34,7 +34,7 @@ describe("命令型モデル", function()
       end
       return tape
     end
-    -- #@range_end(turing)
+    -- #@@range_end(turing)
   end)
   -- **リスト 1.2 チューリング機械の実行例 **
   -- describe('チューリング機械の実行例', function()
@@ -42,7 +42,7 @@ describe("命令型モデル", function()
   --   -- ![チューリング機械の挙動](images/turing_succ.gif) 
   --   it('チューリング機械でsucc関数を実装する', (next) => {
   --     --[[
-  --      #@range_begin(turing_example_succ)
+  --      #@@range_begin(turing_example_succ)
   --      2進法で10、つまり10進法で2を表すテープ
   --     ]]
   --     var tape = { 
@@ -64,24 +64,24 @@ describe("命令型モデル", function()
   --       "0": {"write": "0", "move": 1, "next": 'q4'},
   --       "B": {"write": "B", "move": 1, "next": 'q4'}}
   --     };
-  --     /* #@range_end(turing_example_succ) */
+  --     /* #@@range_end(turing_example_succ) */
   --     expect(
   --     -- **リスト 1.3 1を加えるチューリング機械の実行 **
-  --     /* #@range_begin(turing_example_succ_test) */
+  --     /* #@@range_begin(turing_example_succ_test) */
   --     machine(program,     -- プログラム
   --     tape,        -- テープ
   --     'q0',        -- 初期状態
   --     'q4')        -- 終了状態
-  --     /* #@range_end(turing_example_succ_test) */
+  --     /* #@@range_end(turing_example_succ_test) */
   --     ).to.eql(
-  --     /* #@range_begin(turing_example_succ_test_result) */
+  --     /* #@@range_begin(turing_example_succ_test_result) */
   --     {
   --       '-1': 'B',
   --       '0': '1',
   --       '1': '1',
   --       '2': 'B'
   --     }
-  --     /* #@range_end(turing_example_succ_test_result) */
+  --     /* #@@range_end(turing_example_succ_test_result) */
   --     );
   --     next();
   --   });

@@ -103,7 +103,7 @@ describe('抽象構文木を作る', function()
   -- **リスト8.2** 式の代数的データ構造
   describe('式の代数的データ構造', function()
     local exp = {
-      --/* #@range_begin(expression_algebraic_datatype) */
+      --/* #@@range_begin(expression_algebraic_datatype) */
       --/* 式のパターンマッチ関数 */
       match = function(data, pattern)
         return data(pattern);
@@ -132,17 +132,17 @@ describe('抽象構文木を作る', function()
           return pattern.app(lambda, arg);
         end;
       end,
-      --/* #@range_end(expression_algebraic_datatype) */
+      --/* #@@range_end(expression_algebraic_datatype) */
 
       -- **リスト8.3** 演算の定義
-      --/* #@range_begin(expression_arithmetic) */
+      --/* #@@range_begin(expression_arithmetic) */
       --/* 足し算の式 */
       add = function(expL,expR)
         return function(pattern)
           return pattern.add(expL, expR);
         end 
       end
-      --/* #@range_end(expression_arithmetic) */
+      --/* #@@range_end(expression_arithmetic) */
     };
     describe('式をテストする', function()
       it("\\x.\\y.x", function()
@@ -167,7 +167,7 @@ end) -- end of 抽象構文木を作る
 -- -- ## 8.3 <section id='environment'>環境を作る</section>
 describe('環境を作る', function()
   -- **リスト8.5** クロージャーによる「環境」の定義
-  --/* #@range_begin(environment) */
+  --/* #@@range_begin(environment) */
   local Env = require("lib/env")
   local env = {
     --/* 空の環境を作る */
@@ -192,7 +192,7 @@ describe('環境を作る', function()
       end
     end 
   };
-  --/* #@range_end(environment) */
+  --/* #@@range_end(environment) */
   -- **リスト8.7** 変数バインディングにおける環境のセマンティクス
 
   -- ~~~
@@ -200,7 +200,7 @@ describe('環境を作る', function()
   -- a;
   -- ~~~
   it('変数バインディングにおける環境のセマンティクス', function()
-    --/* #@range_begin(environment_code_test) */
+    --/* #@@range_begin(environment_code_test) */
     local test =  function()
       --/* 空の環境からnewEnv環境を作る */
       local newEnv = env.extend("a", 1, env.empty); 
@@ -220,7 +220,7 @@ describe('環境を作る', function()
     -- })()).to.eql(
     --   1
     -- );
-    --/* #@range_end(environment_code_test) */
+    --/* #@@range_end(environment_code_test) */
     --
     local test2 = function()
       local initEnv = env.empty;                      -- 空の辞書を作成する
@@ -257,7 +257,7 @@ describe('環境を作る', function()
     -- closure() 
     -- ~~~
     -- **リスト8.9** クロージャーにおける環境のセマンティクス
-    --/* #@range_begin(environment_extend_test) */
+    --/* #@@range_begin(environment_extend_test) */
     local test3 = function()
       --/* 空の辞書を作成する */
       local initEnv = Env.empty;                   
@@ -288,7 +288,7 @@ describe('環境を作る', function()
     -- })()).to.eql(
     --   3
     -- );
-    --/* #@range_end(environment_extend_test) */
+    --/* #@@range_end(environment_extend_test) */
    end)
 end)
 --
@@ -349,7 +349,7 @@ describe('評価器を作る', function()
       end
     };
     -- ### 恒等モナド
-    --/* #@range_begin(identity_monad) */
+    --/* #@@range_begin(identity_monad) */
     local ID = require("lib/id")
     -- local ID = {
     --   unit = function(value) => {
@@ -362,10 +362,10 @@ describe('評価器を作る', function()
     --     };
     --   }
     -- };
-    --/* #@range_end(identity_monad) */
+    --/* #@@range_end(identity_monad) */
 
     -- **リスト8.10** 恒等モナド評価器の定義
-    --/* #@range_begin(identity_monad_evaluator) */
+    --/* #@@range_begin(identity_monad_evaluator) */
     --/* evaluate:= function(EXP, ENV) => ID[VALUE] */
     local function evaluate(anExp, environment)
       return exp.match(anExp,{
@@ -406,10 +406,10 @@ describe('評価器を作る', function()
         end
       });
     end;
-    --/* #@range_end(identity_monad_evaluator) */
+    --/* #@@range_end(identity_monad_evaluator) */
     -- **リスト8.12** 数値の評価のテスト
     it('数値の評価のテスト', function()
-      --/* #@range_begin(number_evaluation_test) */
+      --/* #@@range_begin(number_evaluation_test) */
       assert.are.equal(
         evaluate(exp.num(2), Env.empty) 
         ,
@@ -420,11 +420,11 @@ describe('評価器を作る', function()
       -- ).to.eql(
       --   ID.unit(2)
       -- );
-      --/* #@range_end(number_evaluation_test) */
+      --/* #@@range_end(number_evaluation_test) */
      end);
     -- **リスト8.14** 変数の評価のテスト
     it('変数の評価のテスト', function()
-      --/* #@range_begin(variable_evaluation_test) */
+      --/* #@@range_begin(variable_evaluation_test) */
       --/* 変数xを1に対応させた環境を作る */
       local newEnv = Env.extend("x", 1, Env.empty); 
       --/* 拡張したnewEnv環境を用いて変数xを評価する */
@@ -438,7 +438,7 @@ describe('評価器を作る', function()
       -- ).to.eql(
       --   ID.unit(1)
       -- );
-      --/* #@range_end(variable_evaluation_test) */
+      --/* #@@range_end(variable_evaluation_test) */
       assert.are.equal(
         evaluate(exp.variable("y"), newEnv)
         ,
@@ -453,7 +453,7 @@ describe('評価器を作る', function()
     -- **リスト8.16** 足し算の評価のテスト
     it('足し算の評価のテスト', function()
       --/* add(1,2) */
-      --/* #@range_begin(add_evaluation_test) */
+      --/* #@@range_begin(add_evaluation_test) */
       local addition = exp.add(exp.num(1),exp.num(2));
       assert.are.equal(
         evaluate(addition, Env.empty) 
@@ -465,7 +465,7 @@ describe('評価器を作る', function()
       -- ).to.eql(
       --   ID.unit(3)
       -- );
-      --/* #@range_end(add_evaluation_test) */
+      --/* #@@range_end(add_evaluation_test) */
     end);
     it('恒等モナド評価器で演算を評価する', function()
       assert.are.equal(
@@ -506,7 +506,7 @@ describe('評価器を作る', function()
       --   return n + 1; 
       -- })(2)
       -- ~~~
-      --/* #@range_begin(application_evaluation_test) */
+      --/* #@@range_begin(application_evaluation_test) */
       local expression = exp.app(         --/* 関数適用 */
         exp.lambda(exp.variable("n"),   --/* λ式 */
                    exp.add(exp.variable("n"),
@@ -522,7 +522,7 @@ describe('評価器を作る', function()
       -- ).to.eql(
       --   ID.unit(3)
       -- );
-      --/* #@range_end(application_evaluation_test) */
+      --/* #@@range_end(application_evaluation_test) */
     end)
     it('ID評価器で関数適用 \\x.add(x,x)(2)を評価する', function()
       -- ~~~js
@@ -553,7 +553,7 @@ describe('評価器を作る', function()
       --    };
       -- })(2)(3)
       -- ~~~
-      --/* #@range_begin(curried_function_evaluation_test) */
+      --/* #@@range_begin(curried_function_evaluation_test) */
       local expression = exp.app(
         exp.app(
           exp.lambda(exp.variable("n"),
@@ -572,7 +572,7 @@ describe('評価器を作る', function()
       -- ).to.eql(
       --   ID.unit(5)
       -- );
-      --/* #@range_end(curried_function_evaluation_test) */
+      --/* #@@range_end(curried_function_evaluation_test) */
     end);
   end)
   -- ### <section id='logger-monad-evaluator'>ログ出力評価器</section>
@@ -581,14 +581,14 @@ describe('評価器を作る', function()
       return data(pattern);
     end
     -- **リスト8.20** ログ出力評価器の式
-    --/* #@range_begin(expression_logger_interpreter) */
+    --/* #@@range_begin(expression_logger_interpreter) */
     local exp = {
       log = function(anExp) -- ログ出力用の式
         return function(pattern)
           return pattern.log(anExp);
         end;
       end,
-      --/* #@range_end(expression_logger_interpreter) */
+      --/* #@@range_end(expression_logger_interpreter) */
       num = function(value)
         return function(pattern)
           return pattern.num(value);
@@ -624,7 +624,7 @@ describe('評価器を作る', function()
       end
     };
     -- **リスト8.21** LOGモナドの定義
-    --/* #@range_begin(logger_monad) */
+    --/* #@@range_begin(logger_monad) */
     --/* LOG[T] = PAIR[T, LIST[STRING]] */
     local LOG = {
       --/* unit:: VALUE => LOG[VALUE] */
@@ -657,9 +657,9 @@ describe('評価器を作る', function()
                          List.cons(value, List.empty()));
       end 
     };
-    --/* #@range_end(logger_monad) */
+    --/* #@@range_end(logger_monad) */
     -- **リスト8.22** LOGモナド評価器
-    --/* #@range_begin(logger_monad_evaluator) */
+    --/* #@@range_begin(logger_monad_evaluator) */
     --/* evaluate:= function(EXP, ENV) => LOG[VALUE] */
     local function evaluate(anExp, environment)
       return match(anExp,{
@@ -673,7 +673,7 @@ describe('評価器を作る', function()
             end)
           end)
         end,
-        --/* #@range_end(logger_monad_evaluator) */
+        --/* #@@range_end(logger_monad_evaluator) */
         --/* 数値の評価 */
         num = function(value)
           return LOG.unit(value);
@@ -713,7 +713,7 @@ describe('評価器を作る', function()
     describe('ログ出力評価器のテスト', function()
       it('LOG評価器で数値を評価する', function()
         pending("I should finish this test later")
-        --/* #@range_begin(log_interpreter_number) */
+        --/* #@@range_begin(log_interpreter_number) */
         -- Pair.match(evaluate(exp.log(exp.num(2)), Env.empty),{
         --   cons = function(value, log)
         --     assert.are.equal(
@@ -738,10 +738,10 @@ describe('評価器を作る', function()
         --     -- );
         --   end
         -- });
-        --/* #@range_end(log_interpreter_number) */
+        --/* #@@range_end(log_interpreter_number) */
       end);
 --       it('LOG評価器で変数を評価する', (next) => {
---         --/* #@range_begin(log_interpreter_variable) */
+--         --/* #@@range_begin(log_interpreter_variable) */
 --         local newEnv = env.extend("x", 1, env.empty);
 --         pair.match(evaluate(exp.log(exp.variable("x")), newEnv), {
 --           cons= function(value, log) => {
@@ -757,7 +757,7 @@ describe('評価器を作る', function()
 --             );
 --           }
 --         });
---         --/* #@range_end(log_interpreter_variable) */
+--         --/* #@@range_end(log_interpreter_variable) */
 --         next();
 --       });
 --       it('LOG評価器で演算を評価する', (next) => {
@@ -790,7 +790,7 @@ describe('評価器を作る', function()
 --           }
 --         });
 --         -- **リスト8.25** ログ出力評価器による評価戦略の確認
---         --/* #@range_begin(log_interpreter_evaluation_strategy) */
+--         --/* #@@range_begin(log_interpreter_evaluation_strategy) */
 --         -- ~~~js
 --         -- ((n) => {
 --         --    return add(1)(n)
@@ -815,7 +815,7 @@ describe('評価器を作る', function()
 --             );
 --           }
 --         });
---         --/* #@range_end(log_interpreter_evaluation_strategy) */
+--         --/* #@@range_end(log_interpreter_evaluation_strategy) */
 --         next();
 --       });
 --       it('LOG評価器で関数適用を評価する', (next) => {

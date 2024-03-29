@@ -23,7 +23,7 @@ describe('DRY原則', function()
   end;
   -- **リスト3.1** 冗長なコード
   it('冗長なコード', function()
-    --/* #@range_begin(redundant_code) */
+    --/* #@@range_begin(redundant_code) */
     local function timesForMultiply(count, arg, memo)
       if(count > 1) then
         return timesForMultiply(count-1, arg, arg + memo);
@@ -44,7 +44,7 @@ describe('DRY原則', function()
     local exponential = function(n, m)
       return timesForExponential(m, n, 1);
     end;
-    --/* #@range_end(redundant_code) */
+    --/* #@@range_end(redundant_code) */
     assert.are.equal(
       multiply(2, 3)
       , 
@@ -66,7 +66,7 @@ describe('DRY原則', function()
   end);
   it('DRYを適用する', function()
     -- **リスト3.3** DRYなtimes関数
-    --/* #@range_begin(dry_times) */
+    --/* #@@range_begin(dry_times) */
     local function times(count, arg, memo, fun) -- 引数funを追加
       if(count > 1) then
         return times(count-1, arg, fun(arg,memo), fun);
@@ -74,10 +74,10 @@ describe('DRY原則', function()
         return fun(arg,memo);
       end 
     end;
-    --/* #@range_end(dry_times) */
+    --/* #@@range_end(dry_times) */
 
     -- **リスト3.4** DRYなかけ算とべき乗
-    --/* #@range_begin(dry_functions) */
+    --/* #@@range_begin(dry_functions) */
     local add = function(n, m)
       return n + m;
     end;
@@ -89,7 +89,7 @@ describe('DRY原則', function()
     local exponential = function(n, m)
       return times(m, n, 1, multiply);
     end;
-    --/* #@range_end(dry_functions) */
+    --/* #@@range_end(dry_functions) */
     assert.are.equal(
       multiply(2, 3) 
       , 
@@ -124,18 +124,18 @@ end);
 describe('抽象化への指向', function()
   -- **リスト3.5** 関数という抽象化
   it('関数という抽象化', function()
-    --/* #@range_begin(function_abstraction_example) */
+    --/* #@@range_begin(function_abstraction_example) */
     local succ = function(n)
       return n + 1;
     end;
-    --/* #@range_end(function_abstraction_example) */
+    --/* #@@range_end(function_abstraction_example) */
   end);
   describe('高階関数による抽象化', function()
     local anArray = {2,3,5,7,11,13};
 
     -- **リスト3.6** for文によるsum関数
     it('for文によるsum関数', function()
-      --/* #@range_begin(sum_for) */
+      --/* #@@range_begin(sum_for) */
       local anArray = {2,3,5,7}
       local sum = function(array)
         local result = 0;
@@ -146,7 +146,7 @@ describe('抽象化への指向', function()
       end;
       sum(anArray);
       assert.are.equal(sum(anArray), 17)
-      --/* #@range_end(sum_for) */
+      --/* #@@range_end(sum_for) */
       -- expect(
       --   sum(anArray)
       -- ).to.eql(
@@ -155,7 +155,7 @@ describe('抽象化への指向', function()
     end);
     -- **リスト3.7** forEachによるsum関数
     it('forEachによるsum関数', function()
-      --/* #@range_begin(sum_forEach) */
+      --/* #@@range_begin(sum_forEach) */
       local sum = function(array)
         --/* 結果を格納する変数result */
         local result = 0;
@@ -168,7 +168,7 @@ describe('抽象化への指向', function()
         -- });
         return result;
       end;
-      --/* #@range_end(sum_forEach) */
+      --/* #@@range_end(sum_forEach) */
       assert.are.equal(sum(anArray), 41)
       -- expect(
       --   sum(anArray)
@@ -178,14 +178,14 @@ describe('抽象化への指向', function()
     end);
     -- **リスト3.8** reduceによるsum関数
     it('reduceによるsum関数', function()
-      --/* #@range_begin(sum_reduce) */
+      --/* #@@range_begin(sum_reduce) */
       local Array = require("lib/array")
       local sum = function(array)
         return Array.reduce(array,  function(x, y)
           return x + y;
         end,  0);
       end 
-      --/* #@range_end(sum_reduce) */
+      --/* #@@range_end(sum_reduce) */
       assert.are.equal(sum(anArray), 41)
       -- expect(
       --   sum(anArray)
@@ -217,7 +217,7 @@ describe('セマンティクスを意識する', function()
     --   <dt>lookupEnv</dt>
     --   <dd>変数を指定して、環境に記憶されている値を取り出す</dd>
     -- </dl>
-    --/* #@range_begin(environment_example) */
+    --/* #@@range_begin(environment_example) */
     --/* 空の環境 */
     local emptyEnv = {};
     --/* 環境を拡張する */
@@ -231,7 +231,7 @@ describe('セマンティクスを意識する', function()
     local lookupEnv = function(name, env)
       return env[name];
     end;
-    --/* #@range_end(environment_example) */
+    --/* #@@range_end(environment_example) */
     -- ~~~
     -- local a = 1;
     -- local b = 3;
@@ -239,7 +239,7 @@ describe('セマンティクスを意識する', function()
     -- ~~~
     -- expect(((_) => {
     --   -- **リスト3.11** リスト 3.10のセマンティクス 
-    --   --/* #@range_begin(environment_example_usage) */
+    --   --/* #@@range_begin(environment_example_usage) */
     --   --/* 空の辞書を作成する */
     --   local initEnv = emptyEnv;                       
     --   --/* local a = 1 を実行して、辞書を拡張する */
@@ -248,7 +248,7 @@ describe('セマンティクスを意識する', function()
     --   local secondEnv = extendEnv({"b" = 3}, firstEnv); 
     --   --/* 辞書から b の値を参照する */
     --   lookupEnv("b", secondEnv);                
-    --   --/* #@range_end(environment_example_usage) */
+    --   --/* #@@range_end(environment_example_usage) */
     --   return lookupEnv("b", secondEnv);                 
     -- })()).to.eql(
     --   3
@@ -265,14 +265,14 @@ describe('テストに親しむ', function()
     --
     -- assertライブラリを使う場合
     it('assertによる表明', function()
-      --/* #@range_begin(assert_assertion) */
+      --/* #@@range_begin(assert_assertion) */
       assert.equal(1 + 2, 3);
-      --/* #@range_end(assert_assertion) */
+      --/* #@@range_end(assert_assertion) */
     end);
     -- expectライブラリを使う場合
     -- > 参考資料: https:--github.com/Automattic/expect.js
     it('assertによる表明', function()
-      --/* #@range_begin(expect_assertion) */
+      --/* #@@range_begin(expect_assertion) */
       assert.are.equal(
         1 +  2
         , 
@@ -282,7 +282,7 @@ describe('テストに親しむ', function()
       -- ).to.eql(
       --   3
       -- );
-      --/* #@range_end(expect_assertion) */
+      --/* #@@range_end(expect_assertion) */
     end);
   end);
 end);

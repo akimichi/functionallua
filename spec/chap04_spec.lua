@@ -31,13 +31,13 @@
 describe('型とは何か', function()
   -- **リスト4.1** 自然数の作り方
   it('自然数の作り方', function()
-    -- /* #@range_begin(integer_construction) */
+    -- /* #@@range_begin(integer_construction) */
     local succ = function(n)
       return n + 1;
     end
     assert.are.equal(succ(0), 1)
     assert.are.equal(succ(succ(0)), 2)
-    -- /* #@range_end(integer_construction) */
+    -- /* #@@range_end(integer_construction) */
     -- next();
   end)
 end)
@@ -46,10 +46,10 @@ end)
  describe('基本型', function()
 --   -- **リスト4.2** 未定義の変数
   it('未定義の変数', function()
-    -- /* #@range_begin(undefined_variable) */
+    -- /* #@@range_begin(undefined_variable) */
     local variable -- 宣言されているが値と結びついていない変数
     assert.are.equal(variable, nil)
-    -- /* #@range_end(undefined_variable) */
+    -- /* #@@range_end(undefined_variable) */
   end)
 --   -- ### 基本型は不変なデータである
   describe('基本型は不変なデータである', function()
@@ -58,31 +58,31 @@ end)
       -- node> true === true
       -- true
       -- ~~~
-      -- /* #@range_begin(truth_is_immutable) */
+      -- /* #@@range_begin(truth_is_immutable) */
       assert.are.equal(true,true)
       -- expect(
       --   true === true
       -- ).to.eql(
       --   true
       -- );
-      -- /* #@range_end(truth_is_immutable) */
+      -- /* #@@range_end(truth_is_immutable) */
     end);
     it('数値型は不変である', function()
       -- ~~~
       -- node> 1 === 1
       -- true
       -- ~~~
-      -- /* #@range_begin(number_is_immutable) */
+      -- /* #@@range_begin(number_is_immutable) */
       assert.are.equal(1,1)
       -- expect(
       --   1 === 1
       -- ).to.eql(
       --   true
       -- );
-      -- /* #@range_end(number_is_immutable) */
+      -- /* #@@range_end(number_is_immutable) */
     end)
     it('文字列は不変である', function()
-      -- /* #@range_begin(string_is_immutable) */
+      -- /* #@@range_begin(string_is_immutable) */
       local str = "to be, or not to be";
       assert.are.equal(str,"to be, or not to be")
       -- expect(
@@ -90,7 +90,7 @@ end)
       -- ).to.eql(
       --   "to be, or not to be"
       -- );
-      -- /* #@range_end(string_is_immutable)  */
+      -- /* #@@range_end(string_is_immutable)  */
     end)
   end)
  end)
@@ -104,18 +104,18 @@ describe('合成型', function()
 --     describe('アドレス帳の例', () => {
 --       -- **リスト4.4** オブジェクト型の例
       it('テーブル型の例', function()
-        -- /* #@range_begin(object_instance_example) */
+        -- /* #@@range_begin(object_instance_example) */
         local addressbook = {
           No1 =  "Alan Turing",
           No2 =  "Haskell Curry",
           No3 =  "Alonzo Church",
           No4 =  "Ada Lovelace"
         }
-        -- /* #@range_end(object_instance_example) */
+        -- /* #@@range_end(object_instance_example) */
       end)
       -- **リスト4.5** オブジェクト型の入れ子
       it('テーブル型の入れ子', function()
-        -- /* ##@range_begin(object_can_embed_object) */
+        -- /* ##@@range_begin(object_can_embed_object) */
         local addressbook = {
           No1 =  {
             name =  "Alan Turing",
@@ -138,9 +138,9 @@ describe('合成型', function()
             birthDay = "1815/12/10"
           }
         }
-        -- /* ##@range_end(object_can_embed_object) */
+        -- /* ##@@range_end(object_can_embed_object) */
         local addressbook_nested = {
-          -- /* ##@range_begin(object_can_embed_object_nested) */
+          -- /* ##@@range_begin(object_can_embed_object_nested) */
           No1 = {
             name = "Alan Turing",
             gender = "male",
@@ -150,10 +150,10 @@ describe('合成型', function()
               day =  23
             }
           }
-        -- /* ##@range_end(object_can_embed_object_nested) */
+        -- /* ##@@range_end(object_can_embed_object_nested) */
         };
         -- **リスト4.6** オブジェクト型インスタンスへのアクセス
-        -- /* #@range_begin(object_access) */
+        -- /* #@@range_begin(object_access) */
         assert.are.equal(addressbook.No1.name , "Alan Turing")
         
         -- expect(
@@ -166,7 +166,7 @@ describe('合成型', function()
         -- ).to.eql(
         --   "Alan Turing"
         -- );
-        -- /* #@range_end(object_access) */
+        -- /* #@@range_end(object_access) */
       end)
      end)
    end)
@@ -175,7 +175,7 @@ describe('合成型', function()
    describe('配列型', function() 
     -- **リスト4.7** 配列の基本操作
     it("配列の基本操作", function()
-      --  #@range_begin(array_access) */
+      --  #@@range_begin(array_access) */
       local array = {10,11,12}
       -- 配列は1から始まるインデックスを持つ
       assert.are.equal(array[1] , 10)
@@ -197,7 +197,7 @@ describe('合成型', function()
       -- ).to.eql(
       --   undefined
       -- );
-      -- /* #@range_end(array_access) */
+      -- /* #@@range_end(array_access) */
     end)
     it("配列の展開", function()
       assert.are.same({table.unpack({})} , {})
@@ -215,7 +215,7 @@ describe('合成型', function()
 --     -- > [5,3,4,1,2]の配列を昇順に並べかえる
 --     -- > 参考資料: https:--developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
     it("sortによる配列要素の並べかえ", function()
-      -- /* #@range_begin(sort_in_array) */
+      -- /* #@@range_begin(sort_in_array) */
       local array = {5,3,4,1,2}
       function compare( a, b )
        return a <  b
@@ -230,11 +230,11 @@ describe('合成型', function()
       -- ).to.eql(
       --   [1,2,3,4,5]
       -- );
-      -- /* #@range_end(sort_in_array) */
+      -- /* #@@range_end(sort_in_array) */
     end)
     -- **リスト4.9** 名簿の配列型表現
     it("名簿の配列型表現", function()
-      -- /* #@range_begin(addressbook_example_in_array) */
+      -- /* #@@range_begin(addressbook_example_in_array) */
       local addressbook = { -- 配列に要素を格納する
         {
           name =  "Alan Turing",
@@ -257,9 +257,9 @@ describe('合成型', function()
           birthDay = "1815/12/10"
         }
       }
-      -- /* #@range_end(addressbook_example_in_array) */
+      -- /* #@@range_end(addressbook_example_in_array) */
       -- **リスト4.10** 名簿の並べかえ
-      -- /* #@range_begin(sorting_array) */
+      -- /* #@@range_begin(sorting_array) */
       -- expect(
       --   addressbook.sort((onePerson,anotherPerson) => {
       --     return onePerson.name > anotherPerson.name;
@@ -288,14 +288,14 @@ describe('合成型', function()
       --     }
       --   ]
       -- );
-      -- /* #@range_end(sorting_array) */
+      -- /* #@@range_end(sorting_array) */
     end)
    end)
 --   -- ### <section id='function-type'>関数型</section>
   describe('関数型', function()
     -- **リスト4.11** 関数はオブジェクト型である
     it('関数はオブジェクト型である', function()
-      -- /* #@range_begin(function_is_object_type) */
+      -- /* #@@range_begin(function_is_object_type) */
       local func = function(n)
         return n
       end
@@ -305,11 +305,11 @@ describe('合成型', function()
       -- ).to.eql(
       --   1
       -- );
-      -- /* #@range_end(function_is_object_type) */
+      -- /* #@@range_end(function_is_object_type) */
     end)
     -- **リスト4.12** 引数のない関数 
     it('引数のない関数', function()
-      -- /* #@range_begin(function_without_argument) */
+      -- /* #@@range_begin(function_without_argument) */
       local three = function()
         return 3
       end
@@ -320,11 +320,11 @@ describe('合成型', function()
       -- ).to.eql(
       --   3
       -- );
-      -- /* #@range_end(function_without_argument) */
+      -- /* #@@range_end(function_without_argument) */
     end)
     -- **リスト4.13** 関数と変数の類似
     it('関数と変数の類似', function()
-      -- /* #@range_begin(function_resembles_variable) */
+      -- /* #@@range_begin(function_resembles_variable) */
       local three = 3;
       assert.are.equal(three, 3)
       -- expect(
@@ -332,7 +332,7 @@ describe('合成型', function()
       -- ).to.eql(
       --   3
       -- );
-      -- /* #@range_end(function_resembles_variable) */
+      -- /* #@@range_end(function_resembles_variable) */
     end)
   end)
   -- ### <section id='abstract-datatype'>抽象データ型</section>
@@ -359,14 +359,14 @@ describe('合成型', function()
       local isEmpty = function(list)
         return #list == 0;
       end 
-      -- /* #@range_begin(list_as_abstract_type) */
+      -- /* #@@range_begin(list_as_abstract_type) */
       assert.are.equal(head(tail(cons(1,cons(2,empty())))), 2)
       -- expect(
       --   
       -- ).to.eql(
       --   2
       -- );
-      -- /* #@range_end(list_as_abstract_type) */
+      -- /* #@@range_end(list_as_abstract_type) */
     end);
   end)
   -- ### <section id='mutability-of-composite-type'>合成型の可変性</section>
@@ -374,7 +374,7 @@ describe('合成型', function()
   --   -- **リスト4.17** 配列型の可変性
   --   -- > JavaScriptの配列は、その一部を書きかえることができる
     it('配列型の可変性', function()
-      -- /* #@range_begin(array_is_mutable) */
+      -- /* #@@range_begin(array_is_mutable) */
       local array = {0,1,2,3}
       array[1] = 7 -- 配列の一部を書きかえている
       assert.are_not.same(array , {0,1,2,3})
@@ -385,13 +385,13 @@ describe('合成型', function()
       -- ).not.to.eql(
       --   [0,1,2,3] -- [7,1,2,3]に変更されている
       -- );
-      -- /* #@range_end(array_is_mutable) */
+      -- /* #@@range_end(array_is_mutable) */
     end)
   --   -- **リスト4.18** 配列の破壊的メソッド
   --   -- > 配列のreverse関数は、元の配列を逆転させる
     it('配列の破壊的メソッド', function()
       pending("I should finish this test later")
-      -- /* #@range_begin(destructive_reverse) */
+      -- /* #@@range_begin(destructive_reverse) */
       -- Luaでは不要なケース
       -- local array = {1,2,3,4,5}
       -- assert.are.same(array , {7,1,2,3})
@@ -405,12 +405,12 @@ describe('合成型', function()
       -- ).not.to.eql(
       --   [1,2,3,4,5]  -- 変数arrayの中身が[5,4,3,2,1]に変更されている
       -- );
-      -- /* #@range_end(destructive_reverse) */
+      -- /* #@@range_end(destructive_reverse) */
     end)
     it('非破壊的なreverse関数', function()
       pending("I should finish this test later")
       -- **リスト4.19** 非破壊的なreverse関数
-      -- /* #@range_begin(immutable_reverse) */
+      -- /* #@@range_begin(immutable_reverse) */
       -- local reverse = function(array)
       --   return array.reduce((accumulator, item) => {
       --     return [item].concat(accumulator);
@@ -423,14 +423,14 @@ describe('合成型', function()
       -- })()).to.eql(
       --   [1,2,3,4,5]   -- 逆転前の配列と同じ
       -- );
-      -- -- /* #@range_end(immutable_reverse) */
+      -- -- /* #@@range_end(immutable_reverse) */
       -- expect(
       --   reverse(array)
       -- ).to.eql(
       --   [5,4,3,2,1]
       -- );
       -- -- **リスト4.20** 非破壊的なreverse関数は完全には不変でない
-      -- -- /* #@range_begin(immutable_reverse_is_not_immutable) */
+      -- -- /* #@@range_begin(immutable_reverse_is_not_immutable) */
       -- var reversed = reverse(array);
       -- reversed[0] = 0;
       -- expect(
@@ -438,7 +438,7 @@ describe('合成型', function()
       -- ).to.eql(
       --   [0,4,3,2,1]
       -- );
-      -- /* #@range_end(immutable_reverse_is_not_immutable) */
+      -- /* #@@range_end(immutable_reverse_is_not_immutable) */
     end)
   end)
 
@@ -448,7 +448,7 @@ describe('変数とデータの関係', function()
 --   -- > 変数boundはバインドされているが、変数unboundはバインドされていない
 --   it('変数のバインド', (next) => {
 --     -- **リスト4.21** バインド変数と自由変数
---     /* #@range_begin(variable_binding_value) */
+--     /* #@@range_begin(variable_binding_value) */
 --     var bound = "我思うゆえに我あり";
 --     expect(
 --       bound
@@ -464,16 +464,16 @@ describe('変数とデータの関係', function()
 --         ReferenceError
 --       );
 --     });
---     /* #@range_end(variable_binding_value) */
+--     /* #@@range_end(variable_binding_value) */
 --     next();
 --   });
 --   -- **リスト4.22** 関数本体でのバインド変数
 --   it('関数本体でのバインド変数', (next) => {
---     /* #@range_begin(bound_variable_in_function) */
+--     /* #@@range_begin(bound_variable_in_function) */
 --     var add = (x,y) => { -- xとyは引数
 --       return x + y; -- それゆえに、xもyもバインド変数
 --     };
---     /* #@range_end(bound_variable_in_function) */
+--     /* #@@range_end(bound_variable_in_function) */
 --     expect(
 --       add(2,3)
 --     ).to.eql(
@@ -491,11 +491,11 @@ end)
 --   describe('環境と値', () => {
 --     it('関数本体での自由変数', (next) => {
 --       -- **リスト4.23** 関数本体での自由変数
---       /* #@range_begin(free_variable_in_function) */
+--       /* #@@range_begin(free_variable_in_function) */
 --       var addWithFreeVariable = (x) => {
 --         return x + y;  -- xはバインド変数だが、yは自由変数
 --       };
---       /* #@range_end(free_variable_in_function) */
+--       /* #@@range_end(free_variable_in_function) */
 --       -- 関数本体での自由変数のテスト
 --       -- 
 --       -- 例外が発生する場合は、無名関数で包みこみ、発生した例外を以下のように捕捉する。
@@ -504,7 +504,7 @@ end)
 --       -- >     ReferenceError
 --       -- >   );
 --       -- > })
---       /* #@range_begin(free_variable_in_function_test) */
+--       /* #@@range_begin(free_variable_in_function_test) */
 --       expect(
 --         (_) => {
 --           return addWithFreeVariable(1);
@@ -514,7 +514,7 @@ end)
 --           ReferenceError
 --         );
 --       });
---       /* #@range_end(free_variable_in_function_test) */
+--       /* #@@range_end(free_variable_in_function_test) */
 --       next();
 --     });
 --   });
@@ -522,7 +522,7 @@ end)
 --   describe('変数のスコープ', () => {
 --     -- **リスト4.25** 関数とローカルスコープ
 --     it('関数とローカルスコープ', (next) => {
---       /* #@range_begin(function_creates_scope) */
+--       /* #@@range_begin(function_creates_scope) */
 --       var createScope = (_) =>  { -- ローカルスコープを作る
 --         var innerScope = "inner"; 
 --         return innerScope; -- 変数innerScopeはcreateScopeのなかでのみ有効
@@ -536,7 +536,7 @@ end)
 --           ReferenceError -- 参照先が見つからないという例外エラーとなる
 --         );
 --       });
---       /* #@range_end(function_creates_scope) */
+--       /* #@@range_end(function_creates_scope) */
 --       expect(
 --         createScope()
 --       ).to.be(
@@ -546,22 +546,22 @@ end)
 --     });
 --     -- **リスト4.26** 入れ子になった関数の変数バインド
 --     it('入れ子になった関数の変数バインド', (next) => {
---       /* #@range_begin(binding_in_closure) */
+--       /* #@@range_begin(binding_in_closure) */
 --       var adder = (y) => { -- 外側の関数
 --         var addWithFreeVariable = (x) => { -- 内側の関数
 --           return x + y; -- 変数yはadder関数の引数yを参照できる
 --         };
 --         return addWithFreeVariable;
 --       };
---       /* #@range_end(binding_in_closure) */
+--       /* #@@range_end(binding_in_closure) */
 --       -- **リスト4.27** 入れ子になった関数の適用 
---       /* #@range_begin(binding_in_closure_test) */
+--       /* #@@range_begin(binding_in_closure_test) */
 --       expect(
 --         adder(2)(3)
 --       ).to.eql(
 --         5
 --       );
---       /* #@range_end(binding_in_closure_test) */
+--       /* #@@range_end(binding_in_closure_test) */
 --       next();
 --     });
 --   });
@@ -572,7 +572,7 @@ end)
 --   describe('不変なデータの仕組み', () => {
 --     -- **リスト4.28** 基本型は値としてのデータである
 --     it('基本型は値としてのデータである', (next) => {
---       /* #@range_begin(basic_type_is_value_type) */
+--       /* #@@range_begin(basic_type_is_value_type) */
 --       var n = 1;
 --       expect(
 --         n
@@ -585,7 +585,7 @@ end)
 --       ).to.eql(
 --         "hello"
 --       );
---       /* #@range_end(basic_type_is_value_type) */
+--       /* #@@range_end(basic_type_is_value_type) */
 --       expect(
 --         n
 --       ).to.eql(
@@ -603,7 +603,7 @@ end)
 --   describe('代入の仕組みと効果', () => {
 --     -- **リスト4.29** 変数への代入
 --     it('変数への代入', (next) => {
---       /* #@range_begin(assign_to_variable) */
+--       /* #@@range_begin(assign_to_variable) */
 --       var age = 29;
 --       expect(
 --         age
@@ -617,7 +617,7 @@ end)
 --       ).to.eql(
 --         30
 --       );
---       /* #@range_end(assign_to_variable) */
+--       /* #@@range_end(assign_to_variable) */
 --       next();
 --     });
 --     -- <a name="mechanism-of-assignment"> **代入の仕組み** </a>

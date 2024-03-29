@@ -249,7 +249,7 @@ describe('カリー化で関数を渡す', function()
   -- **リスト7.1** multipleOf関数の定義
   -- > multipleOf関数は、multipleOf(n,m)でnの倍数がmかどうかを判定する
   it('multipleOf関数の定義', function()
-    -- /* #@range_begin(multipleOf_uncurried) */
+    -- /* #@@range_begin(multipleOf_uncurried) */
     local multipleOf = function(n,m)
       if(m % n == 0) then -- /* m / n の余りが 0 かどうか */
         return true;
@@ -257,16 +257,16 @@ describe('カリー化で関数を渡す', function()
         return false;
       end 
     end;
-    -- /* #@range_end(multipleOf_uncurried) */
+    -- /* #@@range_end(multipleOf_uncurried) */
     -- **リスト7.2** multipleOf関数のテスト
-    -- /* #@range_begin(multipleOf_uncurried_test) */
+    -- /* #@@range_begin(multipleOf_uncurried_test) */
     assert.are.equal(multipleOf(2,4), true)
     -- expect(
     --   multipleOf(2,4)     -- /* 4は、2の倍数である */
     -- ).to.eql(
     --   true
     -- );
-    -- /* #@range_end(multipleOf_uncurried_test) */
+    -- /* #@@range_end(multipleOf_uncurried_test) */
     assert.are.equal(multipleOf(3,4), false)
     -- expect(
     --   multipleOf(3,4)     -- /* 4は、3の倍数ではない */
@@ -276,7 +276,7 @@ describe('カリー化で関数を渡す', function()
   end);
   -- **リスト7.3** カリー化されたmultipleOf関数の定義
   it('カリー化されたmultipleOf関数', function()
-    -- /* #@range_begin(multipleOf_curried) */
+    -- /* #@@range_begin(multipleOf_curried) */
     local multipleOf = function(n) -- 外側の関数定義
       return function(m)          -- 内側の関数定義
         if(m % n == 0) then
@@ -286,16 +286,16 @@ describe('カリー化で関数を渡す', function()
         end 
       end 
     end 
-    -- /* #@range_end(multipleOf_curried) */
+    -- /* #@@range_end(multipleOf_curried) */
     -- **リスト7.4** カリー化されたmultipleOf関数のテスト
-    -- /* #@range_begin(multipleOf_curried_test) */
+    -- /* #@@range_begin(multipleOf_curried_test) */
     assert.are.equal(multipleOf(2)(4), true)
     -- expect(
     --   multipleOf(2)(4)   -- /* 関数適用を2回実行する */ 
     -- ).to.eql(
     --   true
     -- );
-    -- /* #@range_end(multipleOf_curried_test) */
+    -- /* #@@range_end(multipleOf_curried_test) */
     assert.are.equal(multipleOf(3)(4), false)
     -- expect(
     --   multipleOf(3)(4)    -- /* 4は、3の倍数ではない */
@@ -303,7 +303,7 @@ describe('カリー化で関数を渡す', function()
     --   false
     -- );
     -- **リスト7.5** multipleOf関数のテスト
-    -- /* #@range_begin(multipleOf_curried_partilly_applied) */
+    -- /* #@@range_begin(multipleOf_curried_partilly_applied) */
     local twoFold = multipleOf(2);
     assert.are.equal(twoFold(4), true)
     -- expect(
@@ -311,12 +311,12 @@ describe('カリー化で関数を渡す', function()
     -- ).to.eql(
     --   true
     -- );
-    -- /* #@range_end(multipleOf_curried_partilly_applied) */
+    -- /* #@@range_end(multipleOf_curried_partilly_applied) */
   end);
   it('カリー化された指数関数', function()
     -- **リスト7.6** 指数関数の例
     -- > exponential関数は、exponential(b)(n)でbのn乗を計算する
-    -- /* #@range_begin(exponential_curried) */
+    -- /* #@@range_begin(exponential_curried) */
     local function exponential(base)
       return function(index)
         if(index == 0) then
@@ -333,7 +333,7 @@ describe('カリー化で関数を渡す', function()
     -- ).to.eql(
     --   8
     -- );
-    -- /* #@range_end(exponential_curried) */
+    -- /* #@@range_end(exponential_curried) */
     assert.are.equal(exponential(2)(2), 4)
     -- expect(
     --   exponential(2)(2)
@@ -342,7 +342,7 @@ describe('カリー化で関数を渡す', function()
     -- );
     -- **リスト7.7** flip関数の定義
     -- > flip関数は、flip(fun)(x)(y)でfun(y)(x)を実行する
-    -- /* #@range_begin(flip_definition) */
+    -- /* #@@range_begin(flip_definition) */
     local flip = function(fun)
       return function(x)
         return function(y)
@@ -350,16 +350,16 @@ describe('カリー化で関数を渡す', function()
         end 
       end 
     end 
-    -- /* #@range_end(flip_definition) */
+    -- /* #@@range_end(flip_definition) */
 
     -- **リスト7.8** flip関数でexponential関数の引数の順番を変更する
-    -- /* #@range_begin(flipped_exponential) */
+    -- /* #@@range_begin(flipped_exponential) */
     -- /* flipで引数を逆転させて、2乗を定義する */
     local square = flip(exponential)(2); 
     -- /* flipで引数を逆転させて、3乗を定義する */
     local cube = flip(exponential)(3);   
-    -- /* #@range_end(flipped_exponential) */
-    -- /* #@range_begin(flipped_exponential_test) */
+    -- /* #@@range_end(flipped_exponential) */
+    -- /* #@@range_begin(flipped_exponential_test) */
     assert.are.equal(square(2), 4)
     -- expect(
     --   square(2)
@@ -372,13 +372,13 @@ describe('カリー化で関数を渡す', function()
     -- ).to.eql(
     --   8 -- /* 2 * 2 * 2 = 8 */
     -- );
-    -- /* #@range_end(flipped_exponential_test) */
+    -- /* #@@range_end(flipped_exponential_test) */
   end);
   -- ### コラム： チャーチ数
   describe('コラム： チャーチ数', function()
     -- **リスト7.9** チャーチによる自然数の定義
     it('チャーチによる自然数の定義', function()
-      -- /* #@range_begin(church_numeral) */
+      -- /* #@@range_begin(church_numeral) */
       local zero = function(f)
         return function(x)
           return x;           -- 関数を0回適用する
@@ -399,7 +399,7 @@ describe('カリー化で関数を渡す', function()
           return f(f(f(x)));  -- 関数を3回適用する
         end 
       end 
-      -- /*#@range_end(church_numeral) */
+      -- /*#@@range_end(church_numeral) */
       local add = function(m)
         return function(n)
           return function(f)
@@ -461,7 +461,7 @@ describe('コンビネータで関数を組み合わせる', function()
           end 
         end 
       end
-      -- /* #@range_begin(multipleOf_combinator) */
+      -- /* #@@range_begin(multipleOf_combinator) */
       local even = multipleOf(2); -- /* カリー化されたmultipleOf関数を使う */
       
       assert.are.equal(even(2), true)
@@ -470,7 +470,7 @@ describe('コンビネータで関数を組み合わせる', function()
       -- ).to.eql(
       --   true
       -- );
-      -- /* #@range_end(multipleOf_combinator) */
+      -- /* #@@range_end(multipleOf_combinator) */
     end); 
     describe('論理コンビネータ', function()
       local multipleOf = function(n)
@@ -485,7 +485,7 @@ describe('コンビネータで関数を組み合わせる', function()
       local even = multipleOf(2);
       -- **リスト7.13** notコンビネータ
       it('negateコンビネータ', function()
-        -- /* #@range_begin(not_combinator) */
+        -- /* #@@range_begin(not_combinator) */
         -- /* negate:: FUN[NUM => BOOL] => FUN[NUM => BOOL] */
         local negate = function(predicate) -- predicateの型はFUN[NUM => BOOL]
           -- /* 全体として、FUN[NUM => BOOL]型を返す */
@@ -493,9 +493,9 @@ describe('コンビネータで関数を組み合わせる', function()
             return not predicate(arg); -- !演算子で論理を反転させて、BOOLを返す
           end 
         end 
-        -- /* #@range_end(not_combinator) */
+        -- /* #@@range_end(not_combinator) */
         -- **リスト7.15** notコンビネータによるodd関数の定義
-        -- /* #@range_begin(not_combinator_test) */
+        -- /* #@@range_begin(not_combinator_test) */
         local odd = negate(even); -- notコンビネータでodd関数を定義する
         -- /******** テスト ********/
         assert.are.equal(odd(3), true)
@@ -510,7 +510,7 @@ describe('コンビネータで関数を組み合わせる', function()
         -- ).to.eql(
         --   false
         -- );
-        --/* #@range_end(not_combinator_test) */
+        --/* #@@range_end(not_combinator_test) */
       end);
       -- /* 本書では割愛したが、論理和や論理積を実行するコンビネータも同様に定義できる */
       it('他の論理コンビネータ', function()
@@ -556,15 +556,15 @@ describe('コンビネータで関数を組み合わせる', function()
   -- $$
   describe('関数を合成する', function()
     -- **リスト7.16** 関数合成の定義
-    -- /* #@range_begin(compose_definition) */
+    -- /* #@@range_begin(compose_definition) */
     local compose = function(f,g)
       return function(arg)
         return f(g(arg))
       end 
     end
-    -- /* #@range_end(compose_definition) */
+    -- /* #@@range_end(compose_definition) */
     -- **リスト7.17** 関数合成のテスト
-    -- /* #@range_begin(compose_test) */
+    -- /* #@@range_begin(compose_test) */
     local f = function(x)
       return x * x + 1; 
     end 
@@ -578,12 +578,12 @@ describe('コンビネータで関数を組み合わせる', function()
     -- ).to.eql(
     --   f(g(2))         -- 合成せずに順次実行した場合
     -- );
-    -- /* #@range_end(compose_test) */
+    -- /* #@@range_end(compose_test) */
     -- #### 関数合成の条件
     describe('関数合成の条件', function()
       -- **リスト7.18** 反数関数の合成
       it('反数関数の合成', function()
-        -- /* #@range_begin(composition_example_opposite_twice) */
+        -- /* #@@range_begin(composition_example_opposite_twice) */
         -- /* 反数の定義 */
         local opposite = function(n)
           return - n;
@@ -595,11 +595,11 @@ describe('コンビネータで関数を組み合わせる', function()
         -- ).to.eql(
         --   2 -- -(-2) === 2
         -- );
-        -- /* #@range_end(composition_example_opposite_twice) */
+        -- /* #@@range_end(composition_example_opposite_twice) */
       end);
       -- **リスト7.20** カリー化による合成
       it('カリー化による合成', function()
-        -- /* #@range_begin(compose_opposite_add_successful) */
+        -- /* #@@range_begin(compose_opposite_add_successful) */
         local opposite = function(x)
           return - x;
         end 
@@ -615,7 +615,7 @@ describe('コンビネータで関数を組み合わせる', function()
         -- ).to.eql(
         --   -5
         -- );
-        -- /* #@range_end(compose_opposite_add_successful) */
+        -- /* #@@range_end(compose_opposite_add_successful) */
       end)
     end);
     local flip = function(fun)
@@ -629,7 +629,7 @@ describe('コンビネータで関数を組み合わせる', function()
     describe('関数合成による抽象化', function()
       -- **リスト7.21** 具体的なlast関数
       it('具体的なlast関数', function()
-        -- /* #@range_begin(list_last_recursive) */
+        -- /* #@@range_begin(list_last_recursive) */
         local function last(alist)
           return List.match(alist, {
             empty = function(_) -- alistが空の場合
@@ -647,7 +647,7 @@ describe('コンビネータで関数を組み合わせる', function()
             end 
           });
         end 
-        -- /* #@range_end(list_last_recursive) */
+        -- /* #@@range_end(list_last_recursive) */
         local aList = list.cons(1,
                                 list.cons(2,
                                           list.cons(3,
@@ -665,12 +665,12 @@ describe('コンビネータで関数を組み合わせる', function()
       end)
       -- ** リスト7.22** 抽象的なlast関数
       it('抽象的なlast関数', function()
-        -- /* #@range_begin(list_last_compose) */
+        -- /* #@@range_begin(list_last_compose) */
         local last = function(alist)
           return compose(List.head,
                          List.reverse)(alist);
         end
-        -- /* #@range_end(list_last_compose) */
+        -- /* #@@range_end(list_last_compose) */
         local sequence = List.cons(1, 
                           List.cons(2,
                             List.cons(3,
@@ -876,7 +876,7 @@ describe('コンビネータで関数を組み合わせる', function()
     -- ### コラム: Yコンビネータ
     -- [![IMAGE ALT TEXT](http:--img.youtube.com/vi/FITJMJjASUs/0.jpg)](https:--www.youtube.com/watch?v=FITJMJjASUs "Ruby Conf 12 - Y Not- Adventures in Functional Programming by Jim Weirich")
     it('Y combinator', function()
-      -- /* #@range_begin(Y_combinator) */
+      -- /* #@@range_begin(Y_combinator) */
       local Y = function(F)
         return (function(x)
           return F(function(y)
@@ -888,9 +888,9 @@ describe('コンビネータで関数を組み合わせる', function()
           end)
         end)
       end
-      -- /* #@range_end(Y_combinator)  */
+      -- /* #@@range_end(Y_combinator)  */
       -- **リスト7.24** Yコンビネータによるfactorial関数の実装
-      -- /* #@range_begin(Y_combinator_test) */
+      -- /* #@@range_begin(Y_combinator_test) */
       local factorial = Y(function(fact)
         return function(n)
           if (n == 0) then
@@ -908,7 +908,7 @@ describe('コンビネータで関数を組み合わせる', function()
       -- ).to.eql(
       --   6
       -- );
-      -- /* #@range_end(Y_combinator_test) */
+      -- /* #@@range_end(Y_combinator_test) */
     end);
   end); -- 関数を合成する
 end); -- コンビネータ
@@ -926,15 +926,15 @@ describe('クロージャーを使う', function()
   describe('クロージャーの仕組み', function()
     -- **リスト7.25** 環境における変数のバインディング
     it('環境における変数のバインディング', function()
-      -- /* #@range_begin(variable_binding_in_environment) */
+      -- /* #@@range_begin(variable_binding_in_environment) */
       -- /* 変数fooに数値1をバインドする */
       local foo = 1;
       -- /* 変数bar に文字列 "a string" をバインドする */
       local bar = "a string"; 
-      -- /* #@range_end(variable_binding_in_environment) */
+      -- /* #@@range_end(variable_binding_in_environment) */
 
       -- **リスト7.26** 環境からバインディングを参照する
-      -- /* #@range_begin(variable_binding_in_environment_test) */
+      -- /* #@@range_begin(variable_binding_in_environment_test) */
       -- /* 環境 <foo |-> 1, bar |-> "a string"> のもとで評価する */
       assert.are.equal(
        foo  -- 上記環境から変数fooの値を取り出す 
@@ -944,7 +944,7 @@ describe('クロージャーを使う', function()
       -- ).to.eql(
       --   1
       -- );
-      -- /* #@range_end(variable_binding_in_environment_test) */
+      -- /* #@@range_end(variable_binding_in_environment_test) */
     end);
     -- **リスト7.27** 部分適用と環境
     it('部分適用と環境', function()
@@ -957,7 +957,7 @@ describe('クロージャーを使う', function()
           end
         end
       end
-      -- /* #@range_begin(partial_application_with_environment) */
+      -- /* #@@range_begin(partial_application_with_environment) */
       local twoFold = multipleOf(2);
       assert.are.equal(
         twoFold(4)  
@@ -967,13 +967,13 @@ describe('クロージャーを使う', function()
       -- ).to.eql(
       --   true
       -- );
-      -- /* #@range_end(partial_application_with_environment) */
+      -- /* #@@range_end(partial_application_with_environment) */
     end);
     -- ### <section id='encapsulation-with-closure'>クロージャーで状態をカプセル化する</section>
     describe('クロージャーで状態をカプセル化する', function()
       -- **リスト7.28** クロージャーとしてのcounter関数
       it('クロージャーとしてのcounter関数', function()
-        -- /* #@range_begin(counter_as_closure) */
+        -- /* #@@range_begin(counter_as_closure) */
         local counter = function(init)
           local countingNumber =  init;
           -- /* countingNumberの環境を持つクロージャーを返す */
@@ -982,9 +982,9 @@ describe('クロージャーを使う', function()
             return countingNumber ;
           end 
         end 
-        -- /* #@range_end(counter_as_closure) */
+        -- /* #@@range_end(counter_as_closure) */
         -- **リスト7.29** counter関数の利用法
-        -- /* #@range_begin(counter_as_closure_test) */
+        -- /* #@@range_begin(counter_as_closure_test) */
         local counterFromZero = counter(0);
         assert.are.equal(
          counterFromZero() -- 1回目の実行 
@@ -1002,13 +1002,13 @@ describe('クロージャーを使う', function()
         -- ).to.eql( 
         --   2
         -- );
-        -- /* #@range_end(counter_as_closure_test) */
+        -- /* #@@range_end(counter_as_closure_test) */
       end);
       -- #### クロージャーで不変なデータ型を作る
       describe('クロージャーで不変なデータ型を作る', function()
         -- **リスト7.31** カリー化された不変なオブジェクト型
         it('カリー化された不変なオブジェクト型', function()
-          -- /* #@range_begin(immutable_object_type_curried) */
+          -- /* #@@range_begin(immutable_object_type_curried) */
           local object = {} -- objectモジュール
           -- /* empty:: STRING => Any */
           object.empty = function(key)
@@ -1055,9 +1055,9 @@ describe('クロージャーを使う', function()
           --     end 
           --   end 
           -- };
-          -- /* #@range_end(immutable_object_type_curried) */
+          -- /* #@@range_end(immutable_object_type_curried) */
           -- **リスト7.32** カリー化された不変なオブジェクト型のテスト
-          -- /* #@range_begin(immutable_object_type_curried_test) */
+          -- /* #@@range_begin(immutable_object_type_curried_test) */
           local robots = compose( -- object.setを合成する
             object.set("C3PO", "Star Wars"), -- (STRING => Any) => STRING => Any
             object.set("HAL9000","2001: a space odessay") -- (STRING => Any) => STRING => Any
@@ -1089,14 +1089,14 @@ describe('クロージャーを使う', function()
           -- ).to.eql(
           --   nil 
           -- );
-          -- /* #@range_end(immutable_object_type_curried_test) */
+          -- /* #@@range_end(immutable_object_type_curried_test) */
         end);
       end);
       -- #### クロージャーでジェネレーターを作る
       describe('クロージャーでジェネレーターを作る', function()
         -- **リスト7.33** ストリームからジェネレータを作る
         describe('ストリームからジェネレータを作る', function()
-          -- /* #@range_begin(generator_from_stream) */
+          -- /* #@@range_begin(generator_from_stream) */
           local generate = function(aStream)
             -- /* いったんローカル変数にストリームを格納する */
             local _stream = aStream; 
@@ -1113,7 +1113,7 @@ describe('クロージャーを使う', function()
               });
             end 
           end
-          -- /* #@range_end(generator_from_stream) */
+          -- /* #@@range_end(generator_from_stream) */
           -- **リスト7.34** 整数列のジェネレータ
           it('整数列のジェネレータ', function()
             local function enumFrom(from)
@@ -1121,7 +1121,7 @@ describe('クロージャーを使う', function()
                 return enumFrom(from + 1);
               end);
             end
-            -- /* #@range_begin(integer_generator) */
+            -- /* #@@range_begin(integer_generator) */
             -- /* 無限の整数列を生成する */
             local integers = enumFrom(0);            
             -- /* 無限ストリームからジェネレータを生成する */
@@ -1138,7 +1138,7 @@ describe('クロージャーを使う', function()
             -- expect(intGenerator()).to.eql(
             --   2
             -- );
-            -- /* #@range_end(integer_generator) */
+            -- /* #@@range_end(integer_generator) */
           end);
           it('無限の素数列を作る', function()
 
@@ -1219,7 +1219,7 @@ describe('クロージャーを使う', function()
                 end;
               end,
               -- **リスト7.35** ストリームのfilter関数
-              -- /* #@range_begin(stream_filter) */
+              -- /* #@@range_begin(stream_filter) */
               -- /* filter:: FUN[T => BOOL] => STREAM[T] => STREAM[T] */
               filter = function(predicate)
                 return function(aStream)
@@ -1239,22 +1239,22 @@ describe('クロージャーを使う', function()
                   });
                 end 
               end,
-              -- /* #@range_end(stream_filter) */
+              -- /* #@@range_end(stream_filter) */
               -- **リスト7.36** ストリームのremove関数
-              -- /* #@range_begin(stream_remove) */
+              -- /* #@@range_begin(stream_remove) */
               -- /* remove:: FUN[T => BOOL] => STREAM[T] => STREAM[T] */
               remove = function(predicate)
                 return function(aStream)
                   return stream.filter(negate(predicate))(aStream);
                 end
               end,
-              -- /* #@range_end(stream_remove) */
+              -- /* #@@range_end(stream_remove) */
               enumFrom = function(from)
                 return stream.cons(from, function(_)
                   return stream.enumFrom(from + 1);
                 end);
               end,
-              -- /* #@range_begin(stream_generate) */
+              -- /* #@@range_begin(stream_generate) */
               generate = function(astream)
                 local theStream = astream;
                 return function(_)
@@ -1269,7 +1269,7 @@ describe('クロージャーを使う', function()
                   });
                 end 
               end
-              -- /* #@range_end(stream_generate) */
+              -- /* #@@range_end(stream_generate) */
             }; -- end of 'stream' module
 
             local multipleOf = function(n)
@@ -1283,7 +1283,7 @@ describe('クロージャーを使う', function()
             end
             -- **リスト7.37** 素数列の生成 
             -- [![IMAGE ALT TEXT](http:--img.youtube.com/vi/1NzrrU8BawA/0.jpg)](http:--www.youtube.com/watch?v=1NzrrU8BawA "エラトステネスのふるいの動画")
-            -- /* #@range_begin(eratosthenes_sieve) */
+            -- /* #@@range_begin(eratosthenes_sieve) */
             -- /* エラトステネスのふるい */
             local function sieve(aStream)
               return Stream.match(aStream, {
@@ -1302,8 +1302,8 @@ describe('クロージャーを使う', function()
               });
             end 
             local primes = sieve(Stream.enumFrom(2)); -- 無限の素数列
-            -- /* #@range_end(eratosthenes_sieve) */
-            -- /* #@range_begin(eratosthenes_sieve_test) */
+            -- /* #@@range_end(eratosthenes_sieve) */
+            -- /* #@@range_begin(eratosthenes_sieve_test) */
             assert.are.same(
               Stream.toArray(Stream.take(primes)(10)) 
             , { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 })
@@ -1312,10 +1312,10 @@ describe('クロージャーを使う', function()
             -- ).to.eql(
             --   { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 }
             -- );
-            -- /* #@range_end(eratosthenes_sieve_test) */
+            -- /* #@@range_end(eratosthenes_sieve_test) */
 
             -- **リスト7.39** 素数のジェネレータ
-            -- /* #@range_begin(prime_generator) */
+            -- /* #@@range_begin(prime_generator) */
             local primes = sieve(Stream.enumFrom(2)); -- 無限の素数列
             local primeGenerator = generate(primes);  -- 素数のジェネレータ
             -- /******* テスト ********/
@@ -1337,7 +1337,7 @@ describe('クロージャーを使う', function()
             -- expect(primeGenerator()).to.eql(
             --   5
             -- );
-            -- /* #@range_end(prime_generator) */
+            -- /* #@@range_end(prime_generator) */
           end);
         end);
         -- #### コラム：ECMAScript2015（ES6）におけるジェネレータ
@@ -1345,7 +1345,7 @@ describe('クロージャーを使う', function()
         it('ECMAScript2015（ES6）におけるジェネレータ', function()
           pending("I should finish this test later")
           -- **リスト7.40** ECMAScript2015のジェネレータ
-          -- /* #@range_begin(es6_generator) */
+          -- /* #@@range_begin(es6_generator) */
           -- function* genCounter(){
           --   yield 1;
           --   yield 2;
@@ -1362,7 +1362,7 @@ describe('クロージャーを使う', function()
           -- ).to.eql(
           --   2
           -- );
-          -- /* #@range_end(es6_generator) */
+          -- /* #@@range_end(es6_generator) */
         end);
       end);
     end); -- クロージャーで状態をカプセル化する
@@ -1380,7 +1380,7 @@ describe('クロージャーを使う', function()
           end 
         end;
       end
-      -- /* #@range_begin(multipleOf_is_transparent) */
+      -- /* #@@range_begin(multipleOf_is_transparent) */
       assert.are.equal(
         multipleOf(2)(4) 
       , 
@@ -1401,7 +1401,7 @@ describe('クロージャーを使う', function()
       -- ).to.eql(
       --   multipleOf(3)(5)
       -- );
-      -- /* #@range_end(multipleOf_is_transparent) */
+      -- /* #@@range_end(multipleOf_is_transparent) */
     end);
     -- **リスト7.42** 参照透過性のないクロージャーの例
     it('参照透過性のないクロージャーの例', function()
@@ -1412,14 +1412,14 @@ describe('クロージャーを使う', function()
           return _init;
         end 
       end 
-      -- /* #@range_begin(counter_is_not_transparent) */
+      -- /* #@@range_begin(counter_is_not_transparent) */
       local counterFromZero = counter(0);
       -- expect(
       --   counterFromZero()
       -- ).not.to.eql( -- notで一致しないことをテストしている
       --   counterFromZero()
       -- );
-      -- /* #@range_end(counter_is_not_transparent) */
+      -- /* #@@range_end(counter_is_not_transparent) */
     end);
     -- **リスト7.44** カウンターをクロージャーで定義する
     it('カウンターをクロージャーで定義する', function()
@@ -1430,13 +1430,13 @@ describe('クロージャーを使う', function()
         end 
       end 
       -- **リスト7.45** チャーチ数のone関数
-      -- /* #@range_begin(church_one) */
+      -- /* #@@range_begin(church_one) */
       local one = function(f)
         return function(x)
           return f(x); -- f関数を1回適用する
         end 
       end 
-      -- /* #@range_end(church_one) */
+      -- /* #@@range_end(church_one) */
       local two = function(f)
         return function(x)
           return f(f(x));
@@ -1472,7 +1472,7 @@ describe('クロージャーを使う', function()
         end 
       end
       -- /***** counterクロージャーを用いたチャーチ数のテスト *****/
-      -- /* #@range_begin(church_numeral_counter) */
+      -- /* #@@range_begin(church_numeral_counter) */
       assert.are.equal(
         one(counter(0))() -- oneはチャーチ数（@<list>{church_numeral}）の1 
       , 
@@ -1493,7 +1493,7 @@ describe('クロージャーを使う', function()
       -- ).to.eql(
       --   2
       -- );
-      -- /* #@range_end(church_numeral_counter) */
+      -- /* #@@range_end(church_numeral_counter) */
       assert.are.equal(
         add(one)(two)(counter(0))()
       , 
@@ -1518,7 +1518,7 @@ describe('関数を渡す', function()
   describe('コールバックで処理をモジュール化する', function()
     -- **リスト7.47** 直接的な呼び出しの例
     it('直接的な呼び出しの例', function()
-      -- /* #@range_begin(direct_call) */
+      -- /* #@@range_begin(direct_call) */
       local succ = function(n)
         return n + 1;
       end 
@@ -1533,14 +1533,14 @@ describe('関数を渡す', function()
       -- ).to.eql(
       --   3
       -- );
-      -- /* #@range_end(direct_call) */
+      -- /* #@@range_end(direct_call) */
     end);
     -- **リスト7.48** 単純なコールバックの例
     it('単純なコールバックの例', function()
       local succ = function(n)
         return n + 1;
       end 
-      -- /* #@range_begin(call_callback) */
+      -- /* #@@range_begin(call_callback) */
       local setupCallback = function(callback)
         -- /* コールバック関数を実行する無名関数を返す */
         return function(arg)
@@ -1557,11 +1557,11 @@ describe('関数を渡す', function()
       -- ).to.eql(
       --   3
       -- );
-      -- /* #@range_end(call_callback) */
+      -- /* #@@range_end(call_callback) */
     end);
     it('リストのmap関数', function()
       -- **リスト7.49** リストのmap関数の定義
-      -- /* #@range_begin(list_map) */
+      -- /* #@@range_begin(list_map) */
       -- /* map:: FUN[T => T] => LIST[T] =>  LIST[T] */
       local function map(callback)
         return function(alist)
@@ -1577,10 +1577,10 @@ describe('関数を渡す', function()
           });
         end 
       end 
-      -- /* #@range_end(list_map) */
+      -- /* #@@range_end(list_map) */
 
       -- **リスト7.50** map関数のテスト
-      -- /* #@range_begin(list_map_test) */
+      -- /* #@@range_begin(list_map_test) */
       -- /* map処理の対象となる数値のリスト */
       local numbers = List.cons(1,
                               List.cons(2,
@@ -1610,7 +1610,7 @@ describe('関数を渡す', function()
       -- ).to.eql(
       --   {1,4,9}
       -- );
-      -- /* #@range_end(list_map_test) */
+      -- /* #@@range_end(list_map_test) */
     end);
   end);
   -- ### <section id='folding'>畳み込み関数に関数を渡す</section>
@@ -1632,7 +1632,7 @@ describe('関数を渡す', function()
         --       return pattern.cons(value, alist);
         --     end 
         --   end, 
-          -- /* #@range_begin(list_sum) */
+          -- /* #@@range_begin(list_sum) */
           local function sum(alist)
             return function(accumulator)
               return List.match(alist,{
@@ -1645,9 +1645,9 @@ describe('関数を渡す', function()
               });
             end 
           end
-          -- /* #@range_end(list_sum) */
+          -- /* #@@range_end(list_sum) */
           -- **リスト7.52** コールバック関数を用いたsum関数の再定義
-          -- /* #@range_begin(list_sum_callback) */
+          -- /* #@@range_begin(list_sum_callback) */
           local function sumWithCallback(alist)
             return function(accumulator)
               return function(CALLBACK)  -- コールバック関数を受け取る
@@ -1664,11 +1664,11 @@ describe('関数を渡す', function()
               end
             end
           end
-          -- /* #@range_end(list_sum_callback) */
+          -- /* #@@range_end(list_sum_callback) */
         -- };
 
         -- **リスト7.53** sumWithCallback関数のテスト
-        -- /* #@range_begin(list_sum_callback_test) */
+        -- /* #@@range_begin(list_sum_callback_test) */
         local numbers = List.cons(1, 
                                 List.cons(2,
                                           List.cons(3,
@@ -1687,7 +1687,7 @@ describe('関数を渡す', function()
         -- ).to.eql(
         --   6  -- 1 + 2 + 3 = 6
         -- );
-        -- /* #@range_end(list_sum_callback_test) */
+        -- /* #@@range_end(list_sum_callback_test) */
         assert.are.equal(
           sum(numbers)(0)
         , 6)
@@ -1713,7 +1713,7 @@ describe('関数を渡す', function()
         --       return pattern.cons(value, alist);
         --     end
         --   end,
-          -- /* #@range_begin(list_length) */
+          -- /* #@@range_begin(list_length) */
           local function length(alist)
             return function(accumulator)
               return List.match(alist,{
@@ -1726,9 +1726,9 @@ describe('関数を渡す', function()
               });
             end
           end
-          -- /* #@range_end(list_length) */
+          -- /* #@@range_end(list_length) */
           -- **リスト7.55** length関数の再定義
-          -- /* #@range_begin(list_length_callback) */
+          -- /* #@@range_begin(list_length_callback) */
           local function lengthWithCallback(alist)
             return function(accumulator)
               return function(CALLBACK)  -- コールバック関数を受け取る
@@ -1745,7 +1745,7 @@ describe('関数を渡す', function()
               end
             end;
           end
-          -- /* #@range_end(list_length_callback) */
+          -- /* #@@range_end(list_length_callback) */
         -- };
         local numbers = List.cons(1, 
                                 List.cons(2,
@@ -1760,7 +1760,7 @@ describe('関数を渡す', function()
         --   3
         -- );
         -- **リスト7.56** lengthWithCallback関数でリストの長さをテストする
-        -- /* #@range_begin(list_length_callback_test) */
+        -- /* #@@range_begin(list_length_callback_test) */
         -- /* lengthWithCallback関数に渡すコールバック関数 */
         local callback = function(n)
           return function(m)
@@ -1775,12 +1775,12 @@ describe('関数を渡す', function()
         -- ).to.eql(
         --   3
         -- );
-        -- /* #@range_end(list_length_callback_test) */
+        -- /* #@@range_end(list_length_callback_test) */
       end);
     end);
     describe('畳み込み関数', function()
       -- **リスト7.58** リストの畳み込み関数
-      -- /* #@range_begin(list_foldr) */
+      -- /* #@@range_begin(list_foldr) */
       local function foldr(alist)
         return function(accumulator)
           return function(callback)
@@ -1795,11 +1795,11 @@ describe('関数を渡す', function()
           end 
         end;
       end;
-      -- /* #@range_end(list_foldr) */
+      -- /* #@@range_end(list_foldr) */
       -- ** リスト7.59** foldr関数によるsum関数とlength関数の定義
       -- /* foldr関数によるsum関数 */
       it("foldr関数によるsum関数", function()
-        -- /* #@range_begin(foldr_sum) */
+        -- /* #@@range_begin(foldr_sum) */
         local sum = function(alist)
           return foldr(alist)(0)(function(item)
             return function(accumulator)
@@ -1807,7 +1807,7 @@ describe('関数を渡す', function()
             end;
           end);
         end;
-        -- /* #@range_end(foldr_sum) */
+        -- /* #@@range_end(foldr_sum) */
         -- /* list = [1,2,3,4] */
         local seq = List.cons(1,List.cons(2,List.cons(3,List.cons(4,List.empty()))));
         assert.are.equal(
@@ -1821,7 +1821,7 @@ describe('関数を渡す', function()
       end);
       -- /* foldr関数によるlength関数 */
       it("foldrでlength関数を作る", function()
-        -- /* #@range_begin(foldr_length) */
+        -- /* #@@range_begin(foldr_length) */
         local length = function(alist)
           return foldr(alist)(0)(function(item)
             return function(accumulator)
@@ -1829,7 +1829,7 @@ describe('関数を渡す', function()
             end
           end);
         end
-        -- /* #@range_end(foldr_length) */
+        -- /* #@@range_end(foldr_length) */
         -- /* list = [1,2,3,4] */
         local seq = List.cons(1,List.cons(2,List.cons(3,List.cons(4,List.empty()))));
         assert.are.equal(
@@ -1853,7 +1853,7 @@ describe('関数を渡す', function()
       --
       describe('反復処理における蓄積変数の初期値とコールバック関数の関係', function()
         it("foldrでproductを作る", function()
-          -- /* #@range_begin(foldr_product) */
+          -- /* #@@range_begin(foldr_product) */
           local product = function(alist)
             return foldr(alist)(1)(function(item)
               return function(accumulator)
@@ -1875,7 +1875,7 @@ describe('関数を渡す', function()
           -- ).to.eql(
           --   6 -- 1 * 2 * 3 = 6
           -- );
-          -- /* #@range_end(foldr_product) */
+          -- /* #@@range_end(foldr_product) */
         end);
         it("foldrでallを作る", function()
           local all = function(alist)
@@ -1975,7 +1975,7 @@ describe('関数を渡す', function()
             end 
             return toArrayAux(alist, {});
           end,
-          -- /* #@range_begin(foldr_reverse) */
+          -- /* #@@range_begin(foldr_reverse) */
           -- /* listのappend関数は、2つのリストを連結する */
           append = function(xs)
             return function(ys)
@@ -1998,7 +1998,7 @@ describe('関数を渡す', function()
               end;
             end);
           end
-          -- /* #@range_end(foldr_reverse) */
+          -- /* #@@range_end(foldr_reverse) */
         };
         -- /* list = [1,2,3,4] */
         local seq = List.cons(1,
@@ -2031,7 +2031,7 @@ describe('関数を渡す', function()
               return pattern.cons(value, alist);
             end 
           end,  
-          -- /* #@range_begin(foldr_find) */
+          -- /* #@@range_begin(foldr_find) */
           -- /* list.find関数は、条件に合致した要素をリストから探す */
           find = function(alist)
             return function(predicate) -- 要素を判定する述語関数
@@ -2047,7 +2047,7 @@ describe('関数を渡す', function()
               end);
             end 
           end 
-          -- /* #@range_end(foldr_find) */
+          -- /* #@@range_end(foldr_find) */
         };
         -- /******** テスト *********/
         local numbers = List.cons(1,
@@ -2067,7 +2067,7 @@ describe('関数を渡す', function()
         local double = function(number)
           return number * 2;
         end 
-        -- /* #@range_begin(foldr_map) */
+        -- /* #@@range_begin(foldr_map) */
         local function map(alist)
           return function(callback) -- 個々の要素を変換するコールバック関数
             return foldr(alist)(List.empty())(function(item)
@@ -2093,7 +2093,7 @@ describe('関数を渡す', function()
         -- ).to.eql(
         --   { 2, 4, 6} -- 2 * [1,2,3] = [2,4,6]
         -- );
-        -- /* #@range_end(foldr_map) */
+        -- /* #@@range_end(foldr_map) */
       end);
     end);
     -- #### コラム：配列の畳み込み関数
@@ -2115,7 +2115,7 @@ describe('関数を渡す', function()
           )
       end)
       it("reduceメソッドによるfromArray関数", function()
-        -- /* #@range_begin(list_fromArray) */
+        -- /* #@@range_begin(list_fromArray) */
         local Array = require("lib/array")
         local function fromArray(anArray)
           return Array.reduce(anArray, function(item,  accumulator)
@@ -2135,7 +2135,7 @@ describe('関数を渡す', function()
         -- ).to.eql(
         --   {0,1,2,3}
         -- );
-        -- /* #@range_end(list_fromArray) */
+        -- /* #@@range_end(list_fromArray) */
       end);
     end);
   end);
@@ -2143,7 +2143,7 @@ describe('関数を渡す', function()
   describe('非同期処理にコールバック関数を渡す', function()
     -- **リスト7.64** tarai関数の定義
     it("tarai関数の定義", function()
-      -- /* #@range_begin(tarai_function) */
+      -- /* #@@range_begin(tarai_function) */
       -- /* たらいまわし関数 */
       local function tarai(x,y,z)
         if(x > y) then
@@ -2164,7 +2164,7 @@ describe('関数を渡す', function()
       -- ).to.eql(
       --   2 
       -- );
-      -- /* #@range_end(tarai_function) */
+      -- /* #@@range_end(tarai_function) */
     end);
     -- <a name="tarai_system"> taraiサーバークライアント</a>
     -- ![](images/tarai-system.gif) 
@@ -2176,19 +2176,19 @@ describe('関数を渡す', function()
     describe('継続とは何か', function()
       -- **リスト7.67** 継続渡しのsucc関数
       it("継続渡しのsucc関数", function()
-        -- /* #@range_begin(succ_cps) */
+        -- /* #@@range_begin(succ_cps) */
         -- /* continues関数は、succ(n)のあとに続く継続 */
         local succ = function(n, continues)
           return continues(n + 1);
         end 
-        -- /* #@range_end(succ_cps) */
+        -- /* #@@range_end(succ_cps) */
 
         -- **リスト7.68** 継続渡しのsucc関数をテストする
         local identity = function(any)
           return any;
         end 
 
-        -- /* #@range_begin(succ_cps_test) */
+        -- /* #@@range_begin(succ_cps_test) */
         --[[ /* identity関数を継続として渡すことで、
            succ(1)の結果がそのまま返る */
            ]]
@@ -2202,7 +2202,7 @@ describe('関数を渡す', function()
         -- ).to.eql(
         --   2
         -- );
-        -- /* #@range_end(succ_cps_test) */
+        -- /* #@@range_end(succ_cps_test) */
       end);
       -- **リスト7.70** add(2, succ(3))の継続渡し
       it("add(2, succ(3))の継続渡し", function()
@@ -2211,7 +2211,7 @@ describe('関数を渡す', function()
         -- local identity = function(any) -- 値をそのまま返すだけの継続
         --   return any;
         -- end
-        -- -- /* #@range_begin(continuation_in_arithmetic) */
+        -- -- /* #@@range_begin(continuation_in_arithmetic) */
         -- -- /* 継続渡しのsucc関数 */
         -- local succ = function(n, continues)
         --   return continues(n + 1);
@@ -2237,7 +2237,7 @@ describe('関数を渡す', function()
         -- -- ).to.eql(
         -- --   6
         -- -- );
-        -- -- /* #@range_end(continuation_in_arithmetic) */
+        -- -- /* #@@range_end(continuation_in_arithmetic) */
         -- ]]
       end);
     end);
@@ -2245,7 +2245,7 @@ describe('関数を渡す', function()
       -- **リスト7.71** 継続による反復処理からの脱出
       it("継続による反復処理からの脱出", function()
         pending("I should finish this test later")
-        -- -- /* #@range_begin(stream_find_cps) */
+        -- -- /* #@@range_begin(stream_find_cps) */
         -- local find = function(aStream,
         --             predicate, 
         --             continuesOnFailure, 
@@ -2275,7 +2275,7 @@ describe('関数を渡す', function()
         --                 end 
         --               });
         --             end;
-        -- -- /* #@range_end(stream_find_cps) */
+        -- -- /* #@@range_end(stream_find_cps) */
         --
         -- -- find関数に渡す2つの継続
         -- local identity = function(any)
@@ -2283,7 +2283,7 @@ describe('関数を渡す', function()
         -- end
         -- -- **リスト7.72** find関数に渡す2つの継続
         -- --[[
-        -- /* #@range_begin(stream_find_continuations) */
+        -- /* #@@range_begin(stream_find_continuations) */
         -- /* 成功継続では、反復処理を脱出する */
         -- ]]
         -- local continuesOnSuccess = identity; 
@@ -2301,7 +2301,7 @@ describe('関数を渡す', function()
         --                               escapesFromRecursion
         --                             );  
         --                           end
-        -- --/* #@range_end(stream_find_continuations) */
+        -- --/* #@@range_end(stream_find_continuations) */
         -- -- **リスト7.73** find関数のテスト
         -- -- /* upto3変数は、1から3までの有限ストリーム */
         -- local upto3 = Stream.cons(1, function(_)
@@ -2325,7 +2325,7 @@ describe('関数を渡す', function()
         -- -- ).to.eql(
         -- --   nil -- リスト中に4の要素はないので、nullになります
         -- -- );
-        -- -- /* #@range_begin(stream_find_cps_test) */
+        -- -- /* #@@range_begin(stream_find_cps_test) */
         -- -- /* 変数integersは、無限の整数ストリーム */
         -- local integers = stream.enumFrom(0);
         -- 
@@ -2337,7 +2337,7 @@ describe('関数を渡す', function()
         -- ).to.eql(
         --   100 -- 100を見つけて返ってくる
         -- );
-        -- -- /* #@range_end(stream_find_cps_test) */
+        -- -- /* #@@range_end(stream_find_cps_test) */
       end); 
     end); 
     -- #### 非決定計算機を作る
@@ -2379,13 +2379,13 @@ describe('関数を渡す', function()
       --     return anExp(pattern);
       --   end,
       --   -- **リスト7.75** 非決定計算機の式
-      --   -- /* #@range_begin(amb_expression) */
+      --   -- /* #@@range_begin(amb_expression) */
       --   amb =  function(alist)
       --     return function(pattern)
       --       return pattern.amb(alist);
       --     end
       --   end,
-      --   -- /* #@range_end(amb_expression) */
+      --   -- /* #@@range_end(amb_expression) */
       --   num = function(n)
       --     return function(pattern)
       --       return pattern.num(n);
@@ -2397,7 +2397,7 @@ describe('関数を渡す', function()
       --     end;
       --   end 
       -- };
-      -- -- /* #@range_begin(amb_calculate) */
+      -- -- /* #@@range_begin(amb_calculate) */
       -- -- <section id='amb_calculate'>非決定性計算機の評価関数</section>
       -- local calculate = function(anExp, 
       --                  continuesOnSuccess, 
@@ -2405,14 +2405,14 @@ describe('関数を渡す', function()
       --                    -- /* 式に対してパターンマッチを実行する */
       --                    return exp.match(anExp, { 
       --                      -- **リスト7.79** 数値の評価
-      --                      -- /* #@range_begin(amb_calculate_num) */
+      --                      -- /* #@@range_begin(amb_calculate_num) */
       --                      -- /* 数値を評価する */
       --                      num = function(n)
       --                        return continuesOnSuccess(n, continuesOnFailure);
       --                      end,
-      --                      -- /* #@range_end(amb_calculate_num) */
+      --                      -- /* #@@range_end(amb_calculate_num) */
       --                      -- **リスト7.80** 足し算の評価 
-      --                      -- /* #@range_begin(amb_calculate_add) */
+      --                      -- /* #@@range_begin(amb_calculate_add) */
       --                      -- /* 足し算の式を評価する */
       --                      add = function(x, y)
       --                        -- /* まず引数xを評価する */
@@ -2424,9 +2424,9 @@ describe('関数を渡す', function()
       --                          end, continuesOnFailureX); -- /* y の計算に失敗すれば、xの失敗継続を渡す */
       --                        end, continuesOnFailure);    -- /* x の計算に失敗すれば、おおもとの失敗継続を渡す */
       --                      end,
-      --                      -- /* #@range_end(amb_calculate_add) */
+      --                      -- /* #@@range_end(amb_calculate_add) */
       --                      -- **リスト7.81** amb式の評価
-      --                      -- /* #@range_begin(amb_calculate_amb) */
+      --                      -- /* #@@range_begin(amb_calculate_amb) */
       --                      -- /* amb式を評価する */
       --                      amb = function(choices)
       --                         local calculateAmb = function(choices)
@@ -2454,13 +2454,13 @@ describe('関数を渡す', function()
       --                        end;
       --                        return calculateAmb(choices);
       --                      end 
-      --                      -- /* #@range_end(amb_calculate_amb) */
+      --                      -- /* #@@range_end(amb_calculate_amb) */
       --                    });
       --                  end;
-      -- -- /* #@range_end(amb_calculate) */
+      -- -- /* #@@range_end(amb_calculate) */
       --
       -- -- **リスト7.82** 非決定計算機の駆動関数
-      -- -- /* #@range_begin(amb_driver) */
+      -- -- /* #@@range_begin(amb_driver) */
       -- local driver = function(expression)
       --   -- /* 中断された計算を継続として保存する変数 */
       --   local suspendedComputation = nil; 
@@ -2488,7 +2488,7 @@ describe('関数を渡す', function()
       --     end 
       --   end 
       -- end;
-      -- -- /* #@range_end(amb_driver) */
+      -- -- /* #@@range_end(amb_driver) */
       -- it("amb[1,2] + 3  = amb[4, 5]", function()
       --   local ambExp = exp.add(exp.amb(list.cons(exp.num(1),list.cons(exp.num(2), list.empty()))), 
       --                        exp.num(3));
@@ -2512,7 +2512,7 @@ describe('関数を渡す', function()
       -- -- **リスト7.83** 非決定計算機のテスト
       -- it("非決定計算機のテスト", function()
       --   -- /* amb[1,2] + amb[3,4] = amb[4, 5, 5, 6] */
-      --   -- /* #@range_begin(amb_test) */
+      --   -- /* #@@range_begin(amb_test) */
       --   -- /* amb[1,2] + amb[3,4] = 4, 5, 5, 6 */
       --   local ambExp = exp.add(
       --     exp.amb(list.fromArray({exp.num(1),exp.num(2)})),
@@ -2543,7 +2543,7 @@ describe('関数を渡す', function()
       --   ).to.eql(
       --     nil -- これ以上の候補はないので、計算は終了
       --   );
-      --   -- /* #@range_end(amb_test) */
+      --   -- /* #@@range_end(amb_test) */
       -- end);
       -- it("amb[1,2,3] + amb[10,20] = amb[11,21,12,22,13,23]", function()
       --   local ambExp = exp.add(
@@ -2643,7 +2643,7 @@ describe('モナドを作る', function()
     local ID = require("lib/id")
     -- **リスト7.85** 恒等モナドの定義
     -- local ID = {
-    --   -- /* #@range_begin(identity_monad) */
+    --   -- /* #@@range_begin(identity_monad) */
     --   -- /* unit:: T => ID[T] */
     --   unit = function(value)  -- 単なる identity関数と同じ
     --     return value;
@@ -2654,7 +2654,7 @@ describe('モナドを作る', function()
     --       return transform(instanceM); -- 単なる関数適用と同じ
     --     end;
     --   end,
-    --   -- /* #@range_end(identity_monad) */
+    --   -- /* #@@range_end(identity_monad) */
     --   compose = function(f, g)
     --     return function(x)
     --       return ID.flatMap(f(x))(g);
@@ -2663,7 +2663,7 @@ describe('モナドを作る', function()
     -- };
     -- **リスト7.86** 恒等モナドunit関数のテスト
     it("恒等モナドunit関数のテスト", function()
-      -- /* #@range_begin(identity_monad_unit_test) */
+      -- /* #@@range_begin(identity_monad_unit_test) */
       assert.are.equal(
         ID.unit(1)
       , 
@@ -2674,14 +2674,14 @@ describe('モナドを作る', function()
       -- ).to.eql(
       --   1
       -- );
-      -- /* #@range_end(identity_monad_unit_test) */
+      -- /* #@@range_end(identity_monad_unit_test) */
     end);
     -- **リスト7.87** 恒等モナドflatMap関数のテスト
     it("恒等モナドflatMap関数のテスト", function()
       local succ = function(n)
         return n + 1;
       end;
-      -- /* #@range_begin(identity_monad_flatMap_test) */
+      -- /* #@@range_begin(identity_monad_flatMap_test) */
       assert.are.equal(
         ID.flatMap(ID.unit(1))(function(one)
           return ID.unit(succ(one));
@@ -2696,12 +2696,12 @@ describe('モナドを作る', function()
       -- ).to.eql(
       --   succ(1)
       -- );
-      -- /* #@range_end(identity_monad_flatMap_test) */
+      -- /* #@@range_end(identity_monad_flatMap_test) */
       local double = function(m)
         return m * 2;
       end
       -- **リスト7.88** flatMapと関数合成の類似性
-      -- /* #@range_begin(flatMap_and_composition) */
+      -- /* #@@range_begin(flatMap_and_composition) */
       assert.are.equal(
         ID.flatMap(ID.unit(1))(function(one)
           -- /* succ関数を適用する */
@@ -2724,16 +2724,16 @@ describe('モナドを作る', function()
       -- ).to.eql(
       --   compose(double,succ)(1)
       -- );
-      -- /* #@range_end(flatMap_and_composition) */
+      -- /* #@@range_end(flatMap_and_composition) */
     end);
     -- **リスト7.89**  恒等モナドのモナド則
     describe("恒等モナドのモナド則", function()
-      -- /* #@range_begin(identity_monad_laws) */
+      -- /* #@@range_begin(identity_monad_laws) */
       it("flatMap(instanceM)(unit) === instanceM", function()
         -- /* flatMap(instanceM)(unit) === instanceM の一例 */
         local instanceM = ID.unit(1);
         -- 右単位元則
-        -- /* #@range_begin(identity_monad_laws_right_unit_law) */
+        -- /* #@@range_begin(identity_monad_laws_right_unit_law) */
         assert.are.equal(
           ID.flatMap(instanceM)(ID.unit)
         , 
@@ -2744,7 +2744,7 @@ describe('モナドを作る', function()
         -- ).to.eql(
         --   instanceM
         -- );
-        -- /* #@range_end(identity_monad_laws_right_unit_law) */
+        -- /* #@@range_end(identity_monad_laws_right_unit_law) */
       end);
       it("flatMap(unit(value))(f) == f(value)", function()
         -- /* flatMap(unit(value))(f) === f(value) */
@@ -2752,7 +2752,7 @@ describe('モナドを作る', function()
           return ID.unit(n + 1);
         end 
         -- 左単位元則
-        -- /* #@range_begin(identity_monad_laws_left_unit_law) */
+        -- /* #@@range_begin(identity_monad_laws_left_unit_law) */
         assert.are.equal(
           ID.flatMap(ID.unit(1))(f)
         , 
@@ -2763,7 +2763,7 @@ describe('モナドを作る', function()
         -- ).to.eql(
         --   f(1)
         -- );
-        -- /* #@range_end(identity_monad_laws_left_unit_law) */
+        -- /* #@@range_end(identity_monad_laws_left_unit_law) */
       end);
       it("flatMap(flatMap(instanceM)(f))(g) == flatMap(instanceM)((x) => flatMap(f(x))(g))", function()
         --[[/* 
@@ -2782,7 +2782,7 @@ describe('モナドを作る', function()
         end;
         local instanceM = ID.unit(1);
         -- 結合法則
-        -- /* #@range_begin(identity_monad_laws_associative_law) */
+        -- /* #@@range_begin(identity_monad_laws_associative_law) */
         assert.are.equal(
           ID.flatMap(ID.flatMap(instanceM)(f))(g), 
           ID.flatMap(instanceM)(function(x)
@@ -2796,8 +2796,8 @@ describe('モナドを作る', function()
         --     return ID.flatMap(f(x))(g);
         --   end)
         -- );
-        -- /* #@range_end(identity_monad_laws_associative_law) */
-        -- /* #@range_end(identity_monad_laws) */
+        -- /* #@@range_end(identity_monad_laws_associative_law) */
+        -- /* #@@range_end(identity_monad_laws) */
       end);
     end);
   end);
@@ -2806,7 +2806,7 @@ describe('モナドを作る', function()
   describe('Maybeモナドでエラーを処理する', function()
     describe('Maybeモナドを作る', function()
       -- **リスト7.91** Maybeの代数的構造
-      -- /* #@range_begin(algebraic_type_maybe) */
+      -- /* #@@range_begin(algebraic_type_maybe) */
       local maybe = {
         match = function(exp, pattern)
           return exp(pattern);
@@ -2822,10 +2822,10 @@ describe('モナドを作る', function()
           end
         end 
       };
-      -- /* #@range_end(algebraic_type_maybe) */
+      -- /* #@@range_end(algebraic_type_maybe) */
       -- **リスト7.92** Maybeモナドの定義
       local MAYBE = {
-        -- /* #@range_begin(maybe_monad) */
+        -- /* #@@range_begin(maybe_monad) */
         -- /* unit:: T => MAYBE[T] */
         unit = function(value)
           return maybe.just(value);
@@ -2858,12 +2858,12 @@ describe('モナドを作る', function()
             });
           end;
         end
-        -- /* #@range_end(maybe_monad) */
+        -- /* #@@range_end(maybe_monad) */
       };
       -- **リスト7.93** Maybeモナドの利用法
       it("Maybeモナドの利用法", function()
         local Maybe = require("lib/maybe")
-        -- /* #@range_begin(maybe_monad_add_test) */
+        -- /* #@@range_begin(maybe_monad_add_test) */
         -- /* 足し算を定義する */
         local add = function(maybeA,maybeB)
           return Maybe.flatMap(maybeA)(function(a)
@@ -2891,7 +2891,7 @@ describe('モナドを作る', function()
         -- ).to.eql(
         --   null
         -- );
-        -- /* #@range_end(maybe_monad_add_test) */
+        -- /* #@@range_end(maybe_monad_add_test) */
       end);
     end);
   end);
@@ -2903,7 +2903,7 @@ describe('モナドを作る', function()
       return data(pattern);
     end 
     -- **リスト7.94** Pair型の定義
-    -- /* #@range_begin(pair_datatype) */
+    -- /* #@@range_begin(pair_datatype) */
     local pair = {
       -- /* pair のデータ構造 */
       cons = function(left, right)
@@ -2927,11 +2927,11 @@ describe('モナドを作る', function()
         });
       end 
     }
-    -- /* #@range_end(pair_datatype) */
+    -- /* #@@range_end(pair_datatype) */
     -- **リスト7.95** 外界を明示したIOモナドの定義
     describe('外界を明示したIOモナドの定義', function()
       local IO = {
-        -- /* #@range_begin(io_monad_definition_with_world) */
+        -- /* #@@range_begin(io_monad_definition_with_world) */
         -- /* unit:: T => IO[T] */
         unit = function(any)
           return function(world)  -- worldは現在の外界
@@ -2951,9 +2951,9 @@ describe('モナドを作る', function()
             end;
           end;
         end,
-        -- /* #@range_end(io_monad_definition_with_world) */
+        -- /* #@@range_end(io_monad_definition_with_world) */
         -- **リスト7.96** IOモナドの補助関数
-        -- /* #@range_begin(io_monad_definition_with_world_helper_function) */
+        -- /* #@@range_begin(io_monad_definition_with_world_helper_function) */
         -- /* done:: T => IO[T] */
         done = function(any)
           return IO.unit();
@@ -2965,7 +2965,7 @@ describe('モナドを作る', function()
             return pair.left(newPair);     -- 結果だけを返す
           end;
         end
-        -- /* #@range_end(io_monad_definition_with_world_helper_function) */
+        -- /* #@@range_end(io_monad_definition_with_world_helper_function) */
       }; -- IO monad
       IO.println = function(message)
         return function(world)  -- IOモナドを返す
@@ -2975,7 +2975,7 @@ describe('モナドを作る', function()
         end;
       end 
       -- **リスト7.98** run関数の利用法
-      -- /* #@range_begin(run_println) */
+      -- /* #@@range_begin(run_println) */
       -- /* 初期の外界に null をバインドする */
       local initialWorld = nil; 
       assert.are.equal(
@@ -2986,11 +2986,11 @@ describe('モナドを作る', function()
       -- ).to.eql(
       --   nil
       -- );
-      --/* #@range_end(run_println) */
+      --/* #@@range_end(run_println) */
     end);
     describe('外界を引数に持たないIOモナド', function()
       -- **リスト7.99** 外界を明示しないIOモナドの定義
-      -- /* #@range_begin(io_monad_definition) */
+      -- /* #@@range_begin(io_monad_definition) */
       local IO = {
         -- /* unit:: T => IO[T] */
         unit = function(any)
@@ -3045,10 +3045,10 @@ describe('モナドを作る', function()
           end 
         end 
       }; -- IO monad
-      -- /* #@range_end(io_monad_definition) */
+      -- /* #@@range_end(io_monad_definition) */
       -- **リスト7.100** run関数の利用法
       it('run関数の利用法', function()
-        -- /* #@range_begin(run_println_without_world) */
+        -- /* #@@range_begin(run_println_without_world) */
         assert.are.equal(
           -- /* 外界を指定する必要はありません */
           IO.run(IO.println("名前はまだない")) 
@@ -3059,11 +3059,11 @@ describe('モナドを作る', function()
         -- ).to.eql(
         --   nil
         -- );
-        -- /* #@range_end(run_println_without_world) */
+        -- /* #@@range_end(run_println_without_world) */
       end);
       -- #### IOアクションを合成する
       describe('IOアクションを合成する', function()
-        -- /* #@range_begin(io_monad_is_composable) */
+        -- /* #@@range_begin(io_monad_is_composable) */
         -- **リスト7.102** seq関数の定義
         -- /* IO.seq:: IO[a] => IO[b] => IO[b] */
         IO.seq = function(instanceA)
@@ -3103,10 +3103,10 @@ describe('モナドを作る', function()
           process.stdin.setEncoding('utf8');
           return process.stdin.on('readable', continuation);
         end;
-        -- /* #@range_end(io_monad_is_composable) */
+        -- /* #@@range_end(io_monad_is_composable) */
 
         -- **リスト7.103** stringモジュール
-        -- /* #@range_begin(string_module) */
+        -- /* #@@range_begin(string_module) */
         local chars = {
           -- /* 先頭文字を取得する */
           head = function(str)
@@ -3132,7 +3132,7 @@ describe('モナドを作る', function()
             end 
           end 
         };
-        -- /* #@range_end(string_module) */
+        -- /* #@@range_end(string_module) */
         -- it('IO.putcのテスト', (next) => {
         --   expect(
         --     IO.putc('a')

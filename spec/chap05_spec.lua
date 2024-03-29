@@ -25,7 +25,7 @@ describe('条文分岐の種類と特徴', function()
   describe('条件分岐としてのif文', function()
     -- **リスト5.2** 偶数かどうかを判定する
     it('偶数かどうかを判定する', function()
-      -- /* ##@range_begin(even_function)*/
+      -- /* ##@@range_begin(even_function)*/
       local even = function(n)
         if (n % 2) == 0 then -- 2で割った余りが0の場合
           return true;
@@ -33,7 +33,7 @@ describe('条文分岐の種類と特徴', function()
           return false;
         end
       end 
-      -- /* ##@range_end(even_function)*/
+      -- /* ##@@range_end(even_function)*/
       assert.are.equal(even(2), true)
       assert.are.equal(even(3), false)
       
@@ -50,7 +50,7 @@ describe('条文分岐の種類と特徴', function()
     end)
     -- **リスト5.3** ネストされたif文
     it("ネストされたif文", function()
-      -- /* #@range_begin(compare) */
+      -- /* #@@range_begin(compare) */
       local compare =  function(n,m)
         if (n > m) then     -- nがmよりも大きなケース
           return 1;
@@ -77,7 +77,7 @@ describe('条文分岐の種類と特徴', function()
       -- ).to.eql(
       --     -1
       -- );
-      -- /* #@range_end(compare) */
+      -- /* #@@range_end(compare) */
       -- /* 1 と 1 は等しい */
       assert.are.equal(compare(1, 1), 0)
       -- expect(
@@ -88,7 +88,7 @@ describe('条文分岐の種類と特徴', function()
     end)
     -- **リスト5.4** else if文による3つ以上の条件分岐
     it("else if文による3つ以上の条件分岐", function()
-      -- /* #@range_begin(elseif) */
+      -- /* #@@range_begin(elseif) */
       local compare =  function(n,m)
         if (n > m) then
           return 1;
@@ -98,7 +98,7 @@ describe('条文分岐の種類と特徴', function()
           return -1;
         end 
       end 
-      -- /* #@range_end(elseif) */
+      -- /* #@@range_end(elseif) */
       -- /* テスト */
       -- /* 3 は 2 よりも大きい */
       assert.are.equal(compare(3, 2), 1)
@@ -139,7 +139,7 @@ describe('条文分岐の種類と特徴', function()
     describe('if文の問題点', function()
       -- **リスト5.7** returnで関数を抜ける
       it('returnで関数を抜ける', function()
-        -- /* ##@range_begin(even_function_again) */
+        -- /* ##@@range_begin(even_function_again) */
         local even = function(n)
           if((n % 2) == 0) then
             -- /* returnでeven関数を抜けてtrueを返す */
@@ -149,7 +149,7 @@ describe('条文分岐の種類と特徴', function()
             return false;      
           end 
         end 
-        -- /* ##@range_end(even_function_again) */
+        -- /* ##@@range_end(even_function_again) */
       end)
     end)
   end)
@@ -161,7 +161,7 @@ describe('条文分岐の種類と特徴', function()
       pending("I should finish this test later")
       
       -- **リスト5.10** 可変なデータとのマッチング
-      -- /* #@range_begin(switch_for_mutable) */
+      -- /* #@@range_begin(switch_for_mutable) */
       -- local match_for_mutable = function(array)
       --   switch(array){
       --   case [1,2,3]: -- [1,2,3] とマッチさせたい
@@ -177,7 +177,7 @@ describe('条文分岐の種類と特徴', function()
       -- ).to.eql(
       --   false  -- case [1,2,3] にはマッチしない
       -- );
-      -- -- /* #@range_end(switch_for_mutable) */
+      -- -- /* #@@range_end(switch_for_mutable) */
       -- next();
     end)
   end)
@@ -189,7 +189,7 @@ describe('条文分岐の種類と特徴', function()
      end
      -- **リスト5.12** 代数的データ構造によるリスト
      it('代数的データ構造によるリスト', function()
-       -- /* #@range_begin(list_in_algebraic_datatype) */
+       -- /* #@@range_begin(list_in_algebraic_datatype) */
        -- /* リストの代数的データ型 */
        local empty = function() -- 空のリスト
          return function(pattern)
@@ -201,18 +201,18 @@ describe('条文分岐の種類と特徴', function()
            return pattern.cons(value, list)
          end
        end 
-       -- /* #@range_end(list_in_algebraic_datatype) */
+       -- /* #@@range_end(list_in_algebraic_datatype) */
 
        -- **リスト5.13** 代数的データ構造のmatch関数
-       -- /* #@range_begin(match_in_algebraic_datatype) */
+       -- /* #@@range_begin(match_in_algebraic_datatype) */
        -- /* 代数的データ型に対してパターンマッチを実現する関数 */
        local match = function(data, pattern)
          return data(pattern)
        end
-       -- /* #@range_end(match_in_algebraic_datatype) */
+       -- /* #@@range_end(match_in_algebraic_datatype) */
 
        -- **リスト5.14** リストの関数定義
-       -- /* #@range_begin(list_function_using_algebraic_datatype) */
+       -- /* #@@range_begin(list_function_using_algebraic_datatype) */
        -- /* isEmpty関数は、引数alistに渡されたリストが空のリストかどうかを判定する */
        local isEmpty = function(alist)
          -- /* match関数で分岐する */
@@ -251,13 +251,13 @@ describe('条文分岐の種類と特徴', function()
            end 
          })
        end 
-       -- /* #@range_end(list_function_using_algebraic_datatype) */
+       -- /* #@@range_end(list_function_using_algebraic_datatype) */
 
        -- <a name="match_reduction_demo"> **head(cons(1, empty()))の簡約** </a>
        -- ![head(cons(1, empty()))の簡約](images/match-reduction.gif) 
 
        -- **リスト5.15** 代数的データ構造のリストの関数のテスト
-       -- /* #@range_begin(list_in_algebraic_datatype_test) */
+       -- /* #@@range_begin(list_in_algebraic_datatype_test) */
        -- /* emptyは空のリストか */
        assert.are.equal(isEmpty(empty()), true)
        -- expect(
@@ -286,7 +286,7 @@ describe('条文分岐の種類と特徴', function()
        -- ).to.eql(
        --   2
        -- );
-       -- /* #@range_end(list_in_algebraic_datatype_test) */
+       -- /* #@@range_end(list_in_algebraic_datatype_test) */
        assert.are.equal(isEmpty(tail(cons(1,empty()))),  true)
        -- expect(
        --   isEmpty(tail(cons(1,empty())))     -- [1]の末尾要素は空のリストである
@@ -302,7 +302,7 @@ describe('条文分岐の種類と特徴', function()
  describe("反復処理の種類と特徴", function()
    -- **リスト5.16** while文の例
    it("while文の例", function()
-     -- /* #@range_begin(while_counter) */
+     -- /* #@@range_begin(while_counter) */
      local counter = 0         -- 変数の初期化
      while (counter < 10) do   -- 反復の条件
        counter = counter + 1; -- 変数の更新
@@ -314,11 +314,11 @@ describe('条文分岐の種類と特徴', function()
      -- ).to.eql(
      --   10
      -- );
-     -- /* #@range_end(while_counter) */
+     -- /* #@@range_end(while_counter) */
    end)
    -- **リスト5.17** for文の例
    it("for文の例", function()
-     -- /* #@range_begin(for_example) */
+     -- /* #@@range_begin(for_example) */
      local counter =0
      for i = 0,  10,  1 do
         counter = i 
@@ -330,13 +330,13 @@ describe('条文分岐の種類と特徴', function()
      -- ).to.eql(
      --   10
      -- );
-     -- /* #@range_end(for_example) */
+     -- /* #@@range_end(for_example) */
    end)
    -- **リスト5.18** forEachメソッドの例
    -- > 参考資料: https:--developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach 
   it("forEach文によるlength", function()
     pending("I should finish this test later")
-    -- /* #@range_begin(forEach_length) */
+    -- /* #@@range_begin(forEach_length) */
     -- local length = function(array)
     --   local result = 0;
     --   array.forEach((element) => {
@@ -350,7 +350,7 @@ describe('条文分岐の種類と特徴', function()
     -- ).to.eql(
     --   5
     -- );
-    -- /* #@range_end(forEach_length) */
+    -- /* #@@range_end(forEach_length) */
   end)
 end)
 
@@ -362,7 +362,7 @@ describe('再帰による反復処理', function()
 
     -- **リスト5.19** 複利の計算
     it("複利の計算", function()
-      -- /* #@range_begin(compound_interest) */
+      -- /* #@@range_begin(compound_interest) */
       function compoundInterest(a, r, n)
         if (n == 0) then -- 初年度は利率がつかないので元金がそのまま返る
           return a;
@@ -371,7 +371,7 @@ describe('再帰による反復処理', function()
           return compoundInterest(a, r, n - 1) * (1 + r); 
         end 
       end 
-      -- /* #@range_end(compound_interest) */
+      -- /* #@@range_end(compound_interest) */
       assert.are.equal(compoundInterest(100000, 0.02, 1), 102000)
       -- expect(
       --   compoundInterest(100000, 0.02, 1)
@@ -396,11 +396,11 @@ describe('再帰による反復処理', function()
   -- ### <section id='requirements-of-recursion'>再帰呼び出しの条件</section>
   describe('再帰呼び出しの条件', function()
     -- **リスト5.20** infiniteLoop関数
-    -- /* ##@range_begin(infiniteLoop) */
+    -- /* ##@@range_begin(infiniteLoop) */
     local infiniteLoop = function(_)
       return infiniteLoop(_);
     end 
-    -- /* ##@range_end(infiniteLoop) */
+    -- /* ##@@range_end(infiniteLoop) */
     -- **リスト5.21** 再帰によるmap関数
     it('再帰によるmap関数', function()
       -- /* 第5章で紹介したリスト型 */
@@ -417,7 +417,7 @@ describe('再帰による反復処理', function()
           return pattern.cons(x, xs)
         end 
       end 
-      -- /* #@range_begin(recursive_map) */
+      -- /* #@@range_begin(recursive_map) */
       function map(alist,transform)
         return match(alist,{
           empty = function(_) 
@@ -457,9 +457,9 @@ describe('再帰による反復処理', function()
           print( item )
         end
       end
-      -- /* #@range_end(recursive_map) */
+      -- /* #@@range_end(recursive_map) */
       -- **リスト5.22** 再帰によるtoArray関数
-      -- /* #@range_begin(recursive_toArray) */
+      -- /* #@@range_begin(recursive_toArray) */
       local toArray = function(alist)
         -- /* 補助関数 toArrayHelper */
         function toArrayHelper(alist,accumulator)
@@ -487,7 +487,7 @@ describe('再帰による反復処理', function()
         end 
         return toArrayHelper(alist,{})
       end 
-      -- /* #@range_end(recursive_toArray) */
+      -- /* #@@range_end(recursive_toArray) */
       local succ = function(n)
         return n + 1;
       end 
@@ -558,7 +558,7 @@ describe('再帰による反復処理', function()
       describe('再帰的データ構造としてのリスト', function()
         -- **リスト5.25** 再帰によるlength関数
         it('再帰によるlength関数', function()
-          -- /* #@range_begin(recursive_length_without_accumulator) */
+          -- /* #@@range_begin(recursive_length_without_accumulator) */
           function length(list) 
             return match(list, {
               -- /* emptyの場合は、終了条件となる */
@@ -571,7 +571,7 @@ describe('再帰による反復処理', function()
               end 
             });
           end 
-          -- /* #@range_end(recursive_length_without_accumulator) */
+          -- /* #@@range_end(recursive_length_without_accumulator) */
           -- /************************ テスト ************************/
           assert.are.equal(length(cons(1,cons(2,cons(3,empty())))),  3)
           -- expect(
@@ -598,7 +598,7 @@ describe('再帰による反復処理', function()
             return toArrayAux(seq, {});
           end 
           -- /* append :: (LIST[T], LIST[T]) -> LIST[T] */
-          -- /* #@range_begin(list_append) */
+          -- /* #@@range_begin(list_append) */
           function append(xs, ys)
             return match(xs,{
               -- /* emptyの場合は、終了条件 */
@@ -612,9 +612,9 @@ describe('再帰による反復処理', function()
               end 
             });
           end 
-          -- /* #@range_end(list_append) */
+          -- /* #@@range_end(list_append) */
           
-          -- /* #@range_begin(list_append_test) */
+          -- /* #@@range_begin(list_append_test) */
           local xs = cons(1,
                         cons(2,
                              empty()));
@@ -627,11 +627,11 @@ describe('再帰による反復処理', function()
           -- ).to.eql(
           --   {1,2,3,4}
           -- );
-          -- /* #@range_end(list_append_test) */
+          -- /* #@@range_end(list_append_test) */
         end)
         -- **リスト5.27** 再帰によるreverse関数
         it('再帰によるreverse関数', function()
-          -- /* #@range_begin(list_reverse) */
+          -- /* #@@range_begin(list_reverse) */
           local reverse = function(list)
             function reverseHelper(list, accumulator)
               return match(list, {
@@ -645,13 +645,13 @@ describe('再帰による反復処理', function()
             end
             return reverseHelper(list, empty());
           end 
-          -- /* #@range_end(list_reverse) */
+          -- /* #@@range_end(list_reverse) */
         end)
       end)
       -- #### 再帰的データ構造としての数式
       describe('再帰的データ構造としての数式', function()
         -- **リスト5.28** 代数的データ構造による数式
-        -- /* #@range_begin(expression_algebraic_datatype) */
+        -- /* #@@range_begin(expression_algebraic_datatype) */
         local num = function(n)
           return function(pattern)
             return pattern.num(n)
@@ -667,9 +667,9 @@ describe('再帰による反復処理', function()
             return pattern.mul(exp1, exp2);
           end 
         end 
-        -- /* #@range_end(expression_algebraic_datatype) */
+        -- /* #@@range_end(expression_algebraic_datatype) */
         -- **リスト5.30** 数式を再帰的に計算する
-        -- /* #@range_begin(expression_algebraic_datatype_recursion) */
+        -- /* #@@range_begin(expression_algebraic_datatype_recursion) */
         function calculate(exp)
           return match(exp, { -- パターンマッチを実行する
             num = function(n)
@@ -696,7 +696,7 @@ describe('再帰による反復処理', function()
         -- ).to.eql(
         --   7
         -- );
-      -- /* #@range_end(expression_algebraic_datatype_recursion) */
+      -- /* #@@range_end(expression_algebraic_datatype_recursion) */
       end)
     end)
   end)
@@ -748,7 +748,7 @@ describe('再帰による反復処理', function()
       end
       -- **リスト5.36** 命題Pの単体テスト
       -- > 命題Pの帰納法による証明は、本書を参照してください
-      -- /* #@range_begin(statement_p_test) */
+      -- /* #@@range_begin(statement_p_test) */
       local xs = cons(1,
                     cons(2,
                          empty()));
@@ -761,7 +761,7 @@ describe('再帰による反復処理', function()
       -- ).to.eql(
       --   length(xs) + length(ys) -- 命題Pの右辺
       -- );
-      -- /* #@range_end(statement_p_test) */
+      -- /* #@@range_end(statement_p_test) */
     end)
   end)
 end)
