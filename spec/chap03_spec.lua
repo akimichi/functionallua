@@ -277,11 +277,6 @@ describe('テストに親しむ', function()
         1 +  2
         , 
         3)
-      -- expect(
-      --   1 + 2
-      -- ).to.eql(
-      --   3
-      -- );
       --/* #@@range_end(expect_assertion) */
     end);
   end);
