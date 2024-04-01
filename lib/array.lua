@@ -1,17 +1,19 @@
-local array = {}
+-- #@@range_begin(array_module)
 
-array.reduce = function(anArray,  callback,  accumulator)
+local function reduce(anArray,  callback,  accumulator)
   if(#anArray == 0) then
     return accumulator
   else
     local head = anArray[1]
-    assert(head)
-    -- print(head)
+    -- assert(head)
     local tail = { select(2, table.unpack(anArray)) }
-    return callback(head,  array.reduce(tail, callback,  accumulator))
+    return callback(head,  reduce(tail, callback,  accumulator))
   end
 
 end
 
-return array
+return {
+  reduce = reduce
+}
 
+-- #@@range_end(array_module)

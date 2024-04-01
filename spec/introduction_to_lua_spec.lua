@@ -624,6 +624,10 @@ end)
 --     -- ![代入の仕組み](images/mechanism-of-assignment.gif) 
 --   });
 -- });
+describe('モジュール機構', function()
+
+
+end)
 
 -- [目次に戻る](index.html) [次章に移る](chap05.spec.html) 
 
