@@ -425,23 +425,14 @@ describe('カリー化で関数を渡す', function()
       end 
 
       assert.are.equal(one(counter(0))(), 1)
-      -- expect(one(counter(0))()).to.eql(1);
       assert.are.equal(two(counter(0))(), 2)
-      -- expect(two(counter(0))()).to.eql(2);
       assert.are.equal(three(counter(0))(), 3)
-      -- expect(three(counter(0))()).to.eql(3);
       assert.are.equal(succ(one)(counter(0))(), 2)
-      -- expect(succ(one)(counter(0))()).to.eql(2);
       assert.are.equal(succ(two)(counter(0))(), 3)
-      -- expect(succ(two)(counter(0))()).to.eql(3);
       assert.are.equal(add(zero)(one)(counter(0))(), 1)
-      -- expect(add(zero)(one)(counter(0))()).to.eql(1);
       assert.are.equal(add(one)(one)(counter(0))(), 2)
-      -- expect(add(one)(one)(counter(0))()).to.eql(2);
       assert.are.equal(add(one)(two)(counter(0))(), 3)
-      -- expect(add(one)(two)(counter(0))()).to.eql(3);
       assert.are.equal(add(two)(three)(counter(0))(), 5)
-      -- expect(add(two)(three)(counter(0))()).to.eql(5);
     end)
   end)
 end)
@@ -465,11 +456,6 @@ describe('コンビネータで関数を組み合わせる', function()
       local even = multipleOf(2); -- /* カリー化されたmultipleOf関数を使う */
       
       assert.are.equal(even(2), true)
-      -- expect(
-      --   even(2)
-      -- ).to.eql(
-      --   true
-      -- );
       -- /* #@@range_end(multipleOf_combinator) */
     end); 
     describe('論理コンビネータ', function()
@@ -499,17 +485,7 @@ describe('コンビネータで関数を組み合わせる', function()
         local odd = negate(even); -- notコンビネータでodd関数を定義する
         -- /******** テスト ********/
         assert.are.equal(odd(3), true)
-        -- expect(
-        --   odd(3) -- 3は奇数である
-        -- ).to.eql(
-        --   true
-        -- );
         assert.are.equal(odd(2), false)
-        -- expect(
-        --   odd(2) -- 2は奇数でない 
-        -- ).to.eql(
-        --   false
-        -- );
         --/* #@@range_end(not_combinator_test) */
       end);
       -- /* 本書では割愛したが、論理和や論理積を実行するコンビネータも同様に定義できる */
@@ -572,12 +548,6 @@ describe('コンビネータで関数を組み合わせる', function()
       return x - 2;
     end 
     assert.are.equal(compose(f,g)(2) , f(g(2)))
-
-    -- expect(
-    --   compose(f,g)(2) -- f◦g で合成された関数
-    -- ).to.eql(
-    --   f(g(2))         -- 合成せずに順次実行した場合
-    -- );
     -- /* #@@range_end(compose_test) */
     -- #### 関数合成の条件
     describe('関数合成の条件', function()
@@ -589,12 +559,6 @@ describe('コンビネータで関数を組み合わせる', function()
           return - n;
         end 
         assert.are.equal(compose(opposite,opposite)(2) , 2)
-        -- expect(
-        --   -- /* 反数同士の合成は成功する */
-        --   compose(opposite,opposite)(2) 
-        -- ).to.eql(
-        --   2 -- -(-2) === 2
-        -- );
         -- /* #@@range_end(composition_example_opposite_twice) */
       end);
       -- **リスト7.20** カリー化による合成
@@ -609,12 +573,6 @@ describe('コンビネータで関数を組み合わせる', function()
           end
         end 
         assert.are.equal(compose(opposite, addCurried(2))(3) , -5)
-        -- expect(
-        --   compose(opposite,
-        --           addCurried(2))(3)
-        -- ).to.eql(
-        --   -5
-        -- );
         -- /* #@@range_end(compose_opposite_add_successful) */
       end)
     end);
@@ -653,11 +611,6 @@ describe('コンビネータで関数を組み合わせる', function()
                                           list.cons(3,
                                                     list.empty())));
         assert.are.equal(last(aList), 3)
-        -- expect(
-        --   last(aList)
-        -- ).to.eql(
-        --   3
-        -- );
       end);
       it('reverse関数', function()
         local sequence = list.cons(1,list.cons(2,list.empty()))
@@ -677,11 +630,6 @@ describe('コンビネータで関数を組み合わせる', function()
                               List.cons(4,
                                 List.empty()))));
         assert.are.equal(last(sequence), 4)
-        -- expect(
-        --   last(sequence)
-        -- ).to.eql(
-        --   4
-        -- );
       end);
       -- **表7.1** 関数合成による様々な関数定義
       -- 
@@ -725,11 +673,6 @@ describe('コンビネータで関数を組み合わせる', function()
           end 
           -- /****** テスト *******/
           assert.are.equal(length(alist), 3)
-          -- expect(
-          --   length(alist)
-          -- ).to.eql(
-          --   3
-          -- );
         end);
         -- last関数の定義
         it('last関数の定義', function()
@@ -738,11 +681,6 @@ describe('コンビネータで関数を組み合わせる', function()
                            List.reverse)(alist);
           end 
           assert.are.equal(last(alist), 3)
-          -- expect(
-          --   last(alist)
-          -- ).to.eql(
-          --   3
-          -- );
         end);
         -- init関数の定義
         it('init関数の義', function()
@@ -755,11 +693,6 @@ describe('コンビネータで関数を組み合わせる', function()
           end 
           -- /****** テスト *******/
           assert.are.same(List.toArray(init(alist)), {1, 2})
-          -- expect(
-          --   list.toArray(init(alist))
-          -- ).to.eql(
-          --   {1,2}
-          -- );
         end);
         -- all関数の定義
         it('all関数の定義', function()
@@ -784,13 +717,6 @@ describe('コンビネータで関数を組み合わせる', function()
               return x > 0;
             end)(alist)
           , true)
-          -- expect(
-          --   all(function(x)
-          --     return x > 0;
-          --   end)(alist)
-          -- ).to.eql(
-          --   true
-          -- );
         end)
         -- any関数の定義
         it('any関数の定義', function()
@@ -815,25 +741,11 @@ describe('コンビネータで関数を組み合わせる', function()
               return x < 2;
             end)(alist)
           , true)
-          -- expect(
-          --   any(function(x)
-          --     return x < 2;
-          --   end)(alist)
-          -- ).to.eql(
-          --   true
-          -- );
           assert.are.equal(
             any(function(x)
               return x < 1;
             end)(alist)
           , false)
-          -- expect(
-          --   any(function(x)
-          --     return x < 1;
-          --   end)(alist)
-          -- ).to.eql(
-          --   false
-          -- );
         end);
         -- none関数の定義
         it('none関数の定義', function()
@@ -863,13 +775,6 @@ describe('コンビネータで関数を組み合わせる', function()
               return x < 0;
             end)(alist)
           , true)
-          -- expect(
-          --   none(function(x)
-          --     return x < 0;
-          --   end)(alist)
-          -- ).to.eql(
-          --   true
-          -- );
         end);
       end)
     end);
@@ -903,11 +808,6 @@ describe('コンビネータで関数を組み合わせる', function()
       assert.are.equal(
         factorial(3) -- 3 * 2 * 1 = 6
       , 6)
-      -- expect(
-      --   factorial(3) -- 3 * 2 * 1 = 6
-      -- ).to.eql(
-      --   6
-      -- );
       -- /* #@@range_end(Y_combinator_test) */
     end);
   end); -- 関数を合成する
@@ -939,11 +839,6 @@ describe('クロージャーを使う', function()
       assert.are.equal(
        foo  -- 上記環境から変数fooの値を取り出す 
       , 1)
-      -- expect(
-      --   foo  -- 上記環境から変数fooの値を取り出す
-      -- ).to.eql(
-      --   1
-      -- );
       -- /* #@@range_end(variable_binding_in_environment_test) */
     end);
     -- **リスト7.27** 部分適用と環境
@@ -962,11 +857,6 @@ describe('クロージャーを使う', function()
       assert.are.equal(
         twoFold(4)  
       , true)
-      -- expect(
-      --   twoFold(4) 
-      -- ).to.eql(
-      --   true
-      -- );
       -- /* #@@range_end(partial_application_with_environment) */
     end);
     -- ### <section id='encapsulation-with-closure'>クロージャーで状態をカプセル化する</section>
@@ -989,19 +879,9 @@ describe('クロージャーを使う', function()
         assert.are.equal(
          counterFromZero() -- 1回目の実行 
         , 1)
-        -- expect(
-        --   counterFromZero() -- 1回目の実行
-        -- ).to.eql( 
-        --   1
-        -- );
         assert.are.equal(
          counterFromZero() -- 1回目の実行 
         , 2)
-        -- expect(
-        --   counterFromZero() -- 2回目の実行
-        -- ).to.eql( 
-        --   2
-        -- );
         -- /* #@@range_end(counter_as_closure_test) */
       end);
       -- #### クロージャーで不変なデータ型を作る
@@ -1031,30 +911,6 @@ describe('クロージャーを使う', function()
               return obj(key);
             end 
           end 
-          -- local object = {  
-          --   -- /* empty:: STRING => Any */
-          --   empty = function(key)
-          --     return nil;
-          --   end,
-          --   -- /* set:: (STRING,Any) => (STRING => Any) => STRING => Any */
-          --   set = function(key, value)
-          --     return function(obj)
-          --       return function(queryKey)
-          --         if(key == queryKey) then
-          --           return value;
-          --         else
-          --           return object.get(queryKey)(obj);
-          --         end 
-          --       end
-          --     end 
-          --   end,
-          --   -- /* get:: (STRING) => (STRING => Any) => Any */
-          --   get = function(key)
-          --     return function(obj)
-          --       return obj(key);
-          --     end 
-          --   end 
-          -- };
           -- /* #@@range_end(immutable_object_type_curried) */
           -- **リスト7.32** カリー化された不変なオブジェクト型のテスト
           -- /* #@@range_begin(immutable_object_type_curried_test) */
@@ -1067,28 +923,13 @@ describe('クロージャーを使う', function()
           assert.are.equal(
            object.get("HAL9000")(robots)
           , "2001: a space odessay")
-          -- expect(
-          --   object.get("HAL9000")(robots)
-          -- ).to.eql(
-          --   "2001: a space odessay"
-          -- );
           assert.are.equal(
            object.get("C3PO")(robots)
           , "Star Wars")
-          -- expect(
-          --   object.get("C3PO")(robots)
-          -- ).to.eql(
-          --   "Star Wars"
-          -- );
           -- 該当するデータがなければ、nullが返る
           assert.are.equal(
            object.get("鉄腕アトム")(robots)
           , nil)
-          -- expect(
-          --   object.get("鉄腕アトム")(robots)
-          -- ).to.eql(
-          --   nil 
-          -- );
           -- /* #@@range_end(immutable_object_type_curried_test) */
         end);
       end);
@@ -1127,17 +968,8 @@ describe('クロージャーを使う', function()
             -- /* 無限ストリームからジェネレータを生成する */
             local intGenerator = generate(integers); 
             assert.are.equal(intGenerator(), 0)
-            -- expect(intGenerator()).to.eql(
-            --   0
-            -- );
             assert.are.equal(intGenerator(), 1)
-            -- expect(intGenerator()).to.eql(
-            --   1
-            -- );
             assert.are.equal(intGenerator(), 2)
-            -- expect(intGenerator()).to.eql(
-            --   2
-            -- );
             -- /* #@@range_end(integer_generator) */
           end);
           it('無限の素数列を作る', function()
@@ -1307,11 +1139,6 @@ describe('クロージャーを使う', function()
             assert.are.same(
               Stream.toArray(Stream.take(primes)(10)) 
             , { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 })
-            -- expect(
-            --   stream.toArray(stream.take(primes)(10))
-            -- ).to.eql(
-            --   { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 }
-            -- );
             -- /* #@@range_end(eratosthenes_sieve_test) */
 
             -- **リスト7.39** 素数のジェネレータ
@@ -1322,48 +1149,38 @@ describe('クロージャーを使う', function()
             assert.are.equal(
               primeGenerator()
             , 2)
-            -- expect(primeGenerator()).to.eql(
-            --   2
-            -- );
             assert.are.equal(
               primeGenerator()
             , 3)
-            -- expect(primeGenerator()).to.eql(
-            --   3
-            -- );
             assert.are.equal(
               primeGenerator()
             , 5)
-            -- expect(primeGenerator()).to.eql(
-            --   5
-            -- );
             -- /* #@@range_end(prime_generator) */
           end);
         end);
         -- #### コラム：ECMAScript2015（ES6）におけるジェネレータ
         -- > 参考資料: https:--developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Generator 
-        it('ECMAScript2015（ES6）におけるジェネレータ', function()
-          pending("I should finish this test later")
-          -- **リスト7.40** ECMAScript2015のジェネレータ
-          -- /* #@@range_begin(es6_generator) */
-          -- function* genCounter(){
-          --   yield 1;
-          --   yield 2;
-          --   return 3;
-          -- };
-          -- local counter = genCounter();
-          -- expect(
-          --   counter.next().value
-          -- ).to.eql(
-          --   1
-          -- );
-          -- expect(
-          --   counter.next().value
-          -- ).to.eql(
-          --   2
-          -- );
-          -- /* #@@range_end(es6_generator) */
-        end);
+        -- it('ECMAScript2015（ES6）におけるジェネレータ', function()
+        --   -- **リスト7.40** ECMAScript2015のジェネレータ
+        --   -- /* #@@range_begin(es6_generator) */
+        --   -- function* genCounter(){
+        --   --   yield 1;
+        --   --   yield 2;
+        --   --   return 3;
+        --   -- };
+        --   -- local counter = genCounter();
+        --   -- expect(
+        --   --   counter.next().value
+        --   -- ).to.eql(
+        --   --   1
+        --   -- );
+        --   -- expect(
+        --   --   counter.next().value
+        --   -- ).to.eql(
+        --   --   2
+        --   -- );
+        --   -- /* #@@range_end(es6_generator) */
+        -- end);
       end);
     end); -- クロージャーで状態をカプセル化する
   end)
@@ -1386,21 +1203,11 @@ describe('クロージャーを使う', function()
       , 
         true
       )
-      -- expect(
-      --   multipleOf(2)(4)
-      -- ).to.eql(
-      --   multipleOf(2)(4)
-      -- );
       assert.are.equal(
         multipleOf(3)(5) 
       , 
         false
       )
-      -- expect(
-      --   multipleOf(3)(5)
-      -- ).to.eql(
-      --   multipleOf(3)(5)
-      -- );
       -- /* #@@range_end(multipleOf_is_transparent) */
     end);
     -- **リスト7.42** 参照透過性のないクロージャーの例
@@ -1477,32 +1284,15 @@ describe('クロージャーを使う', function()
         one(counter(0))() -- oneはチャーチ数（@<list>{church_numeral}）の1 
       , 
         1)
-
-      -- expect(
-      --   one(counter(0))() -- oneはチャーチ数（@<list>{church_numeral}）の1
-      -- ).to.eql(
-      --   1
-      -- );
       assert.are.equal(
         two(counter(0))() -- twoはチャーチ数（@<list>{church_numeral}）の2
       , 
         2)
-
-      -- expect(
-      --   two(counter(0))() -- twoはチャーチ数（@<list>{church_numeral}）の2
-      -- ).to.eql(
-      --   2
-      -- );
       -- /* #@@range_end(church_numeral_counter) */
       assert.are.equal(
         add(one)(two)(counter(0))()
       , 
         3)
-      -- expect(
-      --   add(one)(two)(counter(0))()
-      -- ).to.eql(
-      --   3
-      -- );
     end);
   end);
 end);
@@ -1528,11 +1318,6 @@ describe('関数を渡す', function()
       assert.are.equal(
        doCall(2) 
       , 3)
-      -- expect(
-      --   doCall(2)
-      -- ).to.eql(
-      --   3
-      -- );
       -- /* #@@range_end(direct_call) */
     end);
     -- **リスト7.48** 単純なコールバックの例
@@ -1552,11 +1337,6 @@ describe('関数を渡す', function()
       assert.are.equal(
         doCallback(2) -- 設定されたコールバック関数を実行する 
       , 3)
-      -- expect(
-      --   doCallback(2) -- 設定されたコールバック関数を実行する
-      -- ).to.eql(
-      --   3
-      -- );
       -- /* #@@range_end(call_callback) */
     end);
     it('リストのmap関数', function()
@@ -1593,11 +1373,6 @@ describe('関数を渡す', function()
       assert.are.same(
         compose(List.toArray,mapDouble)(numbers)
       , {2,4,6})
-      -- expect(
-      --   compose(list.toArray,mapDouble)(numbers)
-      -- ).to.eql(
-      --   {2,4,6}
-      -- );
       -- /* 要素を2乗するmap処理 */
       local mapSquare = map(function(n)
         return n * n;
@@ -1605,11 +1380,6 @@ describe('関数を渡す', function()
       assert.are.same(
         compose(List.toArray,mapSquare)(numbers) 
       , {1,4,9})
-      -- expect(
-      --   compose(list.toArray,mapSquare)(numbers)
-      -- ).to.eql(
-      --   {1,4,9}
-      -- );
       -- /* #@@range_end(list_map_test) */
     end);
   end);
@@ -1618,20 +1388,6 @@ describe('関数を渡す', function()
     describe('コールバックによるリストの再帰関数', function()
       -- **リスト7.51** sum関数の定義
       it('sum関数の定義', function()
-        -- local list = {
-        --   match = function(data, pattern)
-        --     return data(pattern);
-        --   end,
-        --   empty = function(_)
-        --     return function(pattern)
-        --       return pattern.empty();
-        --     end 
-        --   end,
-        --   cons = function(value, alist)
-        --     return function(pattern)
-        --       return pattern.cons(value, alist);
-        --     end 
-        --   end, 
           -- /* #@@range_begin(list_sum) */
           local function sum(alist)
             return function(accumulator)
@@ -1665,7 +1421,6 @@ describe('関数を渡す', function()
             end
           end
           -- /* #@@range_end(list_sum_callback) */
-        -- };
 
         -- **リスト7.53** sumWithCallback関数のテスト
         -- /* #@@range_begin(list_sum_callback_test) */
@@ -1682,37 +1437,13 @@ describe('関数を渡す', function()
         assert.are.equal(
           sumWithCallback(numbers)(0)(callback)
         , 6)
-        -- expect(
-        --   list.sumWithCallback(numbers)(0)(callback)
-        -- ).to.eql(
-        --   6  -- 1 + 2 + 3 = 6
-        -- );
         -- /* #@@range_end(list_sum_callback_test) */
         assert.are.equal(
           sum(numbers)(0)
         , 6)
-        -- expect(
-        --   list.sum(numbers)(0)
-        -- ).to.eql(
-        --   6
-        -- );
       end);
       -- **リスト7.54** length関数の定義
       it('length関数の定義', function()
-        -- local list = {
-        --   match = function(data, pattern)
-        --     return data(pattern);
-        --   end,
-        --   empty = function(_)
-        --     return function(pattern)
-        --       return pattern.empty();
-        --     end 
-        --   end,
-        --   cons = function(value, alist)
-        --     return function(pattern)
-        --       return pattern.cons(value, alist);
-        --     end
-        --   end,
           -- /* #@@range_begin(list_length) */
           local function length(alist)
             return function(accumulator)
@@ -1754,11 +1485,6 @@ describe('関数を渡す', function()
         assert.are.equal(
           length(numbers)(0) 
         , 3)
-        -- expect(
-        --   list.length(numbers)(0)
-        -- ).to.eql(
-        --   3
-        -- );
         -- **リスト7.56** lengthWithCallback関数でリストの長さをテストする
         -- /* #@@range_begin(list_length_callback_test) */
         -- /* lengthWithCallback関数に渡すコールバック関数 */
@@ -1770,11 +1496,6 @@ describe('関数を渡す', function()
         assert.are.equal(
           lengthWithCallback(numbers)(0)(callback) 
         , 3)
-        -- expect(
-        --   list.lengthWithCallback(numbers)(0)(callback)
-        -- ).to.eql(
-        --   3
-        -- );
         -- /* #@@range_end(list_length_callback_test) */
       end);
     end);
@@ -1813,11 +1534,6 @@ describe('関数を渡す', function()
         assert.are.equal(
           sum(seq) 
         , 10)
-        -- expect(
-        --   sum(seq)
-        -- ).to.eql(
-        --   10  -- 1 + 2 + 3 + 4 = 10
-        -- );
       end);
       -- /* foldr関数によるlength関数 */
       it("foldrでlength関数を作る", function()
@@ -1835,11 +1551,6 @@ describe('関数を渡す', function()
         assert.are.equal(
          length(seq) 
         , 4)
-        -- expect(
-        --   length(seq)
-        -- ).to.eql(
-        --   4
-        -- );
       end);
       -- **表7.2** 反復処理における蓄積変数の初期値とコールバック関数の関係
       --
@@ -1870,11 +1581,6 @@ describe('関数を渡す', function()
           assert.are.equal(
            product(seq)
           , 6)
-          -- expect(
-          --   product(seq)
-          -- ).to.eql(
-          --   6 -- 1 * 2 * 3 = 6
-          -- );
           -- /* #@@range_end(foldr_product) */
         end);
         it("foldrでallを作る", function()
@@ -1893,11 +1599,6 @@ describe('関数を渡す', function()
           assert.are.equal(
             all(allTrueList) 
           , true)
-          -- expect(
-          --   all(allTrueList)
-          -- ).to.eql(
-          --   true
-          -- );
           local someFalseList = List.cons(true,
                                         List.cons(false,
                                                   List.cons(true,
@@ -1905,11 +1606,6 @@ describe('関数を渡す', function()
           assert.are.equal(
             all(someFalseList) 
           , false)
-          -- expect(
-          --   all(someFalseList)
-          -- ).to.eql(
-          --   false
-          -- );
         end);
         it("foldrでanyを作る", function()
           local any = function(alist)
@@ -1927,11 +1623,6 @@ describe('関数を渡す', function()
           assert.are.equal(
            any(allTrueList) 
           , true)
-          -- expect(
-          --   any(allTrueList)
-          -- ).to.eql(
-          --   true
-          -- );
           local someFalseList = List.cons(true,
                                         List.cons(false,
                                                   List.cons(true,
@@ -1939,11 +1630,6 @@ describe('関数を渡す', function()
           assert.are.equal(
             any(someFalseList) 
           , true)
-          -- expect(
-          --   any(someFalseList)
-          -- ).to.eql(
-          --   true
-          -- );
         end);
       end);
       -- **リス7.60** foldr関数によるreverse関数の定義
@@ -2009,11 +1695,6 @@ describe('関数を渡す', function()
         assert.are.same(
          List.toArray(List.reverse(seq)) 
         , { 4, 3, 2, 1})
-        -- expect(
-        --   list.toArray(list.reverse(seq))
-        -- ).to.eql(
-        --   { 4, 3, 2, 1}
-        -- );
       end);
       -- **リスト7.61** foldr関数によるfind関数の定義
       it("foldr関数によるfind関数の定義", function()
@@ -2057,11 +1738,6 @@ describe('関数を渡す', function()
         assert.are.same(
           List.find(numbers)(even) -- 最初に登場する偶数の要素を探す 
         , 2)
-        -- expect(
-        --   list.find(numbers)(even) -- 最初に登場する偶数の要素を探す
-        -- ).to.eql(
-        --   2
-        -- );
       end);
       it("foldrで map関数を作る", function()
         local double = function(number)
@@ -2088,11 +1764,6 @@ describe('関数を渡す', function()
         ,  
           { 2, 4, 6}
         )
-        -- expect(
-        --   List.toArray(map(seq)(double))
-        -- ).to.eql(
-        --   { 2, 4, 6} -- 2 * [1,2,3] = [2,4,6]
-        -- );
         -- /* #@@range_end(foldr_map) */
       end);
     end);
@@ -2130,11 +1801,6 @@ describe('関数を渡す', function()
         ,  
           {0,1,2,3}
         )
-        -- expect(
-        --   list.toArray(theList)
-        -- ).to.eql(
-        --   {0,1,2,3}
-        -- );
         -- /* #@@range_end(list_fromArray) */
       end);
     end);
@@ -2159,11 +1825,6 @@ describe('関数を渡す', function()
       ,  
         2
       )
-      -- expect(
-      --   tarai(1 * 2, 1, 0)
-      -- ).to.eql(
-      --   2 
-      -- );
       -- /* #@@range_end(tarai_function) */
     end);
     -- <a name="tarai_system"> taraiサーバークライアント</a>
@@ -2642,25 +2303,6 @@ describe('モナドを作る', function()
   describe('恒等モナド', function()
     local ID = require("lib/monad/id")
     -- **リスト7.85** 恒等モナドの定義
-    -- local ID = {
-    --   -- /* #@@range_begin(identity_monad) */
-    --   -- /* unit:: T => ID[T] */
-    --   unit = function(value)  -- 単なる identity関数と同じ
-    --     return value;
-    --   end,
-    --   -- /* flatMap:: ID[T] => FUN[T => ID[T]] => ID[T] */
-    --   flatMap = function(instanceM)
-    --     return function(transform)
-    --       return transform(instanceM); -- 単なる関数適用と同じ
-    --     end;
-    --   end,
-    --   -- /* #@@range_end(identity_monad) */
-    --   compose = function(f, g)
-    --     return function(x)
-    --       return ID.flatMap(f(x))(g);
-    --     end
-    --   end
-    -- };
     -- **リスト7.86** 恒等モナドunit関数のテスト
     it("恒等モナドunit関数のテスト", function()
       -- /* #@@range_begin(identity_monad_unit_test) */
@@ -2669,11 +2311,6 @@ describe('モナドを作る', function()
       , 
        1 
       )
-      -- expect(
-      --   ID.unit(1)
-      -- ).to.eql(
-      --   1
-      -- );
       -- /* #@@range_end(identity_monad_unit_test) */
     end);
     -- **リスト7.87** 恒等モナドflatMap関数のテスト
@@ -2689,13 +2326,6 @@ describe('モナドを作る', function()
       , 
         succ(1)
       )
-      -- expect(
-      --   ID.flatMap(ID.unit(1))(function(one)
-      --     return ID.unit(succ(one));
-      --   end)
-      -- ).to.eql(
-      --   succ(1)
-      -- );
       -- /* #@@range_end(identity_monad_flatMap_test) */
       local double = function(m)
         return m * 2;
@@ -2713,17 +2343,6 @@ describe('モナドを作る', function()
       , 
         compose(double,succ)(1)
       )
-      -- expect(
-      --   ID.flatMap(ID.unit(1))(function(one)
-      --     -- /* succ関数を適用する */
-      --     return ID.flatMap(ID.unit(succ(one)))(function(two)
-      --       -- /* double関数を適用する */
-      --       return ID.unit(double(two));  
-      --     end);
-      --   end)
-      -- ).to.eql(
-      --   compose(double,succ)(1)
-      -- );
       -- /* #@@range_end(flatMap_and_composition) */
     end);
     -- **リスト7.89**  恒等モナドのモナド則
@@ -2739,11 +2358,6 @@ describe('モナドを作る', function()
         , 
           instanceM
         )
-        -- expect(
-        --   ID.flatMap(instanceM)(ID.unit)
-        -- ).to.eql(
-        --   instanceM
-        -- );
         -- /* #@@range_end(identity_monad_laws_right_unit_law) */
       end);
       it("flatMap(unit(value))(f) == f(value)", function()
@@ -2758,11 +2372,6 @@ describe('モナドを作る', function()
         , 
           f(1)
         )
-        -- expect(
-        --   ID.flatMap(ID.unit(1))(f)
-        -- ).to.eql(
-        --   f(1)
-        -- );
         -- /* #@@range_end(identity_monad_laws_left_unit_law) */
       end);
       it("flatMap(flatMap(instanceM)(f))(g) == flatMap(instanceM)((x) => flatMap(f(x))(g))", function()
@@ -2789,13 +2398,7 @@ describe('モナドを作る', function()
             return ID.flatMap(f(x))(g);
           end)
         )
-        -- expect(
-        --   ID.flatMap(ID.flatMap(instanceM)(f))(g)
-        -- ).to.eql(
-        --   ID.flatMap(instanceM)(function(x)
-        --     return ID.flatMap(f(x))(g);
-        --   end)
-        -- );
+
         -- /* #@@range_end(identity_monad_laws_associative_law) */
         -- /* #@@range_end(identity_monad_laws) */
       end);
@@ -2807,59 +2410,23 @@ describe('モナドを作る', function()
     describe('Maybeモナドを作る', function()
       -- **リスト7.91** Maybeの代数的構造
       -- /* #@@range_begin(algebraic_type_maybe) */
-      local maybe = {
-        match = function(exp, pattern)
-          return exp(pattern);
-        end,
-        just = function(value)
-          return function(pattern)
-            return pattern.just(value);
-          end;
-        end,
-        nothing = function(_)
-          return function(pattern)
-            return pattern.nothing(_);
-          end
-        end 
-      };
+      -- local maybe = {
+      --   match = function(exp, pattern)
+      --     return exp(pattern);
+      --   end,
+      --   just = function(value)
+      --     return function(pattern)
+      --       return pattern.just(value);
+      --     end;
+      --   end,
+      --   nothing = function(_)
+      --     return function(pattern)
+      --       return pattern.nothing(_);
+      --     end
+      --   end 
+      -- };
       -- /* #@@range_end(algebraic_type_maybe) */
       -- **リスト7.92** Maybeモナドの定義
-      local MAYBE = {
-        -- /* #@@range_begin(maybe_monad) */
-        -- /* unit:: T => MAYBE[T] */
-        unit = function(value)
-          return maybe.just(value);
-        end,
-        -- /* flatMap:: MAYBE[T] => FUN[T => MAYBE[U]] => MAYBE[U] */
-        flatMap = function(instanceM)
-          return function(transform)
-            return maybe.match(instanceM,{
-              -- /* 正常な値の場合は、transform関数を計算する */
-              just = function(value)
-                return transform(value);
-              end,
-              -- /* エラーの場合は、何もしない */
-              nothing = function(_)
-                return maybe.nothing();
-              end 
-            });
-          end 
-        end,
-        -- /* ヘルパー関数  */
-        getOrElse = function(instanceM)
-          return function(alternate)
-            return maybe.match(instanceM,{
-              just = function(value)
-                return value;
-              end,
-              nothing = function(_)
-                return alternate;
-              end 
-            });
-          end;
-        end
-        -- /* #@@range_end(maybe_monad) */
-      };
       -- **リスト7.93** Maybeモナドの利用法
       it("Maybeモナドの利用法", function()
         local Maybe = require("lib/monad/maybe")
@@ -2878,19 +2445,9 @@ describe('モナドを作る', function()
            Maybe.getOrElse(add(justOne,justOne))(nil)
            , 2)
 
-        -- expect(
-        --   MAYBE.getOrElse(add(justOne,justOne))(nil) 
-        -- ).to.eql(
-        --   2
-        -- );
         assert.are.equal(
-          Maybe.getOrElse(add(justOne,maybe.nothing()))(nil) 
+          Maybe.getOrElse(add(justOne,Maybe.nothing()))(nil) 
            , nil)
-        -- expect(
-        --   MAYBE.getOrElse(add(justOne,maybe.nothing()))(nil)
-        -- ).to.eql(
-        --   null
-        -- );
         -- /* #@@range_end(maybe_monad_add_test) */
       end);
     end);
@@ -2981,70 +2538,11 @@ describe('モナドを作る', function()
       assert.are.equal(
         IO.run(IO.println("我輩は猫である"))(initialWorld), 
         nil)
-      -- expect(
-      --   IO.run(IO.println("我輩は猫である"))(initialWorld)
-      -- ).to.eql(
-      --   nil
-      -- );
       --/* #@@range_end(run_println) */
     end);
     describe('外界を引数に持たないIOモナド', function()
       local IO = require("../lib/monad/io")
       -- **リスト7.99** 外界を明示しないIOモナドの定義
-      -- local IO = {
-      --   -- /* unit:: T => IO[T] */
-      --   unit = function(any)
-      --     return function(_) -- 外界を明示する必要はない
-      --       return any;
-      --     end 
-      --   end,
-      --   -- /* flatMap:: IO[T] => FUN[T => IO[U]] => IO[U] */
-      --   flatMap = function(instanceA)
-      --     return function(actionAB) -- actionAB:: a -> IO[b]
-      --       return function(_)
-      --         return IO.run(actionAB(IO.run(instanceA)));
-      --       end 
-      --     end 
-      --   end,
-      --   -- 間違った定義
-      --   -- flatMap: (instanceA) => {
-      --   --   return (actionAB) => { -- actionAB:: A => IO[B]
-      --   --     return actionAB(IO.run(instanceA)); 
-      --   --   };
-      --   -- },
-      --   -- /* done:: T => IO[T] */
-      --   done = function(any)
-      --     return IO.unit();
-      --   end,
-      --   -- /* run:: IO[A] => A */
-      --   run = function(instance)
-      --     return instance();
-      --   end,
-      --   -- /* readFile:: STRING => IO[STRING] */
-      --   readFile = function(path)
-      --     return function(_)
-      --       -- local fs = require('fs');
-      --       local content = fs.readFileSync(path, 'utf8');
-      --       return IO.unit(content)();
-      --     end;
-      --   end,
-      --   -- /* println:: STRING => IO[null] */
-      --   println = function(message)
-      --     return function(_)
-      --       print(message);
-      --       return IO.new(nil)();
-      --     end 
-      --   end,
-      --   writeFile = function(path)
-      --     return function(content)
-      --       return function(_)
-      --         local fs = require('fs');
-      --         fs.writeFileSync(path,content);
-      --         return IO.new(nil)();
-      --       end;
-      --     end 
-      --   end 
-      -- }; -- IO monad
       -- **リスト7.100** run関数の利用法
       it('run関数の利用法', function()
         -- /* #@@range_begin(run_println_without_world) */
@@ -3052,12 +2550,6 @@ describe('モナドを作る', function()
           -- /* 外界を指定する必要はありません */
           IO.run(IO.println("名前はまだない")) 
         , nil)
-        -- expect(
-        --   -- /* 外界を指定する必要はありません */
-        --   IO.run(IO.println("名前はまだない")) 
-        -- ).to.eql(
-        --   nil
-        -- );
         -- /* #@@range_end(run_println_without_world) */
       end);
       -- #### IOアクションを合成する
@@ -3142,17 +2634,7 @@ describe('モナドを作る', function()
         -- });
         it('charsのテスト', function()
           assert.are.equal(chars.head("abc"), "a")
-          -- expect(
-          --   string.head("abc")
-          -- ).to.eql(
-          --   'a'
-          -- );
           assert.are.equal(chars.tail("abc"), "bc")
-          -- expect(
-          --   string.tail("abc")
-          -- ).to.eql(
-          --   'bc'
-          -- );
         end);
       end);
     end);
