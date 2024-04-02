@@ -350,7 +350,7 @@ describe('評価器を作る', function()
     };
     -- ### 恒等モナド
     --/* #@@range_begin(identity_monad) */
-    local ID = require("lib/id")
+    local ID = require("lib/monad/id")
     -- local ID = {
     --   unit = function(value) => {
     --     return value;
@@ -371,17 +371,17 @@ describe('評価器を作る', function()
       return exp.match(anExp,{
         -- **リスト8.11** 数値の評価
         num = function(numericValue)
-          return ID.unit(numericValue);
+          return ID.new(numericValue);
         end,
         -- **リスト8.13** 変数の評価
         variable = function(name)
-          return ID.unit(Env.lookup(name, environment));
+          return ID.new(Env.lookup(name, environment));
         end,
         --/* 関数定義（λ式）の評価  */
         lambda = function(variable, body)
           return exp.match(variable,{
             variable = function(name)
-              return ID.unit(function(actualArg)
+              return ID.new(function(actualArg)
                 return evaluate(body, 
                                 Env.extend(name, actualArg, environment))
               end)
@@ -400,7 +400,7 @@ describe('評価器を作る', function()
         add = function(expL, expR)
           return ID.flatMap(evaluate(expL, environment))(function(valueL)
             return ID.flatMap(evaluate(expR, environment))(function(valueR)
-              return ID.unit(valueL + valueR); 
+              return ID.new(valueL + valueR); 
             end);
           end);
         end
@@ -413,7 +413,7 @@ describe('評価器を作る', function()
       assert.are.equal(
         evaluate(exp.num(2), Env.empty) 
         ,
-        ID.unit(2) 
+        ID.new(2) 
       )
       -- expect(
       --   evaluate(exp.num(2), env.empty)
@@ -431,7 +431,7 @@ describe('評価器を作る', function()
       assert.are.equal(
         evaluate(exp.variable("x"), newEnv)
         ,
-        ID.unit(1) 
+        ID.new(1) 
       )
       -- expect(
       --   evaluate(exp.variable("x"), newEnv)
@@ -458,7 +458,7 @@ describe('評価器を作る', function()
       assert.are.equal(
         evaluate(addition, Env.empty) 
         ,
-        ID.unit(3)
+        ID.new(3)
       )
       -- expect(
       --   evaluate(addition, Env.empty)
@@ -471,7 +471,7 @@ describe('評価器を作る', function()
       assert.are.equal(
         evaluate(exp.add(exp.num(1),exp.num(2)), emptyEnv) 
         ,
-        ID.unit(3)
+        ID.new(3)
       )
       -- expect(
       --   evaluate(exp.add(exp.num(1),exp.num(2)), emptyEnv)
@@ -491,7 +491,7 @@ describe('評価器を作る', function()
       assert.are.equal(
         evaluate(expression, emptyEnv)(1)
         ,
-        ID.unit(1)
+        ID.new(1)
       )
       -- expect(
       --   evaluate(expression, emptyEnv)(1)
@@ -515,7 +515,7 @@ describe('評価器を作る', function()
       assert.are.equal(
         evaluate(expression, Env.empty) 
         ,
-        ID.unit(3)
+        ID.new(3)
       )
       -- expect(
       --   evaluate(expression, env.empty)
@@ -536,7 +536,7 @@ describe('評価器を作る', function()
       assert.are.equal(
         evaluate(expression, Env.empty)
         ,
-        ID.unit(4)
+        ID.new(4)
       )
       -- expect(
       --   evaluate(expression, env.empty)
@@ -565,7 +565,7 @@ describe('評価器を作る', function()
       assert.are.equal(
         evaluate(expression, Env.empty)
         ,
-        ID.unit(5)
+        ID.new(5)
       )
       -- expect(
       --   evaluate(expression, env.empty)

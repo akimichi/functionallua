@@ -2640,7 +2640,7 @@ describe('モナドを作る', function()
   end
   -- ### <section id='identity-monad'>恒等モナド</section>
   describe('恒等モナド', function()
-    local ID = require("lib/id")
+    local ID = require("lib/monad/id")
     -- **リスト7.85** 恒等モナドの定義
     -- local ID = {
     --   -- /* #@@range_begin(identity_monad) */
@@ -2665,7 +2665,7 @@ describe('モナドを作る', function()
     it("恒等モナドunit関数のテスト", function()
       -- /* #@@range_begin(identity_monad_unit_test) */
       assert.are.equal(
-        ID.unit(1)
+        ID.new(1)
       , 
        1 
       )
@@ -2683,8 +2683,8 @@ describe('モナドを作る', function()
       end;
       -- /* #@@range_begin(identity_monad_flatMap_test) */
       assert.are.equal(
-        ID.flatMap(ID.unit(1))(function(one)
-          return ID.unit(succ(one));
+        ID.flatMap(ID.new(1))(function(one)
+          return ID.new(succ(one));
         end)
       , 
         succ(1)
@@ -2703,11 +2703,11 @@ describe('モナドを作る', function()
       -- **リスト7.88** flatMapと関数合成の類似性
       -- /* #@@range_begin(flatMap_and_composition) */
       assert.are.equal(
-        ID.flatMap(ID.unit(1))(function(one)
+        ID.flatMap(ID.new(1))(function(one)
           -- /* succ関数を適用する */
-          return ID.flatMap(ID.unit(succ(one)))(function(two)
+          return ID.flatMap(ID.new(succ(one)))(function(two)
             -- /* double関数を適用する */
-            return ID.unit(double(two));  
+            return ID.new(double(two));  
           end);
         end)
       , 
@@ -2731,11 +2731,11 @@ describe('モナドを作る', function()
       -- /* #@@range_begin(identity_monad_laws) */
       it("flatMap(instanceM)(unit) === instanceM", function()
         -- /* flatMap(instanceM)(unit) === instanceM の一例 */
-        local instanceM = ID.unit(1);
+        local instanceM = ID.new(1);
         -- 右単位元則
         -- /* #@@range_begin(identity_monad_laws_right_unit_law) */
         assert.are.equal(
-          ID.flatMap(instanceM)(ID.unit)
+          ID.flatMap(instanceM)(ID.new)
         , 
           instanceM
         )
@@ -2749,12 +2749,12 @@ describe('モナドを作る', function()
       it("flatMap(unit(value))(f) == f(value)", function()
         -- /* flatMap(unit(value))(f) === f(value) */
         local f = function(n)
-          return ID.unit(n + 1);
+          return ID.new(n + 1);
         end 
         -- 左単位元則
         -- /* #@@range_begin(identity_monad_laws_left_unit_law) */
         assert.are.equal(
-          ID.flatMap(ID.unit(1))(f)
+          ID.flatMap(ID.new(1))(f)
         , 
           f(1)
         )
@@ -2775,12 +2775,12 @@ describe('モナドを作る', function()
         */
         ]]
         local f = function(n)
-          return ID.unit(n + 1);
+          return ID.new(n + 1);
         end;
         local g = function(n)
-          return ID.unit(- n);
+          return ID.new(- n);
         end;
-        local instanceM = ID.unit(1);
+        local instanceM = ID.new(1);
         -- 結合法則
         -- /* #@@range_begin(identity_monad_laws_associative_law) */
         assert.are.equal(
@@ -2862,13 +2862,13 @@ describe('モナドを作る', function()
       };
       -- **リスト7.93** Maybeモナドの利用法
       it("Maybeモナドの利用法", function()
-        local Maybe = require("lib/maybe")
+        local Maybe = require("lib/monad/maybe")
         -- /* #@@range_begin(maybe_monad_add_test) */
         -- /* 足し算を定義する */
         local add = function(maybeA,maybeB)
           return Maybe.flatMap(maybeA)(function(a)
             return Maybe.flatMap(maybeB)(function(b)
-              return Maybe.unit(a + b);
+              return Maybe.new(a + b);
             end);
           end);
         end;
@@ -2898,7 +2898,7 @@ describe('モナドを作る', function()
   -- ### <section id='io-monad'>IOモナドで副作用を閉じ込める</section>
   -- > 参考資料: https:--en.wikibooks.org/wiki/Haskell/Understanding_monads/IO
   describe('IOモナドで副作用を閉じ込める', function()
-    local IO = require("lib/io")
+    local IO = require("lib/monad/io")
     local match = function(data, pattern)
       return data(pattern);
     end 
@@ -2989,63 +2989,62 @@ describe('モナドを作る', function()
       --/* #@@range_end(run_println) */
     end);
     describe('外界を引数に持たないIOモナド', function()
+      local IO = require("../lib/monad/io")
       -- **リスト7.99** 外界を明示しないIOモナドの定義
-      -- /* #@@range_begin(io_monad_definition) */
-      local IO = {
-        -- /* unit:: T => IO[T] */
-        unit = function(any)
-          return function(_) -- 外界を明示する必要はない
-            return any;
-          end 
-        end,
-        -- /* flatMap:: IO[T] => FUN[T => IO[U]] => IO[U] */
-        flatMap = function(instanceA)
-          return function(actionAB) -- actionAB:: a -> IO[b]
-            return function(_)
-              return IO.run(actionAB(IO.run(instanceA)));
-            end 
-          end 
-        end,
-        -- 間違った定義
-        -- flatMap: (instanceA) => {
-        --   return (actionAB) => { -- actionAB:: A => IO[B]
-        --     return actionAB(IO.run(instanceA)); 
-        --   };
-        -- },
-        -- /* done:: T => IO[T] */
-        done = function(any)
-          return IO.unit();
-        end,
-        -- /* run:: IO[A] => A */
-        run = function(instance)
-          return instance();
-        end,
-        -- /* readFile:: STRING => IO[STRING] */
-        readFile = function(path)
-          return function(_)
-            -- local fs = require('fs');
-            local content = fs.readFileSync(path, 'utf8');
-            return IO.unit(content)();
-          end;
-        end,
-        -- /* println:: STRING => IO[null] */
-        println = function(message)
-          return function(_)
-            print(message);
-            return IO.unit(nil)();
-          end 
-        end,
-        writeFile = function(path)
-          return function(content)
-            return function(_)
-              local fs = require('fs');
-              fs.writeFileSync(path,content);
-              return IO.unit(null)();
-            end;
-          end 
-        end 
-      }; -- IO monad
-      -- /* #@@range_end(io_monad_definition) */
+      -- local IO = {
+      --   -- /* unit:: T => IO[T] */
+      --   unit = function(any)
+      --     return function(_) -- 外界を明示する必要はない
+      --       return any;
+      --     end 
+      --   end,
+      --   -- /* flatMap:: IO[T] => FUN[T => IO[U]] => IO[U] */
+      --   flatMap = function(instanceA)
+      --     return function(actionAB) -- actionAB:: a -> IO[b]
+      --       return function(_)
+      --         return IO.run(actionAB(IO.run(instanceA)));
+      --       end 
+      --     end 
+      --   end,
+      --   -- 間違った定義
+      --   -- flatMap: (instanceA) => {
+      --   --   return (actionAB) => { -- actionAB:: A => IO[B]
+      --   --     return actionAB(IO.run(instanceA)); 
+      --   --   };
+      --   -- },
+      --   -- /* done:: T => IO[T] */
+      --   done = function(any)
+      --     return IO.unit();
+      --   end,
+      --   -- /* run:: IO[A] => A */
+      --   run = function(instance)
+      --     return instance();
+      --   end,
+      --   -- /* readFile:: STRING => IO[STRING] */
+      --   readFile = function(path)
+      --     return function(_)
+      --       -- local fs = require('fs');
+      --       local content = fs.readFileSync(path, 'utf8');
+      --       return IO.unit(content)();
+      --     end;
+      --   end,
+      --   -- /* println:: STRING => IO[null] */
+      --   println = function(message)
+      --     return function(_)
+      --       print(message);
+      --       return IO.new(nil)();
+      --     end 
+      --   end,
+      --   writeFile = function(path)
+      --     return function(content)
+      --       return function(_)
+      --         local fs = require('fs');
+      --         fs.writeFileSync(path,content);
+      --         return IO.new(nil)();
+      --       end;
+      --     end 
+      --   end 
+      -- }; -- IO monad
       -- **リスト7.100** run関数の利用法
       it('run関数の利用法', function()
         -- /* #@@range_begin(run_println_without_world) */

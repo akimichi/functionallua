@@ -1,46 +1,45 @@
-local Maybe = {}
 
 -- #@@range_begin(maybe_monad)
-Maybe.match = function(exp, pattern)
+local function match(exp, pattern)
   return exp(pattern);
 end
 
-Maybe.just = function(value)
+local function just(value)
   return function(pattern)
     return pattern.just(value);
   end;
 end
 
-Maybe.nothing = function(_)
+local function nothing(_)
   return function(pattern)
     return pattern.nothing(_);
   end
 end 
 
-Maybe.unit = function(value)
-  return Maybe.just(value);
+local function new(value)
+  return just(value);
 end
 
 -- /* flatMap:: MAYBE[T] => FUN[T => MAYBE[U]] => MAYBE[U] */
-Maybe.flatMap = function(instanceM)
+local function flatMap(instanceM)
   return function(transform)
-    return Maybe.match(instanceM,{
+    return match(instanceM,{
       -- /* 正常な値の場合は、transform関数を計算する */
       just = function(value)
         return transform(value);
       end,
       -- /* エラーの場合は、何もしない */
       nothing = function(_)
-        return Maybe.nothing();
+        return nothing();
       end 
     });
   end 
 end
 
 -- /* ヘルパー関数  */
-Maybe.getOrElse = function(instanceM)
+local function getOrElse(instanceM)
   return function(alternate)
-    return Maybe.match(instanceM,{
+    return match(instanceM,{
       just = function(value)
         return value;
       end,
@@ -53,8 +52,14 @@ end
 -- #@@range_end(maybe_monad)
 
 
-return Maybe
-
+return {
+  match = match, 
+  just = just, 
+  nothing = nothing, 
+  new = new, 
+  flatMap = flatMap, 
+  getOrElse = getOrElse
+}
 
 
 
