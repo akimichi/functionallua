@@ -1,3 +1,4 @@
+-- #@@range_begin(cont_monad)
 
 local function new(a)
   return function(k)
@@ -31,3 +32,5 @@ return {
   flatMap = flatMap, 
   callCC = callCC
 }
+--
+-- #@@range_end(cont_monad)

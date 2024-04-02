@@ -21,6 +21,7 @@ ask = Reader id
 local f c = Reader $ \e -> runReader c (f e)
 --]]
 
+-- #@@range_begin(reader_monad)
 local function new(a)
   return {
     run = function(_)
@@ -64,3 +65,4 @@ return {
 }
 
 
+-- #@@range_end(reader_monad)

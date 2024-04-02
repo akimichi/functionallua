@@ -1,6 +1,8 @@
 local Pair = require("../pair.lua")
 local List = require("../list.lua")
 
+-- #@@range_begin(writer_monad)
+
 local function new(a)
   return {
     run = function(_)
@@ -39,3 +41,5 @@ return {
   tell = tell
 
 }
+
+-- #@@range_end(writer_monad)
