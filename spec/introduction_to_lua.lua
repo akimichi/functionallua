@@ -46,10 +46,10 @@ end)
  describe('基本型', function()
 --   -- **リスト4.2** 未定義の変数
   it('未定義の変数', function()
-    -- /* #@@range_begin(undefined_variable) */
+    -- /* #@@range_begin(nil_variable) */
     local variable -- 宣言されているが値と結びついていない変数
     assert.are.equal(variable, nil)
-    -- /* #@@range_end(undefined_variable) */
+    -- /* #@@range_end(nil_variable) */
   end)
 --   -- ### 基本型は不変なデータである
   describe('基本型は不変なデータである', function()
@@ -195,7 +195,7 @@ describe('合成型', function()
       -- expect(
       --   array[100] 
       -- ).to.eql(
-      --   undefined
+      --   nil
       -- );
       -- /* #@@range_end(array_access) */
     end)
