@@ -232,6 +232,38 @@ describe('代数的データ構造', function()
         });
       end);
     end);
+    describe('式を評価する', function()
+      -- #@@range_begin(evaluate_numerical_expression)
+      local function evaluate(anExpression)
+        return exp.match(anExpression, {
+          num = function(value)
+            return value
+          end,
+          add = function(left, right)
+            return evaluate(left) + evaluate(right)
+          end,
+          subtract = function(left, right)
+            return evaluate(left) - evaluate(right)
+          end,
+          multiply = function(left, right)
+            return evaluate(left) * evaluate(right)
+          end,
+          divide = function(left, right)
+            return evaluate(left) / evaluate(right)
+          end 
+        });
+      end
+      -- #@@range_end(evaluate_numerical_expression)
+
+      it("1+2を評価する", function()
+        local theExpression = exp.add(exp.num(1), exp.num(2))
+        assert.are.equal(
+          evaluate(theExpression)
+          ,
+          3)
+
+      end);
+    end);
   end);
 end) -- end of 抽象構文木を作る
 
