@@ -185,7 +185,7 @@ end)
 
 describe('代数的データ構造', function()
   describe('式の代数的データ構造', function()
-    --/* #@@range_begin(expression_algebraic_datatype) */
+    -- #@@range_begin(numerical_expression_as_algebraic_datatype)
     local exp = {
       match = function(data, pattern)
         return data(pattern);
@@ -217,7 +217,7 @@ describe('代数的データ構造', function()
         end 
       end
     };
-      --/* #@@range_end(numerical_expression_as_algebraic_datatype) */
+    -- #@@range_end(numerical_expression_as_algebraic_datatype)
     describe('式をテストする', function()
       it("1+2", function()
         local expression = exp.add(exp.num(1), exp.num(2))
