@@ -811,6 +811,126 @@ describe('コンビネータで関数を組み合わせる', function()
       -- /* #@@range_end(Y_combinator_test) */
     end);
   end); -- 関数を合成する
+  describe('コンビネータパーサーの作り方', function()
+
+    -- パーサーコンビネーターの定義
+    local parser = {}
+
+    -- パーサーの定義
+    function parser.number(input)
+      local num = tonumber(input:match("^%d+"))
+      if num then
+        return num, input:sub(#tostring(num) + 1)
+      else
+        return nil, input
+      end
+    end
+
+    function parser.char(expectedChar, input)
+      if input:sub(1, 1) == expectedChar then
+        return expectedChar, input:sub(2)
+      else
+        return nil, input
+      end
+    end
+
+    function parser.expr(input)
+      return parser.expr_plus(input)
+    end
+
+    function parser.expr_plus(input, acc)
+      local term, rest = parser.term(input)
+      if term then
+        return parser.expr_plus(rest, acc and acc + term or term)
+      else
+        return acc, input
+      end
+    end
+
+    function parser.term(input)
+      local num, rest = parser.number(input)
+      if num then
+        return num, rest
+      else
+        local open, rest = parser.char("(", input)
+        if open then
+          local expr, rest = parser.expr(rest)
+          if expr then
+            local close, rest = parser.char(")", rest)
+            if close then
+              return expr, rest
+            end
+          end
+        end
+      end
+      return nil, input
+    end
+
+--     -- パースを行う関数
+--     function parse(input)
+--       local result, remaining = parser.expr(input)
+--       if remaining == "" then
+--         return result
+--       else
+--         return nil, "Failed to parse"
+--       end
+--     end
+--
+-- -- テスト
+-- print(parse("2 + 3 * (4 - 1)")) -- 14
+--
+--     -- パーサーの定義
+--     function parser.number()
+--       return function(input)
+--         local num = tonumber(input:match("^%d+"))
+--         if num then
+--           return num, input:sub(#tostring(num) + 1)
+--         else
+--           return nil, input
+--         end
+--       end
+--     end
+--
+--     function parser.char(expectedChar)
+--       return function(input)
+--         if input:sub(1, 1) == expectedChar then
+--           return expectedChar, input:sub(2)
+--         else
+--           return nil, input
+--         end
+--       end
+--     end
+--
+--     function parser.term()
+--       return parser.number() + parser.char("(") * parser.expr() * parser.char(")")
+--     end
+--
+--     function parser.factor()
+--       return parser.term() + parser.char("-") * parser.factor() / function(n) return -n end
+--     end
+--
+--     function parser.expr()
+--       return parser.factor() * (parser.char("+") * parser.expr() + parser.char("-") * parser.expr()) ^ -1
+--     end
+--
+    -- パースを行う関数
+    function parse(input)
+      local result, remaining = parser.expr()(input)
+      if remaining == "" then
+        return result
+      else
+        return nil, "Failed to parse"
+      end
+    end
+
+    -- テスト
+    assert.are.equal(
+        parse("2 + 3 * (4 - 1)")
+    , 0)
+
+
+  end) 
+
 end); -- コンビネータ
 
 
