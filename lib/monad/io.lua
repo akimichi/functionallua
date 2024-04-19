@@ -1,3 +1,5 @@
+local List = require("lib/list")
+
 -- #@@range_begin(io_monad_definition)
 -- /* unit:: T => IO[T] */
 local function new(any)
@@ -37,7 +39,7 @@ local function readFile(path)
     return new(lines)();
   end;
 end
--- /* println:: STRING => IO[null] */
+-- /* println:: STRING => IO[nil] */
 local function println(message)
   return function(_)
     print(message);
@@ -55,6 +57,49 @@ local function writeFile(path)
   end 
 end 
 
+local function seq(instanceA)
+  return function(instanceB)
+    return flatMap(instanceA)(function(a)
+      return instanceB;
+    end)
+  end;
+end
+
+local function seqs(alist)
+  return List.foldr(alist)(List.empty())(done());
+end;
+
+-- /* IO.putc:: CHAR => IO[] */
+local function putc(character)
+  return function(_)
+    process.stdout.write(character);
+    return nil;
+  end;
+end
+
+-- /* IO.puts:: LIST[CHAR] => IO[] */
+local function puts(alist)
+  return List.match(alist, {
+    empty = function()
+      return done();
+    end,
+    cons = function(head, tail)
+      return seq(putc(head))(puts(tail));
+    end
+  });
+end
+
+-- /* IO.getc:: IO[CHAR] *
+local function getc()
+  local continuation = function()
+    local chunk = process.stdin.read();
+    return chunk;
+  end 
+  process.stdin.setEncoding('utf8');
+  return process.stdin.on('readable', continuation);
+end;
+        -- /* #@@range_end(io_monad_is_composable) */
+
 
 return {
   new = new, 
@@ -63,7 +108,12 @@ return {
   run = run, 
   readFile = readFile, 
   println = println, 
-  writeFile = writeFile
+  writeFile = writeFile, 
+  seq = seq, 
+  seqs = seqs, 
+  putc = putc, 
+  puts = puts, 
+  getc = getc
 }
 
 -- #@@range_end(io_monad_definition)

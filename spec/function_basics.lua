@@ -39,23 +39,13 @@ describe('関数の基本', function()
   describe('関数を定義する', function()
     -- **リスト6.1** 恒等関数
     it('恒等関数', function()
-      -- /* #@@range_begin(identity_function_definition) */
+      -- #@@range_begin(identity_function_definition)
       local identity = function(any)
         return any;
       end
-      -- /* #@@range_end(identity_function_definition) */
+      -- #@@range_end(identity_function_definition)
       assert.are.equal(identity(1), 1)
       assert.are.equal(identity("a"), "a")
-      -- expect(
-      --   identity(1)
-      -- ).to.eql(
-      --   1
-      -- );
-      -- expect(
-      --   identity("a")
-      -- ).to.eql(
-      --   "a"
-      -- );
     end)
     -- **リスト6.2** succ関数
     it('succ関数', function()
@@ -1426,6 +1416,74 @@ describe('再帰による反復処理', function()
       --   length(xs) + length(ys) -- 命題Pの右辺
       -- );
       -- /* #@@range_end(statement_p_test) */
+    end)
+  end)
+  describe('末尾再帰による効率化', function()
+    it('素朴な再帰によるfactorial関数', function()
+      -- #@@range_begin(naive_factorial)
+      local function factorial(n)
+        if n <= 0 then
+          return 1
+        else
+          return n * factorial(n-1)
+        end
+      end
+      assert.are.equal(
+        factorial(10)
+      , 
+        3628800) 
+    end)
+      -- #@@range_end(naive_factorial)
+    it('末尾再帰によるfactorial関数', function()
+      -- #@@range_begin(tail_call_factorial)
+      local function factorial(n)
+        local function factAux(n, accumulator)
+          if n <= 0 then
+            return accumulator 
+          else
+            return factAux(n - 1, accumulator*n)
+          end
+        end
+        return factAux(n, 1)
+      end
+      assert.are.equal(
+        factorial(10)
+      , 
+        3628800) 
+      -- #@@range_end(tail_call_factorial)
+    end)
+    it('素朴な再帰によるfibonacci関数', function()
+      -- #@@range_begin(naive_fibonacci)
+      local function fibonacci(n)
+        if n < 2 then
+          return n
+        end
+        return fibonacci(n-1) + fibonacci(n-2)
+      end
+
+      assert.are.equal(
+        fibonacci(10)
+      , 
+        55) 
+      -- #@@range_end(naive_fibonacci)
+    end)
+    it('末尾再帰によるfibonacci関数', function()
+      -- #@@range_begin(tail_call_fibonacci)
+      local function fibonacci(n)
+        local function inner(m, a, b)
+          if m == 0 then
+            return a
+          end
+          return inner(m-1, b, a+b)
+        end
+        return inner(n, 0, 1)
+      end
+
+      assert.are.equal(
+        fibonacci(100)
+      , 
+        55) 
+      -- #@@range_end(tail_call_fibonacci)
     end)
   end)
 end)
